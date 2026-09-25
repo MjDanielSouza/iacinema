@@ -213,58 +213,41 @@ body {
 }
 
 /* ==========================================================================
-   Scrollytelling — cada seção "acontece" conforme entra na tela, em vez de
-   já aparecer pronta. Implementado com IntersectionObserver (ver
-   ScrollRevealController) em vez de animation-timeline:view() porque essa
-   API ainda tem comportamento inconsistente entre engines/versões — aqui
-   o disparo é confiável e testado de verdade, não só "deveria funcionar".
-   Estado inicial: invisível e 48px abaixo. Some da lista via
-   ScrollRevealController assim que intersecta.
+   Scrollytelling — de verdade preso ao scroll, não um "fade-in que dispara
+   uma vez". O ScrollRevealController recalcula a cada frame de scroll o
+   progresso de cada elemento (posição real na tela) e escreve
+   opacity/transform/filter direto via style — por isso aqui só existe o
+   estado inicial (antes do JS rodar / sem JS / reduced-motion) e uma
+   transição bem curta só pra suavizar entre frames, sem brigar com os
+   valores que o JS está cravando a cada scroll.
    ========================================================================== */
 .scroll-reveal,
 .scroll-reveal-scale,
-.scroll-reveal-stagger > * {
-  opacity: 0;
-  filter: blur(6px);
-  transition: opacity 900ms var(--ease-emphasized), transform 900ms var(--ease-emphasized),
-    filter 900ms var(--ease-emphasized);
+.scroll-reveal-stagger > *,
+.backdrop-reveal {
+  transition: opacity 60ms linear, transform 60ms linear, filter 60ms linear,
+    clip-path 60ms linear;
 }
 
 .scroll-reveal,
 .scroll-reveal-stagger > * {
-  transform: translateY(96px) scale(0.96);
+  opacity: 0;
+  filter: blur(7px);
+  transform: translateY(92px) scale(0.95);
 }
 
 .scroll-reveal-scale {
-  transform: scale(1.16);
-}
-
-.scroll-reveal.is-revealed,
-.scroll-reveal-scale.is-revealed,
-.scroll-reveal-stagger > *.is-revealed {
-  opacity: 1;
-  filter: blur(0);
-  transform: translateY(0) scale(1);
-}
-
-.scroll-reveal-stagger > *:nth-child(1) { transition-delay: 0ms; }
-.scroll-reveal-stagger > *:nth-child(2) { transition-delay: 120ms; }
-.scroll-reveal-stagger > *:nth-child(3) { transition-delay: 240ms; }
-.scroll-reveal-stagger > *:nth-child(4) { transition-delay: 360ms; }
-.scroll-reveal-stagger > *:nth-child(5) { transition-delay: 480ms; }
-.scroll-reveal-stagger > *:nth-child(6) { transition-delay: 600ms; }
-
-/* Fundo de seção — abertura tipo diafragma de lente (íris) conforme a
-   seção entra na tela, acompanhando o parallax feito em JS (SectionBackdrop). */
-.backdrop-reveal {
   opacity: 0;
-  clip-path: inset(0 38% 0 38%);
-  transition: opacity 1100ms var(--ease-emphasized), clip-path 1100ms var(--ease-emphasized);
+  filter: blur(7px);
+  transform: scale(1.18);
 }
 
-.backdrop-reveal.is-revealed {
-  opacity: 1;
-  clip-path: inset(0 0 0 0);
+/* Fundo de seção — abertura tipo diafragma de lente (íris), também presa
+   ao scroll (ver ScrollRevealController), acompanhando o parallax feito
+   em JS em SectionBackdrop. */
+.backdrop-reveal {
+  opacity: 0.15;
+  clip-path: inset(0 40% 0 40%);
 }
 
 @media (prefers-reduced-motion: reduce) {

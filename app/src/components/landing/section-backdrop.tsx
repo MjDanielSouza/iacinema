@@ -4,9 +4,11 @@ import { useEffect, useRef } from "react";
 import Image from "next/image";
 
 /**
- * Fundo full-bleed com parallax (imagem se move mais devagar que o scroll)
- * e abertura tipo diafragma de lente quando a seção entra na tela.
- * Some nas bordas superior/inferior pra voltar ao bg-base entre seções.
+ * Fundo full-bleed com parallax (imagem se move mais devagar que o
+ * scroll). A abertura tipo diafragma (opacity/clip-path) é presa ao
+ * scroll pelo ScrollRevealController — aqui só cuida do movimento da
+ * imagem em si. Some nas bordas superior/inferior pra voltar ao
+ * bg-base entre seções.
  */
 export function SectionBackdrop({
   src,
@@ -21,49 +23,28 @@ export function SectionBackdrop({
   const imgRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const section = wrapRef.current?.parentElement;
     if (!section) return;
 
-    if (!reduceMotion) {
-      let ticking = false;
-      const onScroll = () => {
-        if (ticking) return;
-        ticking = true;
-        requestAnimationFrame(() => {
-          const rect = section.getBoundingClientRect();
-          const vh = window.innerHeight || 1;
-          const progress = (vh - rect.top) / (vh + rect.height);
-          const clamped = Math.min(Math.max(progress, 0), 1);
-          if (imgRef.current) {
-            imgRef.current.style.transform = `translateY(${(clamped - 0.5) * 14}%) scale(1.18)`;
-          }
-          ticking = false;
-        });
-      };
-      window.addEventListener("scroll", onScroll, { passive: true });
-      onScroll();
-      return () => window.removeEventListener("scroll", onScroll);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const el = wrapRef.current;
-    if (!el) return;
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) {
-            el.classList.add("is-revealed");
-            observer.unobserve(entry.target);
-          }
+    let ticking = false;
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        const rect = section.getBoundingClientRect();
+        const vh = window.innerHeight || 1;
+        const progress = (vh - rect.top) / (vh + rect.height);
+        const clamped = Math.min(Math.max(progress, 0), 1);
+        if (imgRef.current) {
+          imgRef.current.style.transform = `translateY(${(clamped - 0.5) * 14}%) scale(1.18)`;
         }
-      },
-      { threshold: 0.1, rootMargin: "0px 0px -10% 0px" },
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
+        ticking = false;
+      });
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   return (
