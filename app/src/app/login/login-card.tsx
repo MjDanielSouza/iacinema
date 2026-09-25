@@ -24,21 +24,21 @@ export function LoginCard({ next }: { next: string }) {
   }
 
   return (
-    <div className="w-full max-w-sm bg-[#141417] border border-white/10 rounded-2xl p-8 text-center">
-      <p className="font-display font-semibold text-white text-lg mb-1">
-        Pipeline<span className="text-amber-400">.</span>
+    <div className="w-full max-w-sm bg-[#141413] border border-line p-8 text-center">
+      <p className="font-tech text-[10px] uppercase tracking-widest text-muted mb-4">
+        [ACESSO // SYS v1.0]
       </p>
-      <h1 className="font-display font-semibold text-xl text-white mb-1">
+      <h1 className="font-display text-2xl text-[#F2EFE9] mb-1">
         Continue de onde parou.
       </h1>
-      <p className="text-sm text-zinc-500 mb-8">
+      <p className="text-sm text-muted mb-8">
         Entre para acessar o curso e seus projetos.
       </p>
 
       <button
         onClick={handleGoogleLogin}
         disabled={loading}
-        className="w-full flex items-center justify-center gap-3 rounded-full border border-white/10 bg-[#1b1b1f] px-4 py-3 text-sm font-medium text-zinc-100 hover:border-cyan-600 transition-colors disabled:opacity-50"
+        className="w-full flex items-center justify-center gap-3 border border-line bg-[#0c0c0b] px-4 py-3 font-tech text-xs uppercase tracking-wider text-[#F2EFE9] hover:border-amber-500 transition-colors duration-100 disabled:opacity-50"
       >
         <svg viewBox="0 0 24 24" className="w-4 h-4" aria-hidden="true">
           <path

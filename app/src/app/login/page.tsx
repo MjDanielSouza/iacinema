@@ -20,7 +20,7 @@ export default async function LoginPage({
   }
 
   return (
-    <main className="min-h-screen bg-[#0a0a0c] text-zinc-300 flex items-center justify-center px-4">
+    <main className="min-h-screen bg-[#0c0c0b] text-[#F2EFE9] flex items-center justify-center px-4">
       <LoginCard next={safeNext} />
     </main>
   );

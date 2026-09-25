@@ -1,9 +1,18 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { PHASES } from "@/lib/phases";
+import { FasesInspector } from "@/components/landing/fases-inspector";
 
 const HERO_IMAGE =
   "https://d8j0ntlcm91z4.cloudfront.net/user_31jsKS5Tv7Qv1EoTdhaNio59PHu/hf_20260925_143804_fe6bfb96-5977-45b9-86a9-afab1ded104b.png";
+
+function Crosshair({ className = "" }: { className?: string }) {
+  return (
+    <span className={`crosshair absolute ${className}`} aria-hidden="true">
+      +
+    </span>
+  );
+}
 
 export default async function Home() {
   const supabase = await createClient();
@@ -15,204 +24,334 @@ export default async function Home() {
   const primaryLabel = user ? "Ir para o Dashboard" : "Começar agora";
 
   return (
-    <main className="bg-[#0a0a0c] text-zinc-300">
-      {/* ============ NAV ============ */}
-      <nav className="fixed top-0 inset-x-0 z-50 border-b border-white/5 bg-[#0a0a0c]/70 backdrop-blur-md">
-        <div className="max-w-6xl mx-auto px-5 sm:px-8 h-16 flex items-center justify-between">
-          <span className="font-display font-semibold text-lg text-white tracking-tight">
-            Pipeline<span className="text-amber-400">.</span>
-          </span>
+    <main className="bg-[#0c0c0b] text-[#F2EFE9] overflow-x-hidden">
+      {/* ============ A. NAVBAR ============ */}
+      <nav className="sticky top-0 z-50 bg-[#0c0c0b]/95 backdrop-blur-sm border-b border-line">
+        <div className="max-w-6xl mx-auto flex divide-x divide-line border-x border-line">
+          <Link href="/" className="px-5 h-12 flex items-center gap-2 shrink-0">
+            <span className="font-semibold text-sm">Pipeline.</span>
+            <span className="font-tech text-[10px] text-muted">[SYS v1.0]</span>
+          </Link>
+          <div className="hidden md:flex items-center px-5 font-tech text-[10px] uppercase tracking-widest text-muted flex-1">
+            MODO: CURSO + FERRAMENTA DE PRODUÇÃO
+          </div>
+          <div className="hidden sm:flex items-center gap-5 px-5 font-tech text-[10px] uppercase tracking-widest text-muted">
+            <a href="#metodo" className="hover:text-[#F2EFE9] transition-colors duration-100">
+              #metodo
+            </a>
+            <a href="#fases" className="hover:text-[#F2EFE9] transition-colors duration-100">
+              #fases
+            </a>
+            <a href="#laboratorio" className="hover:text-[#F2EFE9] transition-colors duration-100">
+              #laboratorio
+            </a>
+          </div>
           <Link
             href={primaryHref}
-            className="px-4 py-2 rounded-full bg-amber-500 text-[#0a0a0c] text-sm font-semibold hover:bg-amber-400 transition-colors"
+            className="flex items-center px-6 font-tech text-xs uppercase tracking-wider bg-[#F2EFE9] text-[#0c0c0b] hover:bg-amber-400 transition-colors duration-100 shrink-0"
           >
             {user ? "Dashboard" : "Entrar"}
           </Link>
         </div>
       </nav>
 
-      {/* ============ HERO ============ */}
-      <section className="relative min-h-[92vh] flex items-end overflow-hidden">
-        <div className="absolute inset-0">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={HERO_IMAGE}
-            alt=""
-            className="w-full h-full object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0c] via-[#0a0a0c]/60 to-[#0a0a0c]/20" />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#0a0a0c]/80 via-transparent to-transparent" />
-        </div>
+      <div className="max-w-6xl mx-auto border-x border-line">
+        {/* ============ B. HERO ============ */}
+        <section className="relative grid grid-cols-1 lg:grid-cols-12 border-b border-line">
+          <Crosshair className="top-2 left-2 hidden lg:block" />
+          <Crosshair className="top-2 right-2 hidden lg:block" />
 
-        <div className="relative max-w-6xl mx-auto px-5 sm:px-8 pb-20 pt-40 w-full">
-          <p className="text-xs uppercase tracking-[0.2em] text-cyan-400 font-semibold mb-5">
-            Curso + ferramenta de produção
-          </p>
-          <h1 className="font-display font-semibold text-[2.5rem] leading-[1.05] sm:text-6xl sm:leading-[1.05] text-white max-w-3xl mb-6">
-            O pipeline que leva um roteiro até a tela,
-            <span className="italic text-amber-400"> ensinado e aplicado</span> no
-            mesmo lugar.
-          </h1>
-          <p className="text-base sm:text-lg text-zinc-400 max-w-xl mb-10 leading-relaxed">
-            Cinco fases — roteiro, pesquisa, assets, direção de cena e
-            pós-produção — com laboratórios práticos em cada uma, e um espaço
-            pra aplicar tudo isso em um projeto de verdade, com sua equipe.
-          </p>
-          <div className="flex flex-wrap items-center gap-4">
-            <Link
-              href={primaryHref}
-              className="px-7 py-3.5 rounded-full bg-amber-500 text-[#0a0a0c] font-semibold text-sm hover:bg-amber-400 transition-colors"
-            >
-              {primaryLabel}
-            </Link>
-            <a
-              href="#fases"
-              className="px-7 py-3.5 rounded-full border border-white/15 text-zinc-200 font-semibold text-sm hover:border-white/40 transition-colors"
-            >
-              Ver as 5 fases
-            </a>
-          </div>
-        </div>
-      </section>
+          <div className="lg:col-span-7 p-6 md:p-12 lg:p-16 flex flex-col justify-between border-b lg:border-b-0 lg:border-r border-line">
+            <div>
+              <p className="font-tech text-xs uppercase tracking-widest text-amber-400 mb-6">
+                [00 // CURSO + FERRAMENTA DE PRODUÇÃO]
+              </p>
+              <h1 className="text-[2.1rem] leading-[1.15] sm:text-5xl sm:leading-[1.15] font-semibold mb-6">
+                O pipeline que leva um roteiro até a tela,{" "}
+                <span className="font-display text-[1.15em] leading-none">
+                  ensinado e aplicado
+                </span>{" "}
+                no mesmo lugar.
+              </h1>
+              <p className="text-sm sm:text-base text-muted max-w-lg leading-relaxed">
+                Cinco fases — roteiro, pesquisa, assets, direção de cena e
+                pós-produção — com laboratórios práticos em cada uma, e um
+                espaço pra aplicar tudo isso em um projeto de verdade, com sua
+                equipe.
+              </p>
+            </div>
 
-      {/* ============ MÉTODO ============ */}
-      <section className="border-t border-white/5">
-        <div className="max-w-3xl mx-auto px-5 sm:px-8 py-24 text-center">
-          <p className="font-display italic text-2xl sm:text-3xl text-white leading-snug">
-            A maioria dos tutoriais de IA te dá prompts soltos. Aqui você
-            aprende o pipeline inteiro —
-            <span className="text-cyan-400 not-italic">
-              {" "}
-              a mesma lógica de decupagem, raccord de figurino e direção de
-              fotografia{" "}
-            </span>
-            que uma produção de verdade usa, adaptada pra IA generativa.
-          </p>
-        </div>
-      </section>
-
-      {/* ============ AS 5 FASES ============ */}
-      <section id="fases" className="border-t border-white/5 scroll-mt-16">
-        <div className="max-w-6xl mx-auto px-5 sm:px-8 py-24">
-          <p className="text-xs uppercase tracking-[0.2em] text-cyan-400 font-semibold mb-3">
-            O pipeline
-          </p>
-          <h2 className="font-display font-semibold text-3xl sm:text-4xl text-white mb-14 max-w-xl">
-            Cinco fases, do papel à tela.
-          </h2>
-
-          <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-px bg-white/5 rounded-2xl overflow-hidden border border-white/5">
-            {PHASES.map((phase) => (
-              <div
-                key={phase.number}
-                className="bg-[#0a0a0c] p-6 flex flex-col min-h-[220px]"
+            <div className="flex flex-wrap gap-3 mt-10">
+              <Link
+                href={primaryHref}
+                className="font-tech text-xs uppercase tracking-wider px-6 py-3.5 bg-amber-500 text-[#0c0c0b] hover:bg-amber-400 transition-colors duration-100"
               >
-                <span className="font-display text-4xl text-amber-500/80 mb-6">
-                  {String(phase.number).padStart(2, "0")}
-                </span>
-                <h3 className="text-sm font-semibold text-white mb-2 leading-snug">
-                  {phase.title}
-                </h3>
-                <p className="text-xs text-zinc-500 leading-relaxed">
-                  {phase.subtitle}
-                </p>
-              </div>
-            ))}
+                {primaryLabel} [-&gt;]
+              </Link>
+              <a
+                href="#fases"
+                className="font-tech text-xs uppercase tracking-wider px-6 py-3.5 border border-line text-[#F2EFE9] hover:border-[#F2EFE9] transition-colors duration-100"
+              >
+                Ver as 5 fases [01-05]
+              </a>
+            </div>
           </div>
-        </div>
-      </section>
 
-      {/* ============ CURSO + PROJETOS ============ */}
-      <section className="border-t border-white/5">
-        <div className="max-w-6xl mx-auto px-5 sm:px-8 py-24">
-          <div className="grid md:grid-cols-2 gap-6">
-            <div className="rounded-2xl border border-white/10 p-8 sm:p-10 bg-gradient-to-br from-amber-500/[0.06] to-transparent">
-              <p className="text-xs uppercase tracking-[0.2em] text-amber-400 font-semibold mb-4">
+          {/* Monitor de Decupagem — 3 camadas */}
+          <div className="lg:col-span-5 bg-[#141413] flex flex-col">
+            <div className="p-5 border-b border-line">
+              <p className="font-tech text-[10px] uppercase tracking-widest text-muted mb-3">
+                Camada 01 — Roteiro Decupado
+              </p>
+              <p className="font-tech text-xs leading-relaxed text-[#F2EFE9]/80">
+                INT. GALPÃO ABANDONADO — NOITE
+                <br />
+                <span className="text-amber-400">[PERSONAGEM: RAFAEL]</span> avança
+                segurando uma <span className="text-sky-400">[PROP: LANTERNA]</span>.
+              </p>
+            </div>
+
+            <div className="p-5 border-b border-line">
+              <p className="font-tech text-[10px] uppercase tracking-widest text-muted mb-3">
+                Camada 02 — Monitor de Frame
+              </p>
+              <div className="relative w-full aspect-[2.39/1] bg-[#0c0c0b] border border-line overflow-hidden">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={HERO_IMAGE} alt="" className="w-full h-full object-cover" />
+              </div>
+              <div className="flex items-center justify-between mt-2">
+                <div className="flex gap-1">
+                  {["#0c0c0b", "#3a2a1a", "#8e6a3a", "#c9a46a", "#e8d8b8"].map((c) => (
+                    <div key={c} className="w-3 h-3 border border-line" style={{ background: c }} />
+                  ))}
+                </div>
+                <p className="font-tech text-[10px] text-muted">TC 01:04:22:10</p>
+              </div>
+              <p className="font-tech text-[10px] text-muted mt-1">
+                LENTE: 35MM ANAMÓRFICA &middot; RACCORD: TRAVADO
+              </p>
+            </div>
+
+            <div className="p-5">
+              <p className="font-tech text-[10px] uppercase tracking-widest text-muted mb-3">
+                Camada 03 — Prompt de Cena Enxuto
+              </p>
+              <p className="font-tech text-xs leading-relaxed text-[#F2EFE9]/80">
+                <span className="text-amber-400">BLOCKING:</span> avança
+                lentamente, ergue a lanterna.
+                <br />
+                <span className="text-amber-400">CÂMERA:</span> dolly in, 35mm.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* ============ C. MANIFESTO ============ */}
+        <section id="metodo" className="border-b border-line scroll-mt-12">
+          <div className="p-6 md:p-12 lg:p-16">
+            <p className="font-display text-2xl sm:text-3xl leading-snug max-w-3xl mb-10">
+              A maioria dos tutoriais de IA te dá prompts soltos. Aqui você
+              aprende o pipeline inteiro — a mesma lógica de decupagem, raccord
+              de figurino e direção de fotografia que uma produção de verdade
+              usa, adaptada pra IA generativa.
+            </p>
+
+            <div className="grid sm:grid-cols-2 border border-line">
+              <div className="p-6 border-b sm:border-b-0 sm:border-r border-line">
+                <p className="font-tech text-xs uppercase tracking-widest text-rec mb-4">
+                  [X] Fluxo comum (prompts soltos)
+                </p>
+                <ul className="space-y-2 text-sm text-muted">
+                  <li>Personagem muda de rosto e roupa a cada take</li>
+                  <li>Prompts gigantes tentando adivinhar iluminação</li>
+                  <li>Zero continuidade entre planos</li>
+                </ul>
+              </div>
+              <div className="p-6">
+                <p className="font-tech text-xs uppercase tracking-widest text-amber-400 mb-4">
+                  [✓] Fluxo pipeline (estúdio)
+                </p>
+                <ul className="space-y-2 text-sm text-[#F2EFE9]/80">
+                  <li>Decupagem prévia do roteiro inteiro</li>
+                  <li>Character Sheet travado por cena</li>
+                  <li>Direção de câmera separada do asset visual</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ============ D. AS 5 FASES ============ */}
+        <section id="fases" className="border-b border-line scroll-mt-12">
+          <div className="p-6 md:p-12 lg:p-16">
+            <p className="font-tech text-xs uppercase tracking-widest text-amber-400 mb-3">
+              O pipeline
+            </p>
+            <h2 className="text-2xl sm:text-3xl font-semibold mb-10">
+              Cinco fases, do papel à tela.
+            </h2>
+
+            <div id="laboratorio" className="scroll-mt-12">
+              <FasesInspector />
+            </div>
+          </div>
+        </section>
+
+        {/* ============ E. CURSO + PROJETOS ============ */}
+        <section className="border-b border-line">
+          <div className="grid md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-line">
+            <div className="p-6 md:p-10">
+              <p className="font-tech text-xs uppercase tracking-widest text-amber-400 mb-4">
                 Curso
               </p>
-              <h3 className="font-display font-semibold text-2xl text-white mb-4">
+              <h3 className="text-xl font-semibold mb-3">
                 Aprenda o processo, fase por fase.
               </h3>
-              <p className="text-sm text-zinc-400 leading-relaxed">
+              <p className="text-sm text-muted leading-relaxed mb-6">
                 Teoria curta e direta, mais um laboratório interativo em cada
                 fase — decupagem de roteiro, organização de referências,
                 construção de assets, direção de cena, e a timeline de
                 pós-produção. A Fase 1 é livre, sem cadastro.
               </p>
+              <div className="grid grid-cols-2 border border-line font-tech text-[10px] uppercase tracking-wider">
+                <div className="p-3 border-r border-line">
+                  <p className="text-muted mb-1">[AULA CURTA]</p>
+                  <p className="text-[#F2EFE9]/70">teoria · 5min</p>
+                </div>
+                <div className="p-3">
+                  <p className="text-amber-400 mb-1">[LABORATÓRIO PRÁTICO]</p>
+                  <p className="text-[#F2EFE9]/70">interativo · sem limite</p>
+                </div>
+              </div>
             </div>
-            <div className="rounded-2xl border border-white/10 p-8 sm:p-10 bg-gradient-to-br from-cyan-500/[0.06] to-transparent">
-              <p className="text-xs uppercase tracking-[0.2em] text-cyan-400 font-semibold mb-4">
+
+            <div className="p-6 md:p-10">
+              <p className="font-tech text-xs uppercase tracking-widest text-amber-400 mb-4">
                 Projetos
               </p>
-              <h3 className="font-display font-semibold text-2xl text-white mb-4">
+              <h3 className="text-xl font-semibold mb-3">
                 Aplique em um filme de verdade.
               </h3>
-              <p className="text-sm text-zinc-400 leading-relaxed">
+              <p className="text-sm text-muted leading-relaxed mb-6">
                 Crie um projeto, cole o roteiro, suba imagens de referência e
                 salve os prompts de cada fase. Convide colaboradores pra
                 trabalhar junto no mesmo projeto.
               </p>
+              <div className="border border-line font-tech text-[10px]">
+                <div className="px-3 py-2 border-b border-line text-muted uppercase tracking-wider">
+                  /PROJETO_FILME_B
+                </div>
+                <div className="px-3 py-2 flex items-center justify-between text-[#F2EFE9]/70">
+                  <span>01_Roteiro</span>
+                  <span className="text-amber-400">[DIRETOR]</span>
+                </div>
+                <div className="px-3 py-2 flex items-center justify-between text-[#F2EFE9]/70 border-t border-line">
+                  <span>02_Referências</span>
+                  <span className="text-sky-400">[DIR. ARTE]</span>
+                </div>
+                <div className="px-3 py-2 flex items-center justify-between text-[#F2EFE9]/70 border-t border-line">
+                  <span>05_Pós-Produção</span>
+                  <span className="text-emerald-400">[EDITOR]</span>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* ============ PRINCÍPIOS ============ */}
-      <section className="border-t border-white/5">
-        <div className="max-w-6xl mx-auto px-5 sm:px-8 py-24">
-          <div className="grid sm:grid-cols-3 gap-10">
-            <div>
-              <p className="font-display italic text-lg text-amber-400 mb-3">
-                Raccord de verdade
-              </p>
-              <p className="text-sm text-zinc-500 leading-relaxed">
-                Character sheets por cena garantem que seu personagem não
-                troque de roupa sozinho entre um plano e outro.
-              </p>
-            </div>
-            <div>
-              <p className="font-display italic text-lg text-cyan-400 mb-3">
-                Prompt de vídeo sem redundância
-              </p>
-              <p className="text-sm text-zinc-500 leading-relaxed">
-                A regra de ouro: nunca redescrever o que a IA já recebeu como
-                referência visual — só blocking, câmera e diálogo.
-              </p>
-            </div>
-            <div>
-              <p className="font-display italic text-lg text-amber-400 mb-3">
-                Processo, não sorte
-              </p>
-              <p className="text-sm text-zinc-500 leading-relaxed">
-                Um pipeline repetível, documentado, que escala de uma cena de
-                teste até um curta inteiro.
-              </p>
+        {/* ============ F. 3 PILARES + REGRA DE OURO ============ */}
+        <section className="border-b border-line">
+          <div className="grid sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-line border-b border-line">
+            {[
+              {
+                n: "01",
+                title: "Raccord de verdade",
+                body: "Character sheets por cena garantem que seu personagem não troque de roupa sozinho entre um plano e outro.",
+              },
+              {
+                n: "02",
+                title: "Prompt de vídeo sem redundância",
+                body: "A regra de ouro: nunca redescrever o que a IA já recebeu como referência visual — só blocking, câmera e diálogo.",
+              },
+              {
+                n: "03",
+                title: "Processo, não sorte",
+                body: "Um pipeline repetível, documentado, que escala de uma cena de teste até um curta inteiro.",
+              },
+            ].map((item) => (
+              <div key={item.n} className="p-6 md:p-10">
+                <p className="font-tech text-xs text-amber-400 mb-4">{item.n}/03</p>
+                <p className="font-display text-lg mb-3">{item.title}</p>
+                <p className="text-sm text-muted leading-relaxed">{item.body}</p>
+              </div>
+            ))}
+          </div>
+
+          <div className="p-6 md:p-12 lg:p-16">
+            <p className="font-tech text-xs uppercase tracking-widest text-muted mb-6">
+              [DEMONSTRAÇÃO — REGRA DE OURO]
+            </p>
+            <div className="grid sm:grid-cols-2 border border-line">
+              <div className="p-6 border-b sm:border-b-0 sm:border-r border-line">
+                <p className="font-tech text-[10px] uppercase tracking-widest text-rec mb-4">
+                  Prompt amador (redundante)
+                </p>
+                <p className="font-tech text-xs leading-relaxed line-through text-muted">
+                  mulher jovem, cabelo curto preto, jaqueta de couro vermelha,
+                  bar escuro com neon, luz azul e rosa, câmera em plano médio...
+                </p>
+              </div>
+              <div className="p-6">
+                <p className="font-tech text-[10px] uppercase tracking-widest text-amber-400 mb-4">
+                  Padrão pipeline
+                </p>
+                <p className="font-tech text-xs leading-relaxed text-[#F2EFE9]/80">
+                  [REF: CHAR_SHEET_02.PNG]
+                  <br />
+                  BLOCKING: caminha até o balcão
+                  <br />
+                  CÂMERA: 35mm, dolly in
+                  <br />
+                  DIÁLOGO: &quot;Já é tarde.&quot;
+                </p>
+              </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* ============ CTA FINAL ============ */}
-      <section className="border-t border-white/5">
-        <div className="max-w-3xl mx-auto px-5 sm:px-8 py-28 text-center">
-          <h2 className="font-display font-semibold text-3xl sm:text-4xl text-white mb-8">
-            Comece pela Fase 1, de graça.
-          </h2>
-          <Link
-            href={primaryHref}
-            className="inline-block px-8 py-4 rounded-full bg-amber-500 text-[#0a0a0c] font-semibold text-sm hover:bg-amber-400 transition-colors"
-          >
-            {primaryLabel}
-          </Link>
-        </div>
-      </section>
+        {/* ============ G. FOOTER / CTA FINAL ============ */}
+        <section className="relative border-b border-line">
+          <Crosshair className="bottom-2 left-2 hidden lg:block" />
+          <Crosshair className="bottom-2 right-2 hidden lg:block" />
+          <div className="p-10 md:p-20 text-center">
+            <h2 className="font-display text-3xl sm:text-5xl mb-10">
+              Comece pela Fase 1, de graça.
+            </h2>
+            <Link
+              href={primaryHref}
+              className="inline-block font-tech text-xs uppercase tracking-wider px-8 py-4 bg-amber-500 text-[#0c0c0b] hover:bg-amber-400 transition-colors duration-100"
+            >
+              {primaryLabel} [-&gt;]
+            </Link>
+          </div>
+        </section>
 
-      {/* ============ FOOTER ============ */}
-      <footer className="border-t border-white/5">
-        <div className="max-w-6xl mx-auto px-5 sm:px-8 py-8 text-xs text-zinc-600">
-          Pipeline de Produção Cinematográfica com IA
-        </div>
-      </footer>
+        <footer className="p-6 md:px-12">
+          <div className="grid sm:grid-cols-3 gap-4 font-tech text-[10px] uppercase tracking-widest text-muted">
+            <p>Pipeline de Produção Cinematográfica com IA</p>
+            <p className="sm:text-center">
+              {PHASES.map((p) => `0${p.number}`).join(" / ")} — Roteiro a Pós-Produção
+            </p>
+            <div className="sm:text-right space-x-4">
+              <a href="#fases" className="hover:text-[#F2EFE9] transition-colors duration-100">
+                fases
+              </a>
+              <Link href="/login" className="hover:text-[#F2EFE9] transition-colors duration-100">
+                entrar
+              </Link>
+            </div>
+          </div>
+        </footer>
+      </div>
     </main>
   );
 }

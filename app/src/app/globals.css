@@ -1,22 +1,33 @@
 @import "tailwindcss";
 
 :root {
-  --background: #0a0a0c;
-  --foreground: #d4d4d8;
+  --background: #0c0c0b;
+  --panel: #141413;
+  --foreground: #f2efe9;
+  --muted: #8e8d8a;
+  --line: #242422;
+  --accent: #eab308;
+  --rec: #e53935;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-body);
-  --font-display: var(--font-display);
+  --color-panel: var(--panel);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-accent: var(--accent);
+  --color-rec: var(--rec);
+  --font-sans: var(--font-sans);
+  --font-serif: var(--font-serif);
+  --font-mono: var(--font-mono);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
   font-family:
-    var(--font-body),
+    var(--font-sans),
     system-ui,
     -apple-system,
     "Segoe UI",
@@ -24,6 +35,25 @@ body {
     sans-serif;
 }
 
+/* Destaque editorial dramático (Instrument Serif itálico) — usado nos
+   títulos de página, mantido com esse nome de classe porque várias
+   páginas já referenciam "font-display". */
 .font-display {
-  font-family: var(--font-display), Georgia, serif;
+  font-family: var(--font-serif), Georgia, serif;
+  font-style: italic;
+  font-weight: 400;
+}
+
+.font-tech {
+  font-family: var(--font-mono), ui-monospace, monospace;
+}
+
+/* Marcador de enquadramento — mira de visor de câmera nos cruzamentos do grid */
+.crosshair {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  color: #52524e;
+  user-select: none;
+  pointer-events: none;
+  font-size: 12px;
+  line-height: 1;
 }

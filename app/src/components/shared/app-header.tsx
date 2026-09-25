@@ -15,61 +15,54 @@ export function AppHeader({
   authed: boolean;
 }) {
   return (
-    <header className="sticky top-0 z-40 border-b border-white/5 bg-[#0a0a0c]/80 backdrop-blur-md">
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between gap-4">
-        <div className="flex items-center gap-3 min-w-0">
-          <Link
-            href={authed ? "/dashboard" : "/"}
-            className="font-display font-semibold text-white text-base shrink-0"
-          >
-            Pipeline<span className="text-amber-400">.</span>
-          </Link>
-          {backHref && backLabel && (
-            <>
-              <span className="text-zinc-700 text-sm hidden sm:inline">/</span>
-              <Link
-                href={backHref}
-                className="text-xs text-zinc-500 hover:text-zinc-300 truncate hidden sm:inline"
-              >
-                {backLabel}
-              </Link>
-            </>
-          )}
-        </div>
+    <header className="sticky top-0 z-40 bg-[#0c0c0b]/95 backdrop-blur-sm border-b border-line">
+      <div className="max-w-5xl mx-auto flex divide-x divide-line border-x border-line">
+        <Link href={authed ? "/dashboard" : "/"} className="px-5 h-12 flex items-center gap-2 shrink-0">
+          <span className="font-semibold text-sm">Pipeline.</span>
+        </Link>
 
-        <div className="flex items-center gap-3 shrink-0">
-          {authed ? (
-            <>
-              {userName && (
-                <span className="hidden sm:inline text-xs text-zinc-500 truncate max-w-[140px]">
-                  {userName}
-                </span>
-              )}
-              {avatarUrl && (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={avatarUrl}
-                  alt=""
-                  className="w-7 h-7 rounded-full border border-white/10"
-                />
-              )}
+        {backHref && backLabel && (
+          <Link
+            href={backHref}
+            className="hidden sm:flex items-center px-5 font-tech text-[10px] uppercase tracking-widest text-muted hover:text-[#F2EFE9] transition-colors duration-100 truncate max-w-xs"
+          >
+            &larr; {backLabel}
+          </Link>
+        )}
+
+        <div className="flex-1" />
+
+        {authed ? (
+          <>
+            {userName && (
+              <span className="hidden md:flex items-center px-5 font-tech text-[10px] uppercase tracking-widest text-muted truncate max-w-[160px]">
+                {userName}
+              </span>
+            )}
+            {avatarUrl && (
+              <span className="hidden sm:flex items-center px-3">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={avatarUrl} alt="" className="w-6 h-6 border border-line" />
+              </span>
+            )}
+            <span className="flex items-center px-4 shrink-0">
               <SignOutButton />
-            </>
-          ) : (
-            <Link
-              href="/login"
-              className="text-xs font-semibold px-3 py-1.5 rounded-full bg-amber-500 text-[#0a0a0c] hover:bg-amber-400 transition-colors"
-            >
-              Entrar
-            </Link>
-          )}
-        </div>
+            </span>
+          </>
+        ) : (
+          <Link
+            href="/login"
+            className="flex items-center px-6 font-tech text-xs uppercase tracking-wider bg-[#F2EFE9] text-[#0c0c0b] hover:bg-amber-400 transition-colors duration-100 shrink-0"
+          >
+            Entrar
+          </Link>
+        )}
       </div>
 
       {backHref && backLabel && (
-        <div className="sm:hidden max-w-5xl mx-auto px-4 pb-2 -mt-1">
-          <Link href={backHref} className="text-xs text-zinc-500 hover:text-zinc-300">
-            ← {backLabel}
+        <div className="sm:hidden max-w-5xl mx-auto px-5 py-2 border-t border-line">
+          <Link href={backHref} className="font-tech text-[10px] uppercase tracking-widest text-muted">
+            &larr; {backLabel}
           </Link>
         </div>
       )}
