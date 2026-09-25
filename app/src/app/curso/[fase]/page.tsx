@@ -6,6 +6,7 @@ import { PhaseHeader } from "@/components/shared/phase-header";
 import { PromptBox } from "@/components/shared/prompt-box";
 import { TheoryCards } from "@/components/shared/theory-cards";
 import { ChecklistGate } from "@/components/shared/checklist-gate";
+import { AppHeader } from "@/components/shared/app-header";
 import { CourseLab } from "@/components/course/course-lab";
 import { saveCourseChecklist, completeCoursePhase } from "../actions";
 import type { ChecklistState } from "@/lib/supabase/database.types";
@@ -48,23 +49,10 @@ export default async function CursoFasePage({
   const nextPhase = PHASES.find((p) => p.number === phaseNumber + 1);
 
   return (
-    <main className="min-h-screen bg-[#0a0a0c] text-zinc-300 px-4 py-10">
+    <>
+      <AppHeader authed={!!user} backHref="/curso" backLabel="Todas as fases" />
+      <main className="min-h-screen bg-[#0a0a0c] text-zinc-300 px-4 py-12">
       <div className="max-w-4xl mx-auto">
-        <div className="flex items-center gap-4 mb-6">
-          <Link
-            href="/curso"
-            className="text-xs text-zinc-500 hover:text-zinc-300 inline-block"
-          >
-            ← Todas as fases
-          </Link>
-          <Link
-            href="/dashboard"
-            className="text-xs text-zinc-500 hover:text-zinc-300 inline-block"
-          >
-            Dashboard
-          </Link>
-        </div>
-
         <PhaseHeader
           kicker={phase.kicker}
           title={phase.title}
@@ -115,6 +103,7 @@ export default async function CursoFasePage({
           </div>
         )}
       </div>
-    </main>
+      </main>
+    </>
   );
 }

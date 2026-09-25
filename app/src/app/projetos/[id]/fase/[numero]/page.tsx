@@ -5,6 +5,7 @@ import { getPhase, PHASES } from "@/lib/phases";
 import { PhaseHeader } from "@/components/shared/phase-header";
 import { PromptBox } from "@/components/shared/prompt-box";
 import { ChecklistGate } from "@/components/shared/checklist-gate";
+import { AppHeader } from "@/components/shared/app-header";
 import { EditableTextarea } from "@/components/project/editable-textarea";
 import { ImageGallery } from "@/components/project/image-gallery";
 import { PromptComposer } from "@/components/project/prompt-composer";
@@ -70,23 +71,10 @@ export default async function ProjectPhasePage({
   const nextPhase = PHASES.find((p) => p.number === phaseNumber + 1);
 
   return (
-    <main className="min-h-screen bg-[#0a0a0c] text-zinc-300 px-4 py-10">
+    <>
+      <AppHeader authed backHref={`/projetos/${id}`} backLabel={project.name} />
+      <main className="min-h-screen bg-[#0a0a0c] text-zinc-300 px-4 py-12">
       <div className="max-w-4xl mx-auto">
-        <div className="flex items-center gap-4 mb-6">
-          <Link
-            href={`/projetos/${id}`}
-            className="text-xs text-zinc-500 hover:text-zinc-300 inline-block"
-          >
-            ← {project.name}
-          </Link>
-          <Link
-            href="/dashboard"
-            className="text-xs text-zinc-500 hover:text-zinc-300 inline-block"
-          >
-            Dashboard
-          </Link>
-        </div>
-
         <PhaseHeader
           kicker={phase.kicker}
           title={phase.title}
@@ -147,6 +135,7 @@ export default async function ProjectPhasePage({
           }
         />
       </div>
-    </main>
+      </main>
+    </>
   );
 }

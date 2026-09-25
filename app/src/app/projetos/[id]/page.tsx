@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { PHASES } from "@/lib/phases";
+import { AppHeader } from "@/components/shared/app-header";
 import { addProjectMember, removeProjectMember } from "@/app/projetos/actions";
 
 export default async function ProjectOverviewPage({
@@ -45,18 +46,11 @@ export default async function ProjectOverviewPage({
   const completedCount = [...progressByPhase.values()].filter(Boolean).length;
 
   return (
-    <main className="min-h-screen bg-[#0a0a0c] text-zinc-300 px-4 py-10">
+    <>
+      <AppHeader authed backHref="/projetos" backLabel="Meus Projetos" />
+      <main className="min-h-screen bg-[#0a0a0c] text-zinc-300 px-4 py-12">
       <div className="max-w-3xl mx-auto">
-        <div className="flex items-center gap-4 mb-4">
-          <Link href="/projetos" className="text-xs text-zinc-500 hover:text-zinc-300 inline-block">
-            ← Meus Projetos
-          </Link>
-          <Link href="/dashboard" className="text-xs text-zinc-500 hover:text-zinc-300 inline-block">
-            Dashboard
-          </Link>
-        </div>
-
-        <h1 className="text-2xl font-bold text-white mb-1">{project.name}</h1>
+        <h1 className="font-display font-semibold text-2xl text-white mb-1">{project.name}</h1>
         <p className="text-sm text-zinc-500 mb-6">
           Criado em {new Date(project.created_at).toLocaleDateString("pt-BR")}
         </p>
@@ -144,13 +138,14 @@ export default async function ProjectOverviewPage({
                 required
                 className="flex-1 bg-[#1b1b1f] border border-[#2a2a2f] rounded-lg px-3 py-2 text-xs text-zinc-200"
               />
-              <button className="px-4 py-2 rounded-lg border border-[#2a2a2f] text-xs text-zinc-300 hover:border-cyan-700">
+              <button className="px-4 py-2 rounded-full border border-white/15 text-xs text-zinc-300 hover:border-cyan-700 transition-colors">
                 Adicionar
               </button>
             </form>
           )}
         </div>
       </div>
-    </main>
+      </main>
+    </>
   );
 }

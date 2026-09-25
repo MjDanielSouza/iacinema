@@ -65,7 +65,7 @@ export function ChecklistGate({
         <button
           onClick={complete}
           disabled={!allChecked || pending}
-          className="mt-5 px-5 py-2.5 rounded-lg bg-amber-500 text-[#0a0a0c] font-semibold text-sm disabled:opacity-40 disabled:cursor-not-allowed transition-opacity"
+          className="mt-5 px-5 py-2.5 rounded-full bg-amber-500 text-[#0a0a0c] font-semibold text-sm disabled:opacity-40 disabled:cursor-not-allowed transition-opacity hover:bg-amber-400"
         >
           {pending ? "Salvando..." : completeLabel}
         </button>

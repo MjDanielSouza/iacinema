@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { PHASES } from "@/lib/phases";
+import { AppHeader } from "@/components/shared/app-header";
 import type { ChecklistState } from "@/lib/supabase/database.types";
 
 export default async function CursoPage() {
@@ -27,15 +28,14 @@ export default async function CursoPage() {
   const completedCount = [...progressByPhase.values()].filter((p) => p.completed).length;
 
   return (
-    <main className="min-h-screen bg-[#0a0a0c] text-zinc-300 px-4 py-10">
+    <>
+      <AppHeader authed={!!user} backHref="/dashboard" backLabel="Dashboard" />
+      <main className="min-h-screen bg-[#0a0a0c] text-zinc-300 px-4 py-12">
       <div className="max-w-3xl mx-auto">
-        <Link href="/dashboard" className="text-xs text-zinc-500 hover:text-zinc-300 mb-4 inline-block">
-          ← Dashboard
-        </Link>
         <p className="text-xs uppercase tracking-widest text-cyan-400 font-semibold mb-2">
           Curso
         </p>
-        <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">
+        <h1 className="font-display font-semibold text-2xl sm:text-3xl text-white mb-2">
           Pipeline de Produção Cinematográfica com IA
         </h1>
         <p className="text-sm text-zinc-500 mb-6">
@@ -106,6 +106,7 @@ export default async function CursoPage() {
           })}
         </div>
       </div>
-    </main>
+      </main>
+    </>
   );
 }

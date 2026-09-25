@@ -1,7 +1,7 @@
-import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { PermissionsRow } from "@/components/admin/permissions-row";
+import { AppHeader } from "@/components/shared/app-header";
 import type { Plan, Role } from "@/lib/supabase/database.types";
 
 export default async function AdminPage() {
@@ -52,14 +52,11 @@ export default async function AdminPage() {
   ).length;
 
   return (
-    <main className="min-h-screen bg-[#0a0a0c] text-zinc-300 px-4 py-10">
+    <>
+      <AppHeader authed backHref="/dashboard" backLabel="Dashboard" />
+      <main className="min-h-screen bg-[#0a0a0c] text-zinc-300 px-4 py-12">
       <div className="max-w-4xl mx-auto">
-        <div className="flex items-center justify-between mb-2">
-          <h1 className="text-2xl font-bold text-white">Dashboard do Admin</h1>
-          <Link href="/dashboard" className="text-xs text-zinc-500 hover:text-zinc-300">
-            ← Dashboard
-          </Link>
-        </div>
+        <h1 className="font-display font-semibold text-2xl text-white mb-2">Dashboard do Admin</h1>
         <p className="text-sm text-zinc-500 mb-8">
           Alunos, progresso no curso e projetos criados.
         </p>
@@ -146,6 +143,7 @@ export default async function AdminPage() {
           </p>
         )}
       </div>
-    </main>
+      </main>
+    </>
   );
 }
