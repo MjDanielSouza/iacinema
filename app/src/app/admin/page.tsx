@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { PermissionsRow } from "@/components/admin/permissions-row";
+import type { Plan, Role } from "@/lib/supabase/database.types";
 
 export default async function AdminPage() {
   const supabase = await createClient();
@@ -17,10 +19,11 @@ export default async function AdminPage() {
 
   const isStaff = myProfile?.role === "admin" || myProfile?.role === "instrutor";
   if (!isStaff) redirect("/dashboard");
+  const isAdmin = myProfile?.role === "admin";
 
   const { data: profiles } = await supabase
     .from("profiles")
-    .select("id, email, full_name, role, plan, created_at")
+    .select("id, email, full_name, role, plan, project_limit, created_at")
     .order("created_at", { ascending: false });
 
   const { data: progressRows } = await supabase
@@ -83,8 +86,9 @@ export default async function AdminPage() {
             <thead>
               <tr className="text-left text-xs uppercase tracking-wider text-zinc-500 border-b border-[#2a2a2f]">
                 <th className="px-4 py-3 font-semibold">Nome / E-mail</th>
-                <th className="px-4 py-3 font-semibold">Papel</th>
-                <th className="px-4 py-3 font-semibold">Plano</th>
+                <th className="px-4 py-3 font-semibold">
+                  {isAdmin ? "Papel / Plano / Limite" : "Papel / Plano"}
+                </th>
                 <th className="px-4 py-3 font-semibold">Curso</th>
                 <th className="px-4 py-3 font-semibold">Projetos</th>
               </tr>
@@ -98,8 +102,21 @@ export default async function AdminPage() {
                       <p className="text-zinc-200">{p.full_name || "—"}</p>
                       <p className="text-xs text-zinc-500">{p.email}</p>
                     </td>
-                    <td className="px-4 py-3 text-zinc-400">{p.role}</td>
-                    <td className="px-4 py-3 text-zinc-400">{p.plan}</td>
+                    <td className="px-4 py-3">
+                      {isAdmin ? (
+                        <PermissionsRow
+                          userId={p.id}
+                          initialRole={p.role as Role}
+                          initialPlan={p.plan as Plan}
+                          initialProjectLimit={p.project_limit}
+                          isSelf={p.id === user.id}
+                        />
+                      ) : (
+                        <span className="text-zinc-400">
+                          {p.role} · {p.plan}
+                        </span>
+                      )}
+                    </td>
                     <td className="px-4 py-3">
                       <span
                         className={
@@ -119,13 +136,15 @@ export default async function AdminPage() {
           </table>
         </div>
 
-        <p className="text-[11px] text-zinc-600 mt-4">
-          Para tornar alguém admin ou instrutor pela primeira vez, rode no SQL
-          Editor do Supabase:{" "}
-          <code className="text-zinc-500">
-            update public.profiles set role = &apos;admin&apos; where email = &apos;seu@email.com&apos;;
-          </code>
-        </p>
+        {isAdmin ? (
+          <p className="text-[11px] text-zinc-600 mt-4">
+            Mudanças de papel, plano e limite de projetos entram em vigor na hora — não precisa de SQL.
+          </p>
+        ) : (
+          <p className="text-[11px] text-zinc-600 mt-4">
+            Só administradores podem alterar papel, plano e limite de projetos.
+          </p>
+        )}
       </div>
     </main>
   );

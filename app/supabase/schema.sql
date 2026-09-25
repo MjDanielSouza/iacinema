@@ -1,7 +1,9 @@
 -- Pipeline de Produção com IA — esquema do banco (Supabase / Postgres)
 --
 -- Como aplicar: Supabase Dashboard → SQL Editor → cole este arquivo inteiro → Run.
--- Seguro rodar mais de uma vez (usa "if not exists" / "or replace" onde possível).
+-- Seguro rodar mais de uma vez (tabelas usam "if not exists", funções usam
+-- "or replace", e toda policy é recriada via "drop policy if exists" antes do
+-- "create policy" — reaplicar o arquivo inteiro não perde dados existentes).
 
 -- ============================================================
 -- PROFILES — um perfil por usuário autenticado (espelha auth.users)
@@ -56,11 +58,31 @@ as $$
   );
 $$;
 
+-- Helper específico para admin (instrutor NÃO entra aqui) — usado para liberar
+-- edição de permissões de outras pessoas, que é mais sensível que só listar.
+create or replace function public.is_admin()
+returns boolean
+language sql
+security definer set search_path = public
+stable
+as $$
+  select exists (
+    select 1 from public.profiles
+    where id = auth.uid() and role = 'admin'
+  );
+$$;
+
+drop policy if exists "profiles: usuário vê o próprio perfil" on public.profiles;
 create policy "profiles: usuário vê o próprio perfil" on public.profiles
   for select using (auth.uid() = id or public.is_staff());
 
+drop policy if exists "profiles: usuário edita o próprio perfil" on public.profiles;
 create policy "profiles: usuário edita o próprio perfil" on public.profiles
   for update using (auth.uid() = id);
+
+drop policy if exists "profiles: admin edita qualquer perfil" on public.profiles;
+create policy "profiles: admin edita qualquer perfil" on public.profiles
+  for update using (public.is_admin());
 
 -- ============================================================
 -- CURSO — progresso do aluno nas 5 fases de treinamento
@@ -76,12 +98,15 @@ create table if not exists public.course_phase_progress (
 
 alter table public.course_phase_progress enable row level security;
 
+drop policy if exists "progresso do curso: dono ou staff" on public.course_phase_progress;
 create policy "progresso do curso: dono ou staff" on public.course_phase_progress
   for select using (auth.uid() = user_id or public.is_staff());
 
+drop policy if exists "progresso do curso: só o dono edita" on public.course_phase_progress;
 create policy "progresso do curso: só o dono edita" on public.course_phase_progress
   for insert with check (auth.uid() = user_id);
 
+drop policy if exists "progresso do curso: só o dono atualiza" on public.course_phase_progress;
 create policy "progresso do curso: só o dono atualiza" on public.course_phase_progress
   for update using (auth.uid() = user_id);
 
@@ -119,23 +144,29 @@ as $$
   );
 $$;
 
+drop policy if exists "projetos: membros e staff veem" on public.projects;
 create policy "projetos: membros e staff veem" on public.projects
   for select using (public.is_project_member(id) or public.is_staff());
 
+drop policy if exists "projetos: dono cria" on public.projects;
 create policy "projetos: dono cria" on public.projects
   for insert with check (auth.uid() = owner_id);
 
+drop policy if exists "projetos: dono apaga" on public.projects;
 create policy "projetos: dono apaga" on public.projects
   for delete using (auth.uid() = owner_id);
 
+drop policy if exists "membros: quem está no projeto vê os outros membros" on public.project_members;
 create policy "membros: quem está no projeto vê os outros membros" on public.project_members
   for select using (public.is_project_member(project_id) or public.is_staff());
 
+drop policy if exists "membros: dono do projeto adiciona" on public.project_members;
 create policy "membros: dono do projeto adiciona" on public.project_members
   for insert with check (
     exists (select 1 from public.projects where id = project_id and owner_id = auth.uid())
   );
 
+drop policy if exists "membros: dono do projeto remove" on public.project_members;
 create policy "membros: dono do projeto remove" on public.project_members
   for delete using (
     exists (select 1 from public.projects where id = project_id and owner_id = auth.uid())
@@ -176,12 +207,15 @@ create table if not exists public.project_phases (
 
 alter table public.project_phases enable row level security;
 
+drop policy if exists "fases do projeto: membros e staff veem" on public.project_phases;
 create policy "fases do projeto: membros e staff veem" on public.project_phases
   for select using (public.is_project_member(project_id) or public.is_staff());
 
+drop policy if exists "fases do projeto: membros editam (insert)" on public.project_phases;
 create policy "fases do projeto: membros editam (insert)" on public.project_phases
   for insert with check (public.is_project_member(project_id));
 
+drop policy if exists "fases do projeto: membros editam (update)" on public.project_phases;
 create policy "fases do projeto: membros editam (update)" on public.project_phases
   for update using (public.is_project_member(project_id));
 
@@ -202,12 +236,15 @@ create table if not exists public.project_assets (
 
 alter table public.project_assets enable row level security;
 
+drop policy if exists "assets do projeto: membros e staff veem" on public.project_assets;
 create policy "assets do projeto: membros e staff veem" on public.project_assets
   for select using (public.is_project_member(project_id) or public.is_staff());
 
+drop policy if exists "assets do projeto: membros inserem" on public.project_assets;
 create policy "assets do projeto: membros inserem" on public.project_assets
   for insert with check (public.is_project_member(project_id));
 
+drop policy if exists "assets do projeto: membros apagam" on public.project_assets;
 create policy "assets do projeto: membros apagam" on public.project_assets
   for delete using (public.is_project_member(project_id));
 
@@ -219,6 +256,7 @@ values ('project-assets', 'project-assets', true)
 on conflict (id) do nothing;
 
 -- Caminho esperado dos arquivos: {project_id}/{phase_number}/{arquivo}
+drop policy if exists "storage: membros do projeto enviam imagem" on storage.objects;
 create policy "storage: membros do projeto enviam imagem"
   on storage.objects for insert
   with check (
@@ -226,10 +264,12 @@ create policy "storage: membros do projeto enviam imagem"
     and public.is_project_member((storage.foldername(name))[1]::uuid)
   );
 
+drop policy if exists "storage: leitura pública (bucket público)" on storage.objects;
 create policy "storage: leitura pública (bucket público)"
   on storage.objects for select
   using (bucket_id = 'project-assets');
 
+drop policy if exists "storage: membros do projeto apagam imagem" on storage.objects;
 create policy "storage: membros do projeto apagam imagem"
   on storage.objects for delete
   using (

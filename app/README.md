@@ -50,9 +50,13 @@ Abra `http://localhost:3000`, clique em **Entrar**, depois **Entrar com Google**
 
 ## Tornar alguém admin ou instrutor
 
-Todo mundo que faz login vira `aluno` por padrão. Para promover alguém (você
-mesmo, por exemplo) a admin — o que libera o link **Dashboard do Admin** no
-`/dashboard` — rode no **SQL Editor** do Supabase:
+Todo mundo que faz login vira `aluno` por padrão (plano `gratuito`, limite de
+1 projeto). Depois que existir ao menos um admin, ele mesmo edita papel,
+plano e limite de projetos de qualquer pessoa direto em **`/admin`** — não
+precisa mais de SQL para isso.
+
+O primeiro admin, porém, precisa ser criado via **SQL Editor** do Supabase
+(ninguém ainda tem permissão para usar a tela):
 
 ```sql
 update public.profiles set role = 'admin' where email = 'seu@email.com';
