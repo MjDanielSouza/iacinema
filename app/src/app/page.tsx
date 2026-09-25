@@ -1,6 +1,12 @@
 import Link from "next/link";
+import { createClient } from "@/lib/supabase/server";
 
-export default function Home() {
+export default async function Home() {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
   return (
     <main className="min-h-screen bg-[#0a0a0c] text-zinc-300 flex items-center justify-center px-4">
       <div className="max-w-xl text-center">
@@ -16,10 +22,10 @@ export default function Home() {
           assets, direção de cena e finalização.
         </p>
         <Link
-          href="/login"
+          href={user ? "/dashboard" : "/login"}
           className="inline-block px-6 py-3 rounded-lg bg-amber-500 text-[#0a0a0c] font-semibold text-sm hover:bg-amber-400 transition-colors"
         >
-          Entrar
+          {user ? "Ir para o Dashboard" : "Entrar"}
         </Link>
       </div>
     </main>
