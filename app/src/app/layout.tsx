@@ -59,7 +59,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <body className="min-h-full flex flex-col overflow-x-hidden">
         <noscript>
-          <style>{`.scroll-reveal, .scroll-reveal-scale, .scroll-reveal-stagger > * { opacity: 1 !important; transform: none !important; }`}</style>
+          <style>{`.scroll-reveal, .scroll-reveal-scale, .scroll-reveal-stagger > *, .backdrop-reveal { opacity: 1 !important; transform: none !important; filter: none !important; clip-path: none !important; }`}</style>
         </noscript>
         <svg className="film-grain" aria-hidden="true" focusable="false">
           <filter id="grain">

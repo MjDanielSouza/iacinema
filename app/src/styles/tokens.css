@@ -76,6 +76,13 @@
     rgba(200, 243, 29, 0.14),
     transparent 70%
   );
+  --gradient-backdrop-fade: linear-gradient(
+    180deg,
+    var(--bg-base) 0%,
+    rgba(7, 7, 10, 0.35) 14%,
+    rgba(7, 7, 10, 0.35) 86%,
+    var(--bg-base) 100%
+  );
 
   /* ---- Overlays ---- */
   --overlay-tech-grid: linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px) 0 0 / 64px

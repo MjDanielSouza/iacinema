@@ -1,4 +1,8 @@
 import { Card } from "@/components/ui/card";
+import { SectionBackdrop } from "./section-backdrop";
+
+const BACKDROP =
+  "https://d8j0ntlcm91z4.cloudfront.net/user_31jsKS5Tv7Qv1EoTdhaNio59PHu/hf_20260925_224455_c55427f5-5a63-4b2b-bdf7-903ebf6769d0.png";
 
 function IconX() {
   return (
@@ -18,8 +22,9 @@ function IconCheck() {
 
 export function Method() {
   return (
-    <section id="metodo" className="scroll-mt-20" style={{ paddingBlock: "var(--section-spacing)" }}>
-      <div className="max-w-[1240px] mx-auto px-[clamp(20px,4vw,48px)]">
+    <section id="metodo" className="relative scroll-mt-20 overflow-hidden" style={{ paddingBlock: "var(--section-spacing)" }}>
+      <SectionBackdrop src={BACKDROP} alt="Mesa de pré-produção com storyboard, roteiro e claquete" />
+      <div className="relative max-w-[1240px] mx-auto px-[clamp(20px,4vw,48px)]">
         <p
           className="scroll-reveal font-editorial leading-[1.02] tracking-[-0.015em] mb-14"
           style={{ fontSize: "clamp(2.5rem, 5.5vw, 5rem)", maxWidth: "30ch" }}

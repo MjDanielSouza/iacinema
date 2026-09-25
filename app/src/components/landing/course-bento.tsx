@@ -1,9 +1,14 @@
 import { RoleTag } from "@/components/ui/role-tag";
+import { SectionBackdrop } from "./section-backdrop";
+
+const BACKDROP =
+  "https://d8j0ntlcm91z4.cloudfront.net/user_31jsKS5Tv7Qv1EoTdhaNio59PHu/hf_20260925_224455_3d276ee5-4e31-488f-b6dd-51f4e298be51.png";
 
 export function CourseBento() {
   return (
-    <section style={{ paddingBottom: "var(--section-spacing)" }}>
-      <div className="max-w-[1240px] mx-auto px-[clamp(20px,4vw,48px)]">
+    <section className="relative overflow-hidden" style={{ paddingBottom: "var(--section-spacing)" }}>
+      <SectionBackdrop src={BACKDROP} alt="Sala de color grading com monitor curvo mostrando a timeline de um filme" />
+      <div className="relative max-w-[1240px] mx-auto px-[clamp(20px,4vw,48px)]">
         <div className="border border-border-accent rounded-lg bg-bg-raised p-6 sm:p-10">
           <div className="scroll-reveal-stagger grid md:grid-cols-12 gap-4">
             <div className="md:col-span-7 bg-surface-card border border-border-default rounded-md p-7 sm:p-9">

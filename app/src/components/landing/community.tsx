@@ -1,4 +1,8 @@
 import { Button } from "@/components/ui/button";
+import { SectionBackdrop } from "./section-backdrop";
+
+const BACKDROP =
+  "https://d8j0ntlcm91z4.cloudfront.net/user_31jsKS5Tv7Qv1EoTdhaNio59PHu/hf_20260925_224455_5f3d2b30-b3a2-4fc0-8ccc-9d9bb493bb48.png";
 
 function IconTeam() {
   return (
@@ -54,6 +58,7 @@ const FEATURES = [
 export function Community({ communityHref }: { communityHref: string }) {
   return (
     <section id="comunidade" className="relative scroll-mt-20 bg-bg-violet-night overflow-hidden">
+      <SectionBackdrop src={BACKDROP} alt="Sala de monitores de produção num set de filmagem, várias câmeras e claquete" />
       <div
         className="absolute inset-0"
         style={{ background: "var(--gradient-hero-glow-violet)", opacity: 0.6 }}

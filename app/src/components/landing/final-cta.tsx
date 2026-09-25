@@ -1,4 +1,8 @@
 import { Button } from "@/components/ui/button";
+import { SectionBackdrop } from "./section-backdrop";
+
+const BACKDROP =
+  "https://d8j0ntlcm91z4.cloudfront.net/user_31jsKS5Tv7Qv1EoTdhaNio59PHu/hf_20260925_224456_9374a231-f057-44de-a4f9-770322c1665c.png";
 
 export function FinalCta({
   primaryHref,
@@ -9,6 +13,7 @@ export function FinalCta({
 }) {
   return (
     <section className="relative text-center overflow-hidden" style={{ paddingBlock: "var(--section-spacing)" }}>
+      <SectionBackdrop src={BACKDROP} alt="Soundstage de VFX com parede de LED e equipe de produção" />
       <div
         className="absolute inset-0"
         style={{ background: "var(--gradient-hero-glow-green)" }}

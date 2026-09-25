@@ -3,6 +3,10 @@
 import { useEffect, useRef, useState } from "react";
 import { PHASES } from "@/lib/phases";
 import { LabPreview } from "./lab-preview";
+import { SectionBackdrop } from "./section-backdrop";
+
+const BACKDROP =
+  "https://d8j0ntlcm91z4.cloudfront.net/user_31jsKS5Tv7Qv1EoTdhaNio59PHu/hf_20260925_224455_17f4111e-33a7-4a4b-bb4c-d56b2cc68f65.png";
 
 export function Phases() {
   const [active, setActive] = useState(0);
@@ -28,9 +32,10 @@ export function Phases() {
   }, []);
 
   return (
-    <section id="fases" className="scroll-mt-20">
+    <section id="fases" className="relative scroll-mt-20 overflow-hidden">
+      <SectionBackdrop src={BACKDROP} alt="Sala de controle de renderização com telas mostrando frames de IA sendo compostos" />
       <div
-        className="max-w-[1240px] mx-auto px-[clamp(20px,4vw,48px)]"
+        className="relative max-w-[1240px] mx-auto px-[clamp(20px,4vw,48px)]"
         style={{ paddingBlock: "var(--section-spacing)" }}
       >
         <h2 className="scroll-reveal font-technical font-bold uppercase tracking-[0.02em] mb-14" style={{ fontSize: "clamp(1.9rem, 3.8vw, 3.5rem)" }}>
