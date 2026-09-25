@@ -16,12 +16,12 @@ export function FinalCta({
       />
       <div className="relative max-w-[1240px] mx-auto px-[clamp(20px,4vw,48px)]">
         <h2
-          className="font-display font-bold text-title mb-10"
+          className="scroll-reveal font-display font-bold text-title mb-10"
           style={{ fontSize: "clamp(2.5rem, 5vw, 4.5rem)" }}
         >
           Comece pela Fase 1, de graça.
         </h2>
-        <div className="flex justify-center">
+        <div className="scroll-reveal flex justify-center">
           <Button href={primaryHref} variant="primary">
             {primaryLabel}
           </Button>

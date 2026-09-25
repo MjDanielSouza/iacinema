@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import { ScrollRevealController } from "@/components/landing/scroll-reveal-controller";
 import { Header } from "@/components/landing/header";
 import { Hero } from "@/components/landing/hero";
 import { Method } from "@/components/landing/method";
@@ -26,6 +27,7 @@ export default async function Home() {
 
   return (
     <main className="bg-bg-base text-body overflow-x-hidden">
+      <ScrollRevealController />
       <Header navHref={navHref} navLabel={navLabel} />
       <Hero primaryHref={primaryHref} primaryLabel={primaryLabel} />
       <Method />

@@ -21,7 +21,7 @@ export function Method() {
     <section id="metodo" className="scroll-mt-20" style={{ paddingBlock: "var(--section-spacing)" }}>
       <div className="max-w-[1240px] mx-auto px-[clamp(20px,4vw,48px)]">
         <p
-          className="font-editorial leading-[1.02] tracking-[-0.015em] mb-14"
+          className="scroll-reveal font-editorial leading-[1.02] tracking-[-0.015em] mb-14"
           style={{ fontSize: "clamp(2.5rem, 5.5vw, 5rem)", maxWidth: "30ch" }}
         >
           A maioria dos tutoriais de IA te dá prompts soltos. Aqui você aprende{" "}
@@ -31,7 +31,7 @@ export function Method() {
           generativa.
         </p>
 
-        <div className="grid sm:grid-cols-2 gap-5">
+        <div className="scroll-reveal-stagger grid sm:grid-cols-2 gap-5">
           <Card variant="base" className="p-7 sm:p-10">
             <p className="flex items-center gap-2 font-technical text-xs uppercase tracking-[0.14em] text-red mb-5">
               <IconX /> Fluxo comum (prompts soltos)

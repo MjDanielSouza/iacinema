@@ -42,8 +42,11 @@ export function Hero({
     <section className="relative w-full">
       <div className="tech-grid absolute inset-0" aria-hidden="true" />
       <div
-        className="absolute inset-0"
-        style={{ background: "var(--gradient-hero-glow-violet)" }}
+        className="absolute inset-y-0 right-0 w-full lg:w-[60%]"
+        style={{
+          background:
+            "radial-gradient(55% 65% at 75% 25%, rgba(130,70,230,0.5) 0%, rgba(40,20,90,0.22) 45%, transparent 75%)",
+        }}
         aria-hidden="true"
       />
       <span
@@ -116,6 +119,14 @@ export function Hero({
               className="hero-letterbox object-cover"
             />
           </div>
+          <div
+            className="absolute inset-0"
+            style={{
+              background:
+                "radial-gradient(38% 32% at 78% 18%, rgba(210,190,255,0.55) 0%, rgba(178,102,232,0.12) 40%, transparent 70%)",
+            }}
+            aria-hidden="true"
+          />
           <div className="absolute inset-0" style={{ background: "var(--gradient-image-fade-left)" }} aria-hidden="true" />
           <div className="absolute inset-0" style={{ background: "var(--gradient-image-fade-bottom)" }} aria-hidden="true" />
 
@@ -126,7 +137,7 @@ export function Hero({
             </p>
           </div>
 
-          <div className="glass absolute -bottom-12 right-6 lg:right-10 rounded-md p-5 w-56 hidden sm:block z-10">
+          <div className="glass absolute top-6 right-6 lg:top-8 lg:right-8 rounded-md p-5 w-56 hidden sm:block z-10 shadow-glow-violet">
             <div className="divide-y divide-border-subtle">
               <div className="pb-3">
                 <span className="font-display font-bold text-2xl text-title">5 fases</span>

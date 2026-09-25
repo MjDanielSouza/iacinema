@@ -56,10 +56,10 @@ export function GoldenRule() {
   return (
     <section style={{ paddingBottom: "var(--section-spacing)" }}>
       <div className="max-w-[1240px] mx-auto px-[clamp(20px,4vw,48px)]">
-        <p className="font-technical text-xs uppercase tracking-[0.14em] text-muted mb-6">
+        <p className="scroll-reveal font-technical text-xs uppercase tracking-[0.14em] text-muted mb-6">
           [DEMONSTRAÇÃO — REGRA DE OURO]
         </p>
-        <div className="grid sm:grid-cols-2 gap-5">
+        <div className="scroll-reveal-stagger grid sm:grid-cols-2 gap-5">
           <div className="bg-surface-card border border-border-default rounded-md p-7">
             <p className="font-technical text-[11px] uppercase tracking-[0.14em] text-red mb-5">
               Prompt amador (redundante)

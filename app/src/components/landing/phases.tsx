@@ -35,7 +35,7 @@ export function Phases() {
         className="max-w-[1240px] mx-auto px-[clamp(20px,4vw,48px)]"
         style={{ paddingBlock: "var(--section-spacing)" }}
       >
-        <h2 className="font-technical font-bold uppercase tracking-[0.02em] mb-14" style={{ fontSize: "clamp(1.9rem, 3.8vw, 3.5rem)" }}>
+        <h2 className="scroll-reveal font-technical font-bold uppercase tracking-[0.02em] mb-14" style={{ fontSize: "clamp(1.9rem, 3.8vw, 3.5rem)" }}>
           Cinco fases, do papel à tela.
         </h2>
 
@@ -83,7 +83,7 @@ export function Phases() {
                   refs.current[i] = el;
                 }}
                 data-index={i}
-                className="scroll-mt-32"
+                className="scroll-reveal scroll-mt-32"
               >
                 <p className="lg:hidden font-technical text-xs uppercase tracking-[0.14em] text-muted mb-2">
                   {String(p.number).padStart(2, "0")}/05

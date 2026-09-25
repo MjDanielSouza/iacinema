@@ -58,6 +58,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${syne.variable} ${instrumentSerif.variable} ${spaceMono.variable} ${manrope.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col overflow-x-hidden">
+        <noscript>
+          <style>{`.scroll-reveal, .scroll-reveal-scale, .scroll-reveal-stagger > * { opacity: 1 !important; transform: none !important; }`}</style>
+        </noscript>
         <svg className="film-grain" aria-hidden="true" focusable="false">
           <filter id="grain">
             <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="2" stitchTiles="stitch" />

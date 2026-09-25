@@ -64,19 +64,19 @@ export function Community({ communityHref }: { communityHref: string }) {
         style={{ paddingBlock: "var(--section-spacing)" }}
       >
         <h2
-          className="font-editorial leading-[1.02] tracking-[-0.015em] mb-6 max-w-3xl"
+          className="scroll-reveal font-editorial leading-[1.02] tracking-[-0.015em] mb-6 max-w-3xl"
           style={{ fontSize: "clamp(2.5rem, 5.5vw, 5rem)" }}
         >
           Você não entra num curso. Entra num{" "}
           <em className="text-violet">ecossistema de cineastas IA</em>.
         </h2>
-        <p className="text-lg text-body leading-relaxed max-w-2xl mb-14">
+        <p className="scroll-reveal text-lg text-body leading-relaxed max-w-2xl mb-14">
           Cada projeto é um set de verdade: convide colaboradores, divida
           papéis, e produza junto — com feedback técnico de gente que fala a
           mesma língua de raccord, prompt e direção de cena.
         </p>
 
-        <div className="grid sm:grid-cols-3 gap-5 mb-14">
+        <div className="scroll-reveal-stagger grid sm:grid-cols-3 gap-5 mb-14">
           {FEATURES.map((f) => (
             <div key={f.title} className="bg-surface-card border border-border-default rounded-md p-7">
               <div

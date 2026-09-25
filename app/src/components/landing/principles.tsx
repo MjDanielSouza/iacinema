@@ -20,7 +20,7 @@ export function Principles() {
   return (
     <section style={{ paddingBottom: "var(--section-spacing)" }}>
       <div className="max-w-[1240px] mx-auto px-[clamp(20px,4vw,48px)]">
-        <div className="grid sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-border-subtle border border-border-default rounded-lg">
+        <div className="scroll-reveal-stagger grid sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-border-subtle border border-border-default rounded-lg">
           {ITEMS.map((item) => (
             <div key={item.n} className="p-8 sm:p-10">
               <p className="font-editorial mb-4" style={{ fontSize: "clamp(2rem, 3vw, 2.75rem)" }}>

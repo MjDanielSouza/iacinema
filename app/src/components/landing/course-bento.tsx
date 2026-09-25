@@ -5,7 +5,7 @@ export function CourseBento() {
     <section style={{ paddingBottom: "var(--section-spacing)" }}>
       <div className="max-w-[1240px] mx-auto px-[clamp(20px,4vw,48px)]">
         <div className="border border-border-accent rounded-lg bg-bg-raised p-6 sm:p-10">
-          <div className="grid md:grid-cols-12 gap-4">
+          <div className="scroll-reveal-stagger grid md:grid-cols-12 gap-4">
             <div className="md:col-span-7 bg-surface-card border border-border-default rounded-md p-7 sm:p-9">
               <p className="font-technical text-xs uppercase tracking-[0.14em] text-lime mb-4">Curso</p>
               <h3 className="font-display font-semibold text-xl text-title mb-3">

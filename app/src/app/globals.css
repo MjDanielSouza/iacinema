@@ -212,6 +212,56 @@ body {
   animation: fade-in var(--duration-slow) var(--ease-standard) both;
 }
 
+/* ==========================================================================
+   Scrollytelling — cada seção "acontece" conforme entra na tela, em vez de
+   já aparecer pronta. Implementado com IntersectionObserver (ver
+   ScrollRevealController) em vez de animation-timeline:view() porque essa
+   API ainda tem comportamento inconsistente entre engines/versões — aqui
+   o disparo é confiável e testado de verdade, não só "deveria funcionar".
+   Estado inicial: invisível e 48px abaixo. Some da lista via
+   ScrollRevealController assim que intersecta.
+   ========================================================================== */
+.scroll-reveal,
+.scroll-reveal-scale,
+.scroll-reveal-stagger > * {
+  opacity: 0;
+  transition: opacity var(--duration-slow) var(--ease-standard),
+    transform var(--duration-slow) var(--ease-standard);
+}
+
+.scroll-reveal,
+.scroll-reveal-stagger > * {
+  transform: translateY(48px);
+}
+
+.scroll-reveal-scale {
+  transform: scale(1.08);
+}
+
+.scroll-reveal.is-revealed,
+.scroll-reveal-scale.is-revealed,
+.scroll-reveal-stagger > *.is-revealed {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.scroll-reveal-stagger > *:nth-child(2) {
+  transition-delay: 90ms;
+}
+.scroll-reveal-stagger > *:nth-child(3) {
+  transition-delay: 180ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-reveal,
+  .scroll-reveal-scale,
+  .scroll-reveal-stagger > * {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
 /* Foco visível — 2px lime, offset 3px */
 :focus-visible {
   outline: 2px solid var(--accent-lime);
