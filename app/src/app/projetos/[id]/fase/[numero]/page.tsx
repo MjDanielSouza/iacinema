@@ -72,12 +72,20 @@ export default async function ProjectPhasePage({
   return (
     <main className="min-h-screen bg-[#0a0a0c] text-zinc-300 px-4 py-10">
       <div className="max-w-4xl mx-auto">
-        <Link
-          href={`/projetos/${id}`}
-          className="text-xs text-zinc-500 hover:text-zinc-300 mb-6 inline-block"
-        >
-          ← {project.name}
-        </Link>
+        <div className="flex items-center gap-4 mb-6">
+          <Link
+            href={`/projetos/${id}`}
+            className="text-xs text-zinc-500 hover:text-zinc-300 inline-block"
+          >
+            ← {project.name}
+          </Link>
+          <Link
+            href="/dashboard"
+            className="text-xs text-zinc-500 hover:text-zinc-300 inline-block"
+          >
+            Dashboard
+          </Link>
+        </div>
 
         <PhaseHeader
           kicker={phase.kicker}

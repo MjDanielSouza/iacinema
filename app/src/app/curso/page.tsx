@@ -29,6 +29,9 @@ export default async function CursoPage() {
   return (
     <main className="min-h-screen bg-[#0a0a0c] text-zinc-300 px-4 py-10">
       <div className="max-w-3xl mx-auto">
+        <Link href="/dashboard" className="text-xs text-zinc-500 hover:text-zinc-300 mb-4 inline-block">
+          ← Dashboard
+        </Link>
         <p className="text-xs uppercase tracking-widest text-cyan-400 font-semibold mb-2">
           Curso
         </p>

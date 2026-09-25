@@ -47,9 +47,14 @@ export default async function ProjectOverviewPage({
   return (
     <main className="min-h-screen bg-[#0a0a0c] text-zinc-300 px-4 py-10">
       <div className="max-w-3xl mx-auto">
-        <Link href="/projetos" className="text-xs text-zinc-500 hover:text-zinc-300 mb-4 inline-block">
-          ← Meus Projetos
-        </Link>
+        <div className="flex items-center gap-4 mb-4">
+          <Link href="/projetos" className="text-xs text-zinc-500 hover:text-zinc-300 inline-block">
+            ← Meus Projetos
+          </Link>
+          <Link href="/dashboard" className="text-xs text-zinc-500 hover:text-zinc-300 inline-block">
+            Dashboard
+          </Link>
+        </div>
 
         <h1 className="text-2xl font-bold text-white mb-1">{project.name}</h1>
         <p className="text-sm text-zinc-500 mb-6">
