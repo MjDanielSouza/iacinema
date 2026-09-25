@@ -1,11 +1,13 @@
 # Pipeline de Produção com IA — App
 
-App Next.js que vai reunir o **Curso** (as 5 fases de produção) e **Meus Projetos**
-(aplicar as 5 fases em projetos reais, com roteiro, imagens e prompts salvos).
+App Next.js que reúne o **Curso** (as 5 fases de produção) e **Meus Projetos**
+(aplicar as 5 fases em projetos reais, com roteiro, imagens e prompts salvos),
+atrás de login com Google.
 
-Este diretório é a Etapa A do plano: esqueleto do app + login com Google via
-Supabase. As próximas etapas vão migrar o conteúdo do curso e adicionar a
-criação de projetos, equipes e o dashboard de instrutor.
+Status: Etapas A–E prontas em código (login, curso, projetos, equipes,
+dashboard do admin). Falta plugar credenciais reais de Supabase/Google e
+fazer o deploy — veja os passos abaixo. Etapa F (assinatura/pagamento) ainda
+não foi iniciada, porque depende de decisões de preço e provedor.
 
 ## Configurar o Supabase (uma vez)
 
@@ -17,6 +19,10 @@ criação de projetos, equipes e o dashboard de instrutor.
    NEXT_PUBLIC_SUPABASE_URL=https://SEU-PROJETO.supabase.co
    NEXT_PUBLIC_SUPABASE_ANON_KEY=SUA_CHAVE_ANON_PUBLICA
    ```
+4. Em **SQL Editor**, cole o conteúdo de `supabase/schema.sql` inteiro e rode.
+   Isso cria as tabelas (`profiles`, `course_phase_progress`, `projects`,
+   `project_members`, `project_phases`, `project_assets`), as políticas de
+   RLS e o bucket de Storage `project-assets` para as imagens.
 
 ## Configurar o login com Google
 
@@ -42,6 +48,16 @@ npm run dev
 
 Abra `http://localhost:3000`, clique em **Entrar**, depois **Entrar com Google**.
 
+## Tornar alguém admin ou instrutor
+
+Todo mundo que faz login vira `aluno` por padrão. Para promover alguém (você
+mesmo, por exemplo) a admin — o que libera o link **Dashboard do Admin** no
+`/dashboard` — rode no **SQL Editor** do Supabase:
+
+```sql
+update public.profiles set role = 'admin' where email = 'seu@email.com';
+```
+
 ## Deploy (Vercel)
 
 1. Em [vercel.com](https://vercel.com), importe este repositório do GitHub.
@@ -53,10 +69,28 @@ Abra `http://localhost:3000`, clique em **Entrar**, depois **Entrar com Google**
 
 ## Estrutura
 
-- `src/app/page.tsx` — landing pública
-- `src/app/login/page.tsx` — login com Google (Supabase Auth)
-- `src/app/auth/callback/route.ts` — troca o código OAuth pela sessão
-- `src/app/dashboard/page.tsx` — página protegida (exige login)
-- `src/proxy.ts` — mantém a sessão atualizada e protege `/dashboard` (no
-  Next.js 16 o arquivo de middleware foi renomeado para `proxy.ts`)
-- `src/lib/supabase/` — clientes Supabase para browser, server e proxy
+- `supabase/schema.sql` — todas as tabelas, RLS e o bucket de Storage
+- `src/lib/phases.ts` — conteúdo compartilhado das 5 fases (título, teoria,
+  prompt de imagem, itens do checklist), usado tanto pelo Curso quanto pelos
+  Projetos
+- `src/app/curso/` — listagem de fases + `/curso/[fase]`, com os laboratórios
+  de demonstração fixos (decupador, pastas, assets, direção, timeline) em
+  `src/components/course/labs/`; Fase 1 é livre, Fases 2–5 exigem login
+- `src/app/projetos/` — `/projetos` (listar/criar, respeita
+  `profiles.project_limit`), `/projetos/[id]` (progresso + equipe) e
+  `/projetos/[id]/fase/[numero]` (roteiro editável na Fase 1; upload de
+  imagem + prompts salvos nas Fases 2–5)
+- `src/app/admin/` — dashboard restrito a `role in ('admin', 'instrutor')`:
+  lista de alunos, progresso no curso e projetos criados
+- `src/app/login/`, `src/app/auth/callback/`, `src/proxy.ts` — login com
+  Google via Supabase Auth e proteção de rotas (no Next.js 16 o arquivo de
+  middleware foi renomeado para `proxy.ts`)
+- `src/lib/supabase/` — clientes Supabase para browser, server e proxy;
+  `database.types.ts` tem tipos escritos à mão que espelham o schema —
+  troque por `supabase gen types typescript` assim que o projeto existir
+
+## O que falta (Etapa F)
+
+Assinatura/pagamento (plano `assinante` em `profiles.plan`, limites maiores
+de projeto, checkout). Falta decidir provedor (Stripe é o mais comum) e
+preço antes de implementar.
