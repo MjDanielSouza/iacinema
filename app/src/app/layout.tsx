@@ -21,10 +21,28 @@ const plexMono = IBM_Plex_Mono({
   weight: ["400", "500", "600"],
 });
 
+const OG_IMAGE =
+  "https://d8j0ntlcm91z4.cloudfront.net/user_31jsKS5Tv7Qv1EoTdhaNio59PHu/hf_20260925_194254_e01ff2a3-ace1-4df1-b099-cf3980c8e513.png";
+
 export const metadata: Metadata = {
   title: "Pipeline de Produção com IA",
   description:
     "Curso e ferramenta de produção cinematográfica com IA, do roteiro à pós-produção.",
+  openGraph: {
+    title: "Pipeline de Produção com IA",
+    description:
+      "Curso e ferramenta de produção cinematográfica com IA, do roteiro à pós-produção.",
+    images: [{ url: OG_IMAGE, width: 1200, height: 675, alt: "Pipeline." }],
+    locale: "pt_BR",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Pipeline de Produção com IA",
+    description:
+      "Curso e ferramenta de produção cinematográfica com IA, do roteiro à pós-produção.",
+    images: [OG_IMAGE],
+  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

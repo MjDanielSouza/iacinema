@@ -72,7 +72,7 @@ export default async function ProjetosPage({
             <button
               type="submit"
               disabled={atLimit}
-              className="px-5 py-2 rounded-full bg-amber-500 text-[#050507] font-semibold text-sm disabled:opacity-40 disabled:cursor-not-allowed hover:bg-amber-400 transition-colors"
+              className="press px-5 py-2 rounded-full bg-amber-500 text-[#050507] font-semibold text-sm disabled:opacity-40 disabled:cursor-not-allowed hover:bg-amber-400 transition duration-150 ease-out"
             >
               Criar projeto
             </button>
@@ -92,7 +92,7 @@ export default async function ProjetosPage({
             <Link
               key={p.id}
               href={`/projetos/${p.id}`}
-              className="flex items-center justify-between rounded-xl border border-white/10 bg-[#0D0E12] p-4 hover:border-[#D4FF00] transition-colors"
+              className="press flex items-center justify-between rounded-xl border border-white/10 bg-[#0D0E12] p-4 hover:border-[#D4FF00] transition duration-150 ease-out"
             >
               <div>
                 <p className="text-sm font-semibold text-white">{p.name}</p>

@@ -78,7 +78,7 @@ export default async function CursoPage() {
               <Link
                 key={phase.number}
                 href={locked ? `/login?next=/curso/${phase.number}` : `/curso/${phase.number}`}
-                className={`flex items-center gap-4 rounded-xl border p-4 transition-colors ${
+                className={`press flex items-center gap-4 rounded-xl border p-4 transition duration-150 ease-out ${
                   locked
                     ? "border-white/10 bg-[#0D0E12] opacity-50"
                     : "border-white/10 bg-[#0D0E12] hover:border-[#D4FF00]"

@@ -72,12 +72,15 @@ body {
   line-height: 1;
 }
 
-/* Glassmorphism escuro — superfícies flutuantes (modais, hero, cards HUD) */
+/* Glassmorphism escuro — superfícies flutuantes (modais, hero, cards HUD).
+   Borda superior mais clara que as outras = luz "pegando" no material
+   (apple-design §12), saturação elevada mantém a vibrância sob o blur. */
 .glass {
   background: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
+  backdrop-filter: blur(24px) saturate(160%);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
   border: 1px solid var(--line);
+  border-top-color: rgba(255, 255, 255, 0.14);
 }
 
 .glass-hover {
@@ -88,6 +91,35 @@ body {
 
 .glass-hover:hover {
   border-color: var(--line-hover);
+}
+
+/* "Materializa" em vez de só aparecer — escala + blur juntos no enter
+   (apple-design §12), com fallback de cross-fade em movimento reduzido. */
+@keyframes materialize {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+    filter: blur(6px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+    filter: blur(0);
+  }
+}
+
+.glass-in {
+  animation: materialize 220ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+/* Feedback instantâneo na pressão, não na soltura (apple-design §1) —
+   aplicado nos elementos que carregam a classe utilitária .press. */
+.press {
+  transition: transform 100ms ease-out;
+}
+
+.press:active {
+  transform: scale(0.97);
 }
 
 /* Atmosfera — glow radial esmaecido atrás de monitores/frames */
@@ -102,4 +134,48 @@ body {
     transparent 65%
   );
   pointer-events: none;
+}
+
+/* Header fixo como camada translúcida, com uma borda-fade em vez de um
+   divisor rígido — a chrome flutuante só "risca" onde encosta no
+   conteúdo (apple-design §12). */
+.chrome-edge {
+  position: relative;
+}
+
+.chrome-edge::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -8px;
+  height: 8px;
+  background: linear-gradient(to bottom, var(--line), transparent);
+  pointer-events: none;
+}
+
+/* Movimento reduzido: troca escala/spring por cross-fade curto, sem
+   overshoot (apple-design §14). */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .press:active {
+    transform: none;
+  }
+}
+
+/* Transparência reduzida: materiais ficam mais sólidos, sem blur. */
+@media (prefers-reduced-transparency: reduce) {
+  .glass {
+    background: var(--panel);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
 }

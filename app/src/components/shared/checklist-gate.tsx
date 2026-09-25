@@ -107,7 +107,7 @@ export function ChecklistGate(props: Props) {
         <button
           onClick={complete}
           disabled={!allChecked || pending}
-          className="mt-5 px-5 py-2.5 rounded-full bg-[#D4FF00] text-[#050507] font-semibold text-sm disabled:opacity-40 disabled:cursor-not-allowed transition-opacity hover:bg-[#e2ff4d]"
+          className="press mt-5 px-5 py-2.5 rounded-full bg-[#D4FF00] text-[#050507] font-semibold text-sm disabled:opacity-40 disabled:cursor-not-allowed transition hover:bg-[#e2ff4d]"
         >
           {pending ? "Salvando..." : completeLabel}
         </button>

@@ -74,7 +74,7 @@ export default async function ProjectOverviewPage({
               <Link
                 key={phase.number}
                 href={`/projetos/${id}/fase/${phase.number}`}
-                className="flex items-center gap-4 rounded-xl border border-white/10 bg-[#0D0E12] p-4 hover:border-[#D4FF00] transition-colors"
+                className="press flex items-center gap-4 rounded-xl border border-white/10 bg-[#0D0E12] p-4 hover:border-[#D4FF00] transition duration-150 ease-out"
               >
                 <span
                   className={`w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold shrink-0 border ${

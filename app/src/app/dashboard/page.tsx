@@ -45,7 +45,7 @@ export default async function DashboardPage() {
           <div className="grid sm:grid-cols-2 gap-4 mb-4">
             <Link
               href="/curso"
-              className="rounded-2xl border border-white/10 p-7 bg-gradient-to-br from-amber-500/[0.06] to-transparent hover:border-amber-600/60 transition-colors"
+              className="press rounded-2xl border border-white/10 p-7 bg-gradient-to-br from-amber-500/[0.06] to-transparent hover:border-amber-600/60 transition duration-150 ease-out"
             >
               <p className="text-xs uppercase tracking-widest text-amber-400 font-semibold mb-3">
                 Curso
@@ -60,7 +60,7 @@ export default async function DashboardPage() {
 
             <Link
               href="/projetos"
-              className="rounded-2xl border border-white/10 p-7 bg-gradient-to-br from-[#D4FF00]/[0.06] to-transparent hover:border-[#D4FF00]/60 transition-colors"
+              className="press rounded-2xl border border-white/10 p-7 bg-gradient-to-br from-[#D4FF00]/[0.06] to-transparent hover:border-[#D4FF00]/60 transition duration-150 ease-out"
             >
               <p className="text-xs uppercase tracking-widest text-[#D4FF00] font-semibold mb-3">
                 Projetos
@@ -77,7 +77,7 @@ export default async function DashboardPage() {
           {isStaff && (
             <Link
               href="/admin"
-              className="block rounded-2xl border border-white/10 p-4 hover:border-purple-600/60 transition-colors text-center text-sm text-purple-300"
+              className="press block rounded-2xl border border-white/10 p-4 hover:border-purple-600/60 transition duration-150 ease-out text-center text-sm text-purple-300"
             >
               Ir para o Dashboard do Admin →
             </Link>

@@ -149,7 +149,7 @@ export function FasesInspector() {
             key={p.number}
             onClick={() => setActive(i)}
             aria-current={active === i ? "true" : undefined}
-            className={`w-full text-left flex items-center gap-4 px-5 min-h-[56px] py-3 border-b last:border-b-0 border-line transition-colors duration-100 ${
+            className={`w-full text-left flex items-center gap-4 px-5 min-h-[56px] py-3 border-b last:border-b-0 border-line transition duration-150 ease-out active:bg-panel/70 ${
               active === i ? "bg-panel border-l-2 border-l-[#D4FF00]" : "hover:bg-panel/50"
             }`}
           >

@@ -56,7 +56,7 @@ export default async function Home() {
   return (
     <main className="bg-[#050507] text-[#FAFAFA] overflow-x-hidden">
       {/* ============ A. NAVBAR ============ */}
-      <nav className="sticky top-0 z-50 bg-[#050507]/95 backdrop-blur-xl border-b border-line">
+      <nav className="chrome-edge sticky top-0 z-50 bg-[#050507]/80 backdrop-blur-xl backdrop-saturate-150">
         <div className="max-w-6xl mx-auto flex divide-x divide-line border-x border-line">
           <Link href="/" className="px-5 h-12 flex items-center gap-2 shrink-0">
             <span className="font-semibold text-sm">Pipeline.</span>
@@ -78,7 +78,7 @@ export default async function Home() {
           </div>
           <Link
             href={navHref}
-            className="flex items-center px-6 font-tech text-xs uppercase tracking-wider bg-[#D4FF00] text-[#050507] hover:bg-[#e2ff4d] transition-colors duration-100 shrink-0"
+            className="press flex items-center px-6 font-tech text-xs uppercase tracking-wider bg-[#D4FF00] text-[#050507] hover:bg-[#e2ff4d] transition duration-150 ease-out shrink-0"
           >
             {navLabel}
           </Link>
@@ -96,7 +96,7 @@ export default async function Home() {
               <p className="font-tech text-xs uppercase tracking-widest text-accent-secondary mb-6">
                 [00 // CURSO + FERRAMENTA DE PRODUÇÃO]
               </p>
-              <h1 className="text-[2.1rem] leading-[1.15] sm:text-5xl sm:leading-[1.15] font-semibold mb-6">
+              <h1 className="text-[2.1rem] leading-[1.15] sm:text-5xl sm:leading-[1.15] tracking-[-0.02em] font-semibold mb-6">
                 O pipeline que leva um roteiro até a tela,{" "}
                 <span className="font-display text-[1.15em] leading-none">
                   ensinado e aplicado
@@ -114,13 +114,13 @@ export default async function Home() {
             <div className="flex flex-wrap gap-3 mt-10">
               <Link
                 href={primaryHref}
-                className="flex items-center gap-2 font-tech text-xs uppercase tracking-wider px-6 py-3.5 bg-[#D4FF00] text-[#050507] hover:bg-[#e2ff4d] transition-colors duration-100"
+                className="press flex items-center gap-2 font-tech text-xs uppercase tracking-wider px-6 py-3.5 bg-[#D4FF00] text-[#050507] hover:bg-[#e2ff4d] transition duration-150 ease-out"
               >
                 {primaryLabel} <IconArrow />
               </Link>
               <a
                 href="#comunidade"
-                className="font-tech text-xs uppercase tracking-wider px-6 py-3.5 border border-line text-[#FAFAFA] hover:border-[#FAFAFA] transition-colors duration-100"
+                className="press font-tech text-xs uppercase tracking-wider px-6 py-3.5 border border-line text-[#FAFAFA] hover:border-[#FAFAFA] transition duration-150 ease-out"
               >
                 Conhecer a Comunidade &amp; Método
               </a>
@@ -185,7 +185,7 @@ export default async function Home() {
         {/* ============ C. MANIFESTO ============ */}
         <section id="metodo" className="border-b border-line scroll-mt-12">
           <div className="p-6 md:p-12 lg:p-16">
-            <p className="font-display text-2xl sm:text-3xl leading-snug max-w-3xl mb-10">
+            <p className="font-display text-2xl sm:text-3xl leading-snug tracking-[-0.01em] max-w-3xl mb-10">
               A maioria dos tutoriais de IA te dá prompts soltos. Aqui você
               aprende o pipeline inteiro — a mesma lógica de decupagem, raccord
               de figurino e direção de fotografia que uma produção de verdade
@@ -338,7 +338,7 @@ export default async function Home() {
 
             <Link
               href={communityHref}
-              className="inline-flex items-center gap-2 font-tech text-xs uppercase tracking-wider px-6 py-3.5 bg-[#D4FF00] text-[#050507] hover:bg-[#e2ff4d] transition-colors duration-100"
+              className="press inline-flex items-center gap-2 font-tech text-xs uppercase tracking-wider px-6 py-3.5 bg-[#D4FF00] text-[#050507] hover:bg-[#e2ff4d] transition duration-150 ease-out"
             >
               Entrar na comunidade e iniciar meu filme <IconArrow />
             </Link>
@@ -410,12 +410,12 @@ export default async function Home() {
           <Crosshair className="bottom-2 left-2 hidden lg:block" />
           <Crosshair className="bottom-2 right-2 hidden lg:block" />
           <div className="p-10 md:p-20 text-center">
-            <h2 className="font-display text-3xl sm:text-5xl mb-10">
+            <h2 className="font-display text-3xl sm:text-5xl tracking-[-0.02em] mb-10">
               Comece pela Fase 1, de graça.
             </h2>
             <Link
               href={primaryHref}
-              className="inline-flex items-center gap-2 font-tech text-xs uppercase tracking-wider px-8 py-4 bg-[#D4FF00] text-[#050507] hover:bg-[#e2ff4d] transition-colors duration-100"
+              className="press inline-flex items-center gap-2 font-tech text-xs uppercase tracking-wider px-8 py-4 bg-[#D4FF00] text-[#050507] hover:bg-[#e2ff4d] transition duration-150 ease-out"
             >
               {primaryLabel} <IconArrow />
             </Link>

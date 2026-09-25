@@ -28,7 +28,7 @@ export function LoginCard({ next, intent }: { next: string; intent?: string }) {
   }
 
   return (
-    <div className="glass relative z-10 w-full max-w-sm p-8 text-center">
+    <div className="glass glass-in relative z-10 w-full max-w-sm p-8 text-center">
       <p className="font-tech text-[10px] uppercase tracking-widest text-muted mb-4">
         [ACESSO // SYS v1.0]
       </p>
@@ -54,7 +54,7 @@ export function LoginCard({ next, intent }: { next: string; intent?: string }) {
       <button
         onClick={handleGoogleLogin}
         disabled={loading}
-        className="w-full flex items-center justify-center gap-3 border border-line bg-[#050507] px-4 py-3 font-tech text-xs uppercase tracking-wider text-[#FAFAFA] hover:border-[#D4FF00]/50 transition-colors duration-100 disabled:opacity-50"
+        className="press w-full flex items-center justify-center gap-3 border border-line bg-[#050507] px-4 py-3 font-tech text-xs uppercase tracking-wider text-[#FAFAFA] hover:border-[#D4FF00]/50 transition duration-150 ease-out disabled:opacity-50"
       >
         <svg viewBox="0 0 24 24" className="w-4 h-4" aria-hidden="true">
           <path

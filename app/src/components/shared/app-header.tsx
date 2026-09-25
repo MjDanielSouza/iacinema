@@ -18,7 +18,7 @@ export function AppHeader({
   authed: boolean;
 }) {
   return (
-    <header className="sticky top-0 z-40 bg-[#050507]/95 backdrop-blur-xl border-b border-line">
+    <header className="chrome-edge sticky top-0 z-40 bg-[#050507]/80 backdrop-blur-xl backdrop-saturate-150">
       <div className="max-w-5xl mx-auto flex divide-x divide-line border-x border-line">
         <Link href="/" className="px-5 h-12 flex items-center gap-2 shrink-0">
           <span className="font-semibold text-sm">Pipeline.</span>
@@ -71,7 +71,7 @@ export function AppHeader({
         ) : (
           <Link
             href="/login"
-            className="flex items-center px-6 font-tech text-xs uppercase tracking-wider bg-[#D4FF00] text-[#050507] hover:bg-[#e2ff4d] transition-colors duration-100 shrink-0"
+            className="press flex items-center px-6 font-tech text-xs uppercase tracking-wider bg-[#D4FF00] text-[#050507] hover:bg-[#e2ff4d] transition duration-150 ease-out shrink-0"
           >
             Entrar
           </Link>
