@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from "react";
 import { PHASES } from "@/lib/phases";
-import { AngularDivider } from "@/components/ui/angular-divider";
 import { LabPreview } from "./lab-preview";
 
 export function Phases() {
@@ -30,7 +29,6 @@ export function Phases() {
 
   return (
     <section id="fases" className="scroll-mt-20">
-      <AngularDivider />
       <div
         className="max-w-[1240px] mx-auto px-[clamp(20px,4vw,48px)]"
         style={{ paddingBlock: "var(--section-spacing)" }}
@@ -100,7 +98,6 @@ export function Phases() {
           </div>
         </div>
       </div>
-      <AngularDivider />
     </section>
   );
 }
