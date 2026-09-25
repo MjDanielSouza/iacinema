@@ -57,127 +57,87 @@ export default async function Home() {
     <main className="bg-[#050507] text-[#FAFAFA] overflow-x-hidden">
       {/* ============ A. NAVBAR ============ */}
       <nav className="chrome-edge sticky top-0 z-50 bg-[#050507]/80 backdrop-blur-xl backdrop-saturate-150">
-        <div className="max-w-6xl mx-auto flex divide-x divide-line border-x border-line">
-          <Link href="/" className="px-5 h-12 flex items-center gap-2 shrink-0">
-            <span className="font-semibold text-sm">Pipeline.</span>
-            <span className="font-tech text-[10px] text-muted">[SYS v1.0]</span>
+        <div className="max-w-6xl mx-auto flex items-center gap-6 px-5 sm:px-8 h-16">
+          <Link href="/" className="flex items-center gap-2 shrink-0">
+            <span className="font-semibold text-base">Pipeline.</span>
           </Link>
-          <div className="hidden md:flex items-center px-5 font-tech text-[10px] uppercase tracking-widest text-muted flex-1">
-            MODO: CURSO + FERRAMENTA DE PRODUÇÃO
-          </div>
-          <div className="hidden sm:flex items-center gap-5 px-5 font-tech text-[10px] uppercase tracking-widest text-muted">
-            <a href="#metodo" className="hover:text-[#FAFAFA] transition-colors duration-100">
-              #metodo
+          <div className="hidden sm:flex items-center gap-6 text-sm text-muted flex-1">
+            <a href="#metodo" className="hover:text-[#FAFAFA] transition-colors duration-150">
+              Método
             </a>
-            <a href="#fases" className="hover:text-[#FAFAFA] transition-colors duration-100">
-              #fases
+            <a href="#fases" className="hover:text-[#FAFAFA] transition-colors duration-150">
+              As 5 Fases
             </a>
-            <a href="#comunidade" className="hover:text-[#FAFAFA] transition-colors duration-100">
-              #comunidade
+            <a href="#comunidade" className="hover:text-[#FAFAFA] transition-colors duration-150">
+              Comunidade
             </a>
           </div>
+          <div className="flex-1 sm:hidden" />
           <Link
             href={navHref}
-            className="press flex items-center px-6 font-tech text-xs uppercase tracking-wider bg-[#D4FF00] text-[#050507] hover:bg-[#e2ff4d] transition duration-150 ease-out shrink-0"
+            className="press flex items-center px-5 py-2 rounded-full text-sm font-medium bg-[#D4FF00] text-[#050507] hover:bg-[#e2ff4d] transition duration-150 ease-out shrink-0"
           >
             {navLabel}
           </Link>
         </div>
       </nav>
 
-      <div className="max-w-6xl mx-auto border-x border-line">
+      <div className="max-w-6xl mx-auto">
         {/* ============ B. HERO ============ */}
-        <section className="relative grid grid-cols-1 lg:grid-cols-12 border-b border-line">
-          <Crosshair className="top-2 left-2 hidden lg:block" />
-          <Crosshair className="top-2 right-2 hidden lg:block" />
-
-          <div className="lg:col-span-7 p-6 md:p-12 lg:p-16 flex flex-col justify-between border-b lg:border-b-0 lg:border-r border-line">
+        <section className="relative">
+          <div className="grid grid-cols-1 lg:grid-cols-2 items-center gap-10 md:gap-16 px-6 md:px-12 lg:px-16 py-12 md:py-20">
             <div>
-              <p className="font-tech text-xs uppercase tracking-widest text-accent-secondary mb-6">
-                [00 // CURSO + FERRAMENTA DE PRODUÇÃO]
-              </p>
-              <h1 className="text-[2.1rem] leading-[1.15] sm:text-5xl sm:leading-[1.15] tracking-[-0.02em] font-semibold mb-6">
+              <span className="inline-block text-xs font-medium tracking-wide text-accent-secondary bg-accent-secondary/10 rounded-full px-3 py-1 mb-6">
+                Curso + Ferramenta de Produção com IA
+              </span>
+              <h1 className="text-[2.3rem] leading-[1.1] sm:text-5xl sm:leading-[1.08] tracking-[-0.02em] font-semibold mb-6">
                 O pipeline que leva um roteiro até a tela,{" "}
-                <span className="font-display text-[1.15em] leading-none">
+                <span className="font-display text-[1.1em] leading-none">
                   ensinado e aplicado
                 </span>{" "}
                 no mesmo lugar.
               </h1>
-              <p className="text-sm sm:text-base text-muted max-w-lg leading-relaxed">
+              <p className="text-base sm:text-lg text-muted max-w-lg leading-relaxed mb-10">
                 Cinco fases — roteiro, pesquisa, assets, direção de cena e
                 pós-produção — com laboratórios práticos em cada uma, e um
                 espaço pra aplicar tudo isso em um projeto de verdade, com sua
                 equipe.
               </p>
+
+              <div className="flex flex-wrap gap-3">
+                <Link
+                  href={primaryHref}
+                  className="press flex items-center gap-2 rounded-full text-sm font-medium px-6 py-3.5 bg-[#D4FF00] text-[#050507] hover:bg-[#e2ff4d] transition duration-150 ease-out"
+                >
+                  {primaryLabel} <IconArrow />
+                </Link>
+                <a
+                  href="#comunidade"
+                  className="press rounded-full text-sm font-medium px-6 py-3.5 border border-line text-[#FAFAFA] hover:border-[#FAFAFA] transition duration-150 ease-out"
+                >
+                  Conhecer a Comunidade &amp; Método
+                </a>
+              </div>
             </div>
 
-            <div className="flex flex-wrap gap-3 mt-10">
-              <Link
-                href={primaryHref}
-                className="press flex items-center gap-2 font-tech text-xs uppercase tracking-wider px-6 py-3.5 bg-[#D4FF00] text-[#050507] hover:bg-[#e2ff4d] transition duration-150 ease-out"
-              >
-                {primaryLabel} <IconArrow />
-              </Link>
-              <a
-                href="#comunidade"
-                className="press font-tech text-xs uppercase tracking-wider px-6 py-3.5 border border-line text-[#FAFAFA] hover:border-[#FAFAFA] transition duration-150 ease-out"
-              >
-                Conhecer a Comunidade &amp; Método
-              </a>
-            </div>
-          </div>
-
-          {/* Monitor de Decupagem — 3 camadas */}
-          <div className="relative lg:col-span-5 bg-[#0D0E12] flex flex-col overflow-hidden">
-            <div className="p-5 border-b border-line">
-              <p className="font-tech text-[10px] uppercase tracking-widest text-muted mb-3">
-                Camada 01 — Roteiro Decupado
-              </p>
-              <p className="font-tech text-xs leading-relaxed text-[#FAFAFA]/80">
-                INT. GALPÃO ABANDONADO — NOITE
-                <br />
-                <span className="text-accent-secondary">[PERSONAGEM: RAFAEL]</span> avança
-                segurando uma <span className="text-[#D4FF00]">[PROP: LANTERNA]</span>.
-              </p>
-            </div>
-
-            <div className="atmosphere relative p-5 border-b border-line">
-              <p className="font-tech text-[10px] uppercase tracking-widest text-muted mb-3">
-                Camada 02 — Monitor de Frame
-              </p>
-              <div className="relative w-full aspect-[2.39/1] bg-[#050507] border border-line overflow-hidden">
+            {/* Foto de destaque do hero */}
+            <div className="atmosphere relative">
+              <div className="relative w-full aspect-[4/3] rounded-3xl overflow-hidden shadow-2xl shadow-black/50 border border-line">
                 <Image
                   src={HERO_IMAGE}
                   alt="Frame cinematográfico gerado por IA: personagem em ambiente noturno, estilo anamórfico 35mm"
                   fill
                   priority
-                  sizes="(max-width: 1024px) 100vw, 480px"
+                  sizes="(max-width: 1024px) 100vw, 560px"
                   className="object-cover"
                 />
               </div>
-              <div className="flex items-center justify-between mt-2">
-                <div className="flex gap-1">
-                  {["#050507", "#3a2a1a", "#8e6a3a", "#c9a46a", "#e8d8b8"].map((c) => (
-                    <div key={c} className="w-3 h-3 border border-line" style={{ background: c }} />
-                  ))}
-                </div>
-                <p className="font-tech text-[10px] text-muted">TC 01:04:22:10</p>
+              <div className="glass absolute -bottom-5 left-5 right-5 sm:left-6 sm:right-auto sm:w-auto rounded-2xl px-4 py-3 flex items-center gap-3">
+                <span className="w-2 h-2 rounded-full bg-[#D4FF00] shrink-0" />
+                <p className="text-xs text-[#FAFAFA]/90">
+                  Frame gerado a partir de roteiro decupado + character sheet
+                </p>
               </div>
-              <p className="font-tech text-[10px] text-muted mt-1">
-                LENTE: 35MM ANAMÓRFICA &middot; RACCORD: TRAVADO
-              </p>
-            </div>
-
-            <div className="p-5">
-              <p className="font-tech text-[10px] uppercase tracking-widest text-muted mb-3">
-                Camada 03 — Prompt de Cena Enxuto
-              </p>
-              <p className="font-tech text-xs leading-relaxed text-[#FAFAFA]/80">
-                <span className="text-accent-secondary">BLOCKING:</span> avança
-                lentamente, ergue a lanterna.
-                <br />
-                <span className="text-accent-secondary">CÂMERA:</span> dolly in, 35mm.
-              </p>
             </div>
           </div>
         </section>
