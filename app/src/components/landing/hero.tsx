@@ -136,20 +136,6 @@ export function Hero({
               Frame gerado a partir de roteiro decupado + character sheet
             </p>
           </div>
-
-          <div className="glass absolute top-6 right-6 lg:top-8 lg:right-8 rounded-md p-5 w-56 hidden sm:block z-10 shadow-glow-violet">
-            <div className="divide-y divide-border-subtle">
-              <div className="pb-3">
-                <span className="font-display font-bold text-2xl text-title">5 fases</span>
-              </div>
-              <div className="py-3 text-sm text-subtitle">Fase 1 livre, sem cadastro</div>
-              <div className="pt-3">
-                <a href="#fases" className="link-underline text-lime text-sm font-medium">
-                  Ver as fases
-                </a>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </section>
