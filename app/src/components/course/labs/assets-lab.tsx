@@ -26,19 +26,19 @@ export function AssetsLab() {
               Combinação de Raccord — {scene.name}
             </h4>
             <div className="space-y-2">
-              <div className="bg-[#1b1b1f] border border-[#2a2a2f] rounded-lg p-3">
+              <div className="bg-[#14151B] border border-white/10 rounded-lg p-3">
                 <span className="text-[10px] uppercase tracking-wider text-amber-400 block mb-1">
                   Referência Base do Ator
                 </span>
                 <span className="text-sm text-zinc-300">{scene.actorBase}</span>
               </div>
-              <div className="bg-[#1b1b1f] border border-[#2a2a2f] rounded-lg p-3">
-                <span className="text-[10px] uppercase tracking-wider text-cyan-400 block mb-1">
+              <div className="bg-[#14151B] border border-white/10 rounded-lg p-3">
+                <span className="text-[10px] uppercase tracking-wider text-[#D4FF00] block mb-1">
                   Figurino da Cena
                 </span>
                 <span className="text-sm text-zinc-300">{scene.figurino}</span>
               </div>
-              <div className="bg-[#1b1b1f] border border-[#2a2a2f] rounded-lg p-3">
+              <div className="bg-[#14151B] border border-white/10 rounded-lg p-3">
                 <span className="text-[10px] uppercase tracking-wider text-purple-300 block mb-1">
                   Acessório no Corpo
                 </span>
@@ -63,8 +63,8 @@ export function AssetsLab() {
             <h4 className="text-xs uppercase tracking-wider text-zinc-500 font-semibold mb-3">
               Set / Clean Plate — {scene.name}
             </h4>
-            <div className="bg-[#1b1b1f] border border-[#2a2a2f] rounded-lg p-3">
-              <span className="text-[10px] uppercase tracking-wider text-cyan-400 block mb-1">
+            <div className="bg-[#14151B] border border-white/10 rounded-lg p-3">
+              <span className="text-[10px] uppercase tracking-wider text-[#D4FF00] block mb-1">
                 {scene.setName}
               </span>
               <span className="text-sm text-zinc-300">{scene.setDesc}</span>
@@ -83,7 +83,7 @@ export function AssetsLab() {
           <h4 className="text-xs uppercase tracking-wider text-zinc-500 font-semibold mb-3">
             Artefato Isolado — {scene.name}
           </h4>
-          <div className="bg-[#1b1b1f] border border-[#2a2a2f] rounded-lg p-3">
+          <div className="bg-[#14151B] border border-white/10 rounded-lg p-3">
             <span className="text-[10px] uppercase tracking-wider text-purple-300 block mb-1">
               {scene.prop}
             </span>
@@ -115,7 +115,7 @@ export function AssetsLab() {
             className={`px-3 py-2 rounded-lg border text-xs font-medium transition-colors ${
               sceneId === s.id
                 ? "border-amber-500 text-amber-400 bg-amber-500/10"
-                : "border-[#2a2a2f] text-zinc-400 hover:border-zinc-500"
+                : "border-white/10 text-zinc-400 hover:border-zinc-500"
             }`}
           >
             Cena {String(s.id).padStart(2, "0")}
@@ -123,14 +123,14 @@ export function AssetsLab() {
         ))}
       </div>
 
-      <div className="flex gap-2 mb-4 border-b border-[#2a2a2f]">
+      <div className="flex gap-2 mb-4 border-b border-white/10">
         {TABS.map((t) => (
           <button
             key={t.id}
             onClick={() => setTab(t.id)}
             className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
               tab === t.id
-                ? "border-cyan-500 text-cyan-400"
+                ? "border-[#D4FF00] text-[#D4FF00]"
                 : "border-transparent text-zinc-500 hover:text-zinc-300"
             }`}
           >
@@ -140,7 +140,7 @@ export function AssetsLab() {
       </div>
 
       <div className="grid lg:grid-cols-2 gap-4">
-        <div className="bg-[#141417] border border-[#2a2a2f] rounded-xl p-4">
+        <div className="bg-[#0D0E12] border border-white/10 rounded-xl p-4">
           {chips}
         </div>
         <PromptBox text={prompt} label="Prompt de Asset Gerado" />

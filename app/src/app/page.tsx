@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { PHASES } from "@/lib/phases";
@@ -14,19 +15,48 @@ function Crosshair({ className = "" }: { className?: string }) {
   );
 }
 
+function IconArrow({ className = "w-3.5 h-3.5" }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 16 16" fill="none" className={className} aria-hidden="true">
+      <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+function IconCheck({ className = "w-3.5 h-3.5" }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 16 16" fill="none" className={className} aria-hidden="true">
+      <path d="M3 8.5l3.2 3.2L13 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+function IconX({ className = "w-3.5 h-3.5" }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 16 16" fill="none" className={className} aria-hidden="true">
+      <path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
 export default async function Home() {
   const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const primaryHref = user ? "/dashboard" : "/login";
-  const primaryLabel = user ? "Ir para o Dashboard" : "Começar agora";
+  const navHref = user ? "/dashboard" : "/login";
+  const navLabel = user ? "Dashboard" : "Entrar";
+
+  const primaryHref = user ? "/dashboard" : "/curso/1";
+  const primaryLabel = user ? "Ir para o Dashboard" : "Começar Fase 1 Agora — Grátis";
+
+  const communityHref = user ? "/projetos" : "/login?next=/projetos";
 
   return (
-    <main className="bg-[#0c0c0b] text-[#F2EFE9] overflow-x-hidden">
+    <main className="bg-[#050507] text-[#FAFAFA] overflow-x-hidden">
       {/* ============ A. NAVBAR ============ */}
-      <nav className="sticky top-0 z-50 bg-[#0c0c0b]/95 backdrop-blur-sm border-b border-line">
+      <nav className="sticky top-0 z-50 bg-[#050507]/95 backdrop-blur-xl border-b border-line">
         <div className="max-w-6xl mx-auto flex divide-x divide-line border-x border-line">
           <Link href="/" className="px-5 h-12 flex items-center gap-2 shrink-0">
             <span className="font-semibold text-sm">Pipeline.</span>
@@ -36,21 +66,21 @@ export default async function Home() {
             MODO: CURSO + FERRAMENTA DE PRODUÇÃO
           </div>
           <div className="hidden sm:flex items-center gap-5 px-5 font-tech text-[10px] uppercase tracking-widest text-muted">
-            <a href="#metodo" className="hover:text-[#F2EFE9] transition-colors duration-100">
+            <a href="#metodo" className="hover:text-[#FAFAFA] transition-colors duration-100">
               #metodo
             </a>
-            <a href="#fases" className="hover:text-[#F2EFE9] transition-colors duration-100">
+            <a href="#fases" className="hover:text-[#FAFAFA] transition-colors duration-100">
               #fases
             </a>
-            <a href="#laboratorio" className="hover:text-[#F2EFE9] transition-colors duration-100">
-              #laboratorio
+            <a href="#comunidade" className="hover:text-[#FAFAFA] transition-colors duration-100">
+              #comunidade
             </a>
           </div>
           <Link
-            href={primaryHref}
-            className="flex items-center px-6 font-tech text-xs uppercase tracking-wider bg-[#F2EFE9] text-[#0c0c0b] hover:bg-amber-400 transition-colors duration-100 shrink-0"
+            href={navHref}
+            className="flex items-center px-6 font-tech text-xs uppercase tracking-wider bg-[#D4FF00] text-[#050507] hover:bg-[#e2ff4d] transition-colors duration-100 shrink-0"
           >
-            {user ? "Dashboard" : "Entrar"}
+            {navLabel}
           </Link>
         </div>
       </nav>
@@ -63,7 +93,7 @@ export default async function Home() {
 
           <div className="lg:col-span-7 p-6 md:p-12 lg:p-16 flex flex-col justify-between border-b lg:border-b-0 lg:border-r border-line">
             <div>
-              <p className="font-tech text-xs uppercase tracking-widest text-amber-400 mb-6">
+              <p className="font-tech text-xs uppercase tracking-widest text-accent-secondary mb-6">
                 [00 // CURSO + FERRAMENTA DE PRODUÇÃO]
               </p>
               <h1 className="text-[2.1rem] leading-[1.15] sm:text-5xl sm:leading-[1.15] font-semibold mb-6">
@@ -84,44 +114,50 @@ export default async function Home() {
             <div className="flex flex-wrap gap-3 mt-10">
               <Link
                 href={primaryHref}
-                className="font-tech text-xs uppercase tracking-wider px-6 py-3.5 bg-amber-500 text-[#0c0c0b] hover:bg-amber-400 transition-colors duration-100"
+                className="flex items-center gap-2 font-tech text-xs uppercase tracking-wider px-6 py-3.5 bg-[#D4FF00] text-[#050507] hover:bg-[#e2ff4d] transition-colors duration-100"
               >
-                {primaryLabel} [-&gt;]
+                {primaryLabel} <IconArrow />
               </Link>
               <a
-                href="#fases"
-                className="font-tech text-xs uppercase tracking-wider px-6 py-3.5 border border-line text-[#F2EFE9] hover:border-[#F2EFE9] transition-colors duration-100"
+                href="#comunidade"
+                className="font-tech text-xs uppercase tracking-wider px-6 py-3.5 border border-line text-[#FAFAFA] hover:border-[#FAFAFA] transition-colors duration-100"
               >
-                Ver as 5 fases [01-05]
+                Conhecer a Comunidade &amp; Método
               </a>
             </div>
           </div>
 
           {/* Monitor de Decupagem — 3 camadas */}
-          <div className="lg:col-span-5 bg-[#141413] flex flex-col">
+          <div className="relative lg:col-span-5 bg-[#0D0E12] flex flex-col overflow-hidden">
             <div className="p-5 border-b border-line">
               <p className="font-tech text-[10px] uppercase tracking-widest text-muted mb-3">
                 Camada 01 — Roteiro Decupado
               </p>
-              <p className="font-tech text-xs leading-relaxed text-[#F2EFE9]/80">
+              <p className="font-tech text-xs leading-relaxed text-[#FAFAFA]/80">
                 INT. GALPÃO ABANDONADO — NOITE
                 <br />
-                <span className="text-amber-400">[PERSONAGEM: RAFAEL]</span> avança
-                segurando uma <span className="text-sky-400">[PROP: LANTERNA]</span>.
+                <span className="text-accent-secondary">[PERSONAGEM: RAFAEL]</span> avança
+                segurando uma <span className="text-[#D4FF00]">[PROP: LANTERNA]</span>.
               </p>
             </div>
 
-            <div className="p-5 border-b border-line">
+            <div className="atmosphere relative p-5 border-b border-line">
               <p className="font-tech text-[10px] uppercase tracking-widest text-muted mb-3">
                 Camada 02 — Monitor de Frame
               </p>
-              <div className="relative w-full aspect-[2.39/1] bg-[#0c0c0b] border border-line overflow-hidden">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={HERO_IMAGE} alt="" className="w-full h-full object-cover" />
+              <div className="relative w-full aspect-[2.39/1] bg-[#050507] border border-line overflow-hidden">
+                <Image
+                  src={HERO_IMAGE}
+                  alt="Frame cinematográfico gerado por IA: personagem em ambiente noturno, estilo anamórfico 35mm"
+                  fill
+                  priority
+                  sizes="(max-width: 1024px) 100vw, 480px"
+                  className="object-cover"
+                />
               </div>
               <div className="flex items-center justify-between mt-2">
                 <div className="flex gap-1">
-                  {["#0c0c0b", "#3a2a1a", "#8e6a3a", "#c9a46a", "#e8d8b8"].map((c) => (
+                  {["#050507", "#3a2a1a", "#8e6a3a", "#c9a46a", "#e8d8b8"].map((c) => (
                     <div key={c} className="w-3 h-3 border border-line" style={{ background: c }} />
                   ))}
                 </div>
@@ -136,11 +172,11 @@ export default async function Home() {
               <p className="font-tech text-[10px] uppercase tracking-widest text-muted mb-3">
                 Camada 03 — Prompt de Cena Enxuto
               </p>
-              <p className="font-tech text-xs leading-relaxed text-[#F2EFE9]/80">
-                <span className="text-amber-400">BLOCKING:</span> avança
+              <p className="font-tech text-xs leading-relaxed text-[#FAFAFA]/80">
+                <span className="text-accent-secondary">BLOCKING:</span> avança
                 lentamente, ergue a lanterna.
                 <br />
-                <span className="text-amber-400">CÂMERA:</span> dolly in, 35mm.
+                <span className="text-accent-secondary">CÂMERA:</span> dolly in, 35mm.
               </p>
             </div>
           </div>
@@ -158,8 +194,8 @@ export default async function Home() {
 
             <div className="grid sm:grid-cols-2 border border-line">
               <div className="p-6 border-b sm:border-b-0 sm:border-r border-line">
-                <p className="font-tech text-xs uppercase tracking-widest text-rec mb-4">
-                  [X] Fluxo comum (prompts soltos)
+                <p className="flex items-center gap-2 font-tech text-xs uppercase tracking-widest text-rec mb-4">
+                  <IconX className="w-3 h-3" /> Fluxo comum (prompts soltos)
                 </p>
                 <ul className="space-y-2 text-sm text-muted">
                   <li>Personagem muda de rosto e roupa a cada take</li>
@@ -168,10 +204,10 @@ export default async function Home() {
                 </ul>
               </div>
               <div className="p-6">
-                <p className="font-tech text-xs uppercase tracking-widest text-amber-400 mb-4">
-                  [✓] Fluxo pipeline (estúdio)
+                <p className="flex items-center gap-2 font-tech text-xs uppercase tracking-widest text-[#D4FF00] mb-4">
+                  <IconCheck className="w-3 h-3" /> Fluxo pipeline (estúdio)
                 </p>
-                <ul className="space-y-2 text-sm text-[#F2EFE9]/80">
+                <ul className="space-y-2 text-sm text-[#FAFAFA]/80">
                   <li>Decupagem prévia do roteiro inteiro</li>
                   <li>Character Sheet travado por cena</li>
                   <li>Direção de câmera separada do asset visual</li>
@@ -184,7 +220,7 @@ export default async function Home() {
         {/* ============ D. AS 5 FASES ============ */}
         <section id="fases" className="border-b border-line scroll-mt-12">
           <div className="p-6 md:p-12 lg:p-16">
-            <p className="font-tech text-xs uppercase tracking-widest text-amber-400 mb-3">
+            <p className="font-tech text-xs uppercase tracking-widest text-accent-secondary mb-3">
               O pipeline
             </p>
             <h2 className="text-2xl sm:text-3xl font-semibold mb-10">
@@ -201,7 +237,7 @@ export default async function Home() {
         <section className="border-b border-line">
           <div className="grid md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-line">
             <div className="p-6 md:p-10">
-              <p className="font-tech text-xs uppercase tracking-widest text-amber-400 mb-4">
+              <p className="font-tech text-xs uppercase tracking-widest text-accent-secondary mb-4">
                 Curso
               </p>
               <h3 className="text-xl font-semibold mb-3">
@@ -216,17 +252,17 @@ export default async function Home() {
               <div className="grid grid-cols-2 border border-line font-tech text-[10px] uppercase tracking-wider">
                 <div className="p-3 border-r border-line">
                   <p className="text-muted mb-1">[AULA CURTA]</p>
-                  <p className="text-[#F2EFE9]/70">teoria · 5min</p>
+                  <p className="text-[#FAFAFA]/70">teoria · 5min</p>
                 </div>
                 <div className="p-3">
-                  <p className="text-amber-400 mb-1">[LABORATÓRIO PRÁTICO]</p>
-                  <p className="text-[#F2EFE9]/70">interativo · sem limite</p>
+                  <p className="text-accent-secondary mb-1">[LABORATÓRIO PRÁTICO]</p>
+                  <p className="text-[#FAFAFA]/70">interativo · sem limite</p>
                 </div>
               </div>
             </div>
 
             <div className="p-6 md:p-10">
-              <p className="font-tech text-xs uppercase tracking-widest text-amber-400 mb-4">
+              <p className="font-tech text-xs uppercase tracking-widest text-accent-secondary mb-4">
                 Projetos
               </p>
               <h3 className="text-xl font-semibold mb-3">
@@ -241,20 +277,71 @@ export default async function Home() {
                 <div className="px-3 py-2 border-b border-line text-muted uppercase tracking-wider">
                   /PROJETO_FILME_B
                 </div>
-                <div className="px-3 py-2 flex items-center justify-between text-[#F2EFE9]/70">
+                <div className="px-3 py-2 flex items-center justify-between text-[#FAFAFA]/70">
                   <span>01_Roteiro</span>
-                  <span className="text-amber-400">[DIRETOR]</span>
+                  <span className="text-accent-secondary">[DIRETOR]</span>
                 </div>
-                <div className="px-3 py-2 flex items-center justify-between text-[#F2EFE9]/70 border-t border-line">
+                <div className="px-3 py-2 flex items-center justify-between text-[#FAFAFA]/70 border-t border-line">
                   <span>02_Referências</span>
-                  <span className="text-sky-400">[DIR. ARTE]</span>
+                  <span className="text-[#D4FF00]">[DIR. ARTE]</span>
                 </div>
-                <div className="px-3 py-2 flex items-center justify-between text-[#F2EFE9]/70 border-t border-line">
+                <div className="px-3 py-2 flex items-center justify-between text-[#FAFAFA]/70 border-t border-line">
                   <span>05_Pós-Produção</span>
                   <span className="text-emerald-400">[EDITOR]</span>
                 </div>
               </div>
             </div>
+          </div>
+        </section>
+
+        {/* ============ E.5 COMUNIDADE ============ */}
+        <section id="comunidade" className="border-b border-line scroll-mt-12">
+          <div className="p-6 md:p-12 lg:p-16">
+            <p className="font-tech text-xs uppercase tracking-widest text-[#D4FF00] mb-3">
+              Comunidade Pipeline
+            </p>
+            <h2 className="text-2xl sm:text-3xl font-semibold mb-4 max-w-2xl">
+              Você não entra num curso. Entra num ecossistema de cineastas IA.
+            </h2>
+            <p className="text-sm sm:text-base text-muted max-w-2xl leading-relaxed mb-10">
+              Cada projeto é um set de verdade: convide colaboradores, divida
+              papéis, e produza junto — com feedback técnico de gente que fala
+              a mesma língua de raccord, prompt e direção de cena.
+            </p>
+
+            <div className="grid sm:grid-cols-3 border border-line mb-10">
+              <div className="p-6 border-b sm:border-b-0 sm:border-r border-line">
+                <p className="font-tech text-xs text-[#D4FF00] mb-3">[DIRETOR] + [DIR. ARTE] + [EDITOR]</p>
+                <p className="text-sm font-semibold text-[#FAFAFA] mb-2">Produção em equipe</p>
+                <p className="text-sm text-muted leading-relaxed">
+                  Vários papéis, um projeto só — cada colaborador trabalha na
+                  fase que é dele, com o mesmo roteiro e os mesmos assets.
+                </p>
+              </div>
+              <div className="p-6 border-b sm:border-b-0 sm:border-r border-line">
+                <p className="font-tech text-xs text-[#D4FF00] mb-3">[REF: CHAR_SHEET_02.PNG]</p>
+                <p className="text-sm font-semibold text-[#FAFAFA] mb-2">Consistência compartilhada</p>
+                <p className="text-sm text-muted leading-relaxed">
+                  Character sheets e referências de arte ficam salvos no
+                  projeto — raccord travado entre todo mundo que colabora.
+                </p>
+              </div>
+              <div className="p-6">
+                <p className="font-tech text-xs text-[#D4FF00] mb-3">[DESAFIO // CURTA-METRAGEM]</p>
+                <p className="text-sm font-semibold text-[#FAFAFA] mb-2">Desafios e feedback técnico</p>
+                <p className="text-sm text-muted leading-relaxed">
+                  Desafios periódicos de curtas-metragens e análise de
+                  raccord/prompt entre membros da comunidade.
+                </p>
+              </div>
+            </div>
+
+            <Link
+              href={communityHref}
+              className="inline-flex items-center gap-2 font-tech text-xs uppercase tracking-wider px-6 py-3.5 bg-[#D4FF00] text-[#050507] hover:bg-[#e2ff4d] transition-colors duration-100"
+            >
+              Entrar na comunidade e iniciar meu filme <IconArrow />
+            </Link>
           </div>
         </section>
 
@@ -279,7 +366,7 @@ export default async function Home() {
               },
             ].map((item) => (
               <div key={item.n} className="p-6 md:p-10">
-                <p className="font-tech text-xs text-amber-400 mb-4">{item.n}/03</p>
+                <p className="font-tech text-xs text-accent-secondary mb-4">{item.n}/03</p>
                 <p className="font-display text-lg mb-3">{item.title}</p>
                 <p className="text-sm text-muted leading-relaxed">{item.body}</p>
               </div>
@@ -292,8 +379,8 @@ export default async function Home() {
             </p>
             <div className="grid sm:grid-cols-2 border border-line">
               <div className="p-6 border-b sm:border-b-0 sm:border-r border-line">
-                <p className="font-tech text-[10px] uppercase tracking-widest text-rec mb-4">
-                  Prompt amador (redundante)
+                <p className="flex items-center gap-2 font-tech text-[10px] uppercase tracking-widest text-rec mb-4">
+                  <IconX className="w-3 h-3" /> Prompt amador (redundante)
                 </p>
                 <p className="font-tech text-xs leading-relaxed line-through text-muted">
                   mulher jovem, cabelo curto preto, jaqueta de couro vermelha,
@@ -301,10 +388,10 @@ export default async function Home() {
                 </p>
               </div>
               <div className="p-6">
-                <p className="font-tech text-[10px] uppercase tracking-widest text-amber-400 mb-4">
-                  Padrão pipeline
+                <p className="flex items-center gap-2 font-tech text-[10px] uppercase tracking-widest text-[#D4FF00] mb-4">
+                  <IconCheck className="w-3 h-3" /> Padrão pipeline
                 </p>
-                <p className="font-tech text-xs leading-relaxed text-[#F2EFE9]/80">
+                <p className="font-tech text-xs leading-relaxed text-[#FAFAFA]/80">
                   [REF: CHAR_SHEET_02.PNG]
                   <br />
                   BLOCKING: caminha até o balcão
@@ -328,27 +415,43 @@ export default async function Home() {
             </h2>
             <Link
               href={primaryHref}
-              className="inline-block font-tech text-xs uppercase tracking-wider px-8 py-4 bg-amber-500 text-[#0c0c0b] hover:bg-amber-400 transition-colors duration-100"
+              className="inline-flex items-center gap-2 font-tech text-xs uppercase tracking-wider px-8 py-4 bg-[#D4FF00] text-[#050507] hover:bg-[#e2ff4d] transition-colors duration-100"
             >
-              {primaryLabel} [-&gt;]
+              {primaryLabel} <IconArrow />
             </Link>
           </div>
         </section>
 
-        <footer className="p-6 md:px-12">
-          <div className="grid sm:grid-cols-3 gap-4 font-tech text-[10px] uppercase tracking-widest text-muted">
-            <p>Pipeline de Produção Cinematográfica com IA</p>
-            <p className="sm:text-center">
-              {PHASES.map((p) => `0${p.number}`).join(" / ")} — Roteiro a Pós-Produção
-            </p>
-            <div className="sm:text-right space-x-4">
-              <a href="#fases" className="hover:text-[#F2EFE9] transition-colors duration-100">
-                fases
-              </a>
-              <Link href="/login" className="hover:text-[#F2EFE9] transition-colors duration-100">
-                entrar
+        <footer className="p-6 md:px-12 py-10">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 font-tech text-[10px] uppercase tracking-widest text-muted mb-8">
+            <div>
+              <p className="text-[#FAFAFA] mb-3">Pipeline.</p>
+              <p className="normal-case tracking-normal leading-relaxed">
+                Curso + ferramenta de produção cinematográfica com IA.
+              </p>
+            </div>
+            <div className="space-y-2">
+              <p className="text-[#FAFAFA]">Navegar</p>
+              <Link href="/" className="block hover:text-[#FAFAFA] transition-colors duration-100">Início</Link>
+              <a href="#metodo" className="block hover:text-[#FAFAFA] transition-colors duration-100">O Método</a>
+              <a href="#fases" className="block hover:text-[#FAFAFA] transition-colors duration-100">As 5 Fases</a>
+            </div>
+            <div className="space-y-2">
+              <p className="text-[#FAFAFA]">Começar</p>
+              <Link href="/curso/1" className="block hover:text-[#FAFAFA] transition-colors duration-100">
+                Laboratório Fase 1
+              </Link>
+              <a href="#comunidade" className="block hover:text-[#FAFAFA] transition-colors duration-100">Comunidade</a>
+            </div>
+            <div className="space-y-2">
+              <p className="text-[#FAFAFA]">Conta</p>
+              <Link href={navHref} className="block hover:text-[#FAFAFA] transition-colors duration-100">
+                {user ? "Dashboard" : "Entrar / Criar Conta"}
               </Link>
             </div>
+          </div>
+          <div className="pt-6 border-t border-line font-tech text-[10px] uppercase tracking-widest text-muted">
+            {PHASES.map((p) => `0${p.number}`).join(" / ")} — Roteiro a Pós-Produção
           </div>
         </footer>
       </div>

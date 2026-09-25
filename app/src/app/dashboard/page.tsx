@@ -2,6 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { AppHeader } from "@/components/shared/app-header";
+import { GuestImportBanner } from "@/components/course/guest-import-banner";
 
 export default async function DashboardPage() {
   const supabase = await createClient();
@@ -30,14 +31,16 @@ export default async function DashboardPage() {
   return (
     <>
       <AppHeader authed userName={name} avatarUrl={avatarUrl} />
-      <main className="min-h-screen bg-[#0a0a0c] text-zinc-300 px-4 py-12">
+      <main className="min-h-screen bg-[#050507] text-zinc-300 px-4 py-12">
         <div className="max-w-3xl mx-auto">
-          <p className="text-xs uppercase tracking-widest text-cyan-400 font-semibold mb-2">
+          <p className="text-xs uppercase tracking-widest text-[#D4FF00] font-semibold mb-2">
             Dashboard
           </p>
-          <h1 className="font-display font-semibold text-2xl sm:text-3xl text-white mb-10">
+          <h1 className="font-display font-semibold text-2xl sm:text-3xl text-white mb-6">
             Olá, {name?.split(" ")[0] ?? "de novo"}.
           </h1>
+
+          <GuestImportBanner />
 
           <div className="grid sm:grid-cols-2 gap-4 mb-4">
             <Link
@@ -57,9 +60,9 @@ export default async function DashboardPage() {
 
             <Link
               href="/projetos"
-              className="rounded-2xl border border-white/10 p-7 bg-gradient-to-br from-cyan-500/[0.06] to-transparent hover:border-cyan-600/60 transition-colors"
+              className="rounded-2xl border border-white/10 p-7 bg-gradient-to-br from-[#D4FF00]/[0.06] to-transparent hover:border-[#D4FF00]/60 transition-colors"
             >
-              <p className="text-xs uppercase tracking-widest text-cyan-400 font-semibold mb-3">
+              <p className="text-xs uppercase tracking-widest text-[#D4FF00] font-semibold mb-3">
                 Projetos
               </p>
               <h2 className="font-display font-semibold text-xl text-white mb-2">

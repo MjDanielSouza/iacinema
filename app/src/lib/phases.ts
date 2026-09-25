@@ -205,7 +205,7 @@ export function getPhase(number: number): PhaseMeta | undefined {
 
 export const ACCENT_CLASSES: Record<TheoryCard["accent"], string> = {
   amber: "text-amber-300",
-  cyan: "text-cyan-300",
+  cyan: "text-[#D4FF00]",
   purple: "text-purple-300",
   rose: "text-rose-300",
 };

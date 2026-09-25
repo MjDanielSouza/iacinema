@@ -8,6 +8,8 @@ import { TheoryCards } from "@/components/shared/theory-cards";
 import { ChecklistGate } from "@/components/shared/checklist-gate";
 import { AppHeader } from "@/components/shared/app-header";
 import { CourseLab } from "@/components/course/course-lab";
+import { GuestFase1Draft } from "@/components/course/labs/guest-fase1-draft";
+import { GuestImportBanner } from "@/components/course/guest-import-banner";
 import { saveCourseChecklist, completeCoursePhase } from "../actions";
 import type { ChecklistState } from "@/lib/supabase/database.types";
 
@@ -30,6 +32,8 @@ export default async function CursoFasePage({
     redirect(`/login?next=/curso/${phaseNumber}`);
   }
 
+  const isGuest = !user && phaseNumber === 1;
+
   let checklist: ChecklistState = [false, false, false];
   let completed = false;
 
@@ -50,9 +54,30 @@ export default async function CursoFasePage({
 
   return (
     <>
-      <AppHeader authed={!!user} backHref="/curso" backLabel="Todas as fases" />
-      <main className="min-h-screen bg-[#0a0a0c] text-zinc-300 px-4 py-12">
+      <AppHeader
+        authed={!!user}
+        backHref="/curso"
+        backLabel="Todas as fases"
+        currentLabel={`Fase 0${phase.number} — ${phase.subtitle}`}
+      />
+      <main className="min-h-screen bg-[#050507] text-zinc-300 px-4 py-12">
       <div className="max-w-4xl mx-auto">
+        {isGuest && (
+          <div className="mb-8 flex items-center justify-between gap-3 flex-wrap border border-[#D4FF00]/30 bg-[#D4FF00]/[0.06] px-4 py-2.5">
+            <span className="font-tech text-[10px] uppercase tracking-widest text-[#D4FF00]">
+              [MODO VISITANTE // SALVAMENTO LOCAL ATIVO]
+            </span>
+            <Link
+              href="/"
+              className="font-tech text-[10px] uppercase tracking-widest text-muted hover:text-[#FAFAFA] transition-colors duration-100"
+            >
+              &larr; Voltar para a Home
+            </Link>
+          </div>
+        )}
+
+        {user && <GuestImportBanner />}
+
         <PhaseHeader
           kicker={phase.kicker}
           title={phase.title}
@@ -68,6 +93,8 @@ export default async function CursoFasePage({
 
         <CourseLab phaseNumber={phase.number} />
 
+        {isGuest && <GuestFase1Draft />}
+
         {user ? (
           <ChecklistGate
             items={phase.checklistItems}
@@ -77,7 +104,7 @@ export default async function CursoFasePage({
             onComplete={completeCoursePhase.bind(null, phaseNumber)}
             completeLabel={`Concluir Fase ${phase.number}`}
             afterComplete={
-              <div className="bg-gradient-to-r from-amber-500/20 to-cyan-500/20 border border-amber-500 rounded-lg p-4 text-sm text-amber-200 flex items-center justify-between gap-4 flex-wrap">
+              <div className="bg-gradient-to-r from-amber-500/20 to-[#D4FF00]/20 border border-amber-500 rounded-lg p-4 text-sm text-amber-200 flex items-center justify-between gap-4 flex-wrap">
                 <span>Fase {phase.number} concluída.</span>
                 {nextPhase ? (
                   <Link
@@ -94,9 +121,18 @@ export default async function CursoFasePage({
               </div>
             }
           />
+        ) : isGuest ? (
+          <ChecklistGate
+            guestMode
+            items={phase.checklistItems}
+            initialChecklist={checklist}
+            initialCompleted={completed}
+            completeLabel={`Concluir Fase ${phase.number}`}
+            checkpointLoginHref="/login?intent=migrate_fase1&next=/curso/2"
+          />
         ) : (
-          <div className="bg-[#141417] border border-[#2a2a2f] rounded-xl p-5 text-sm text-zinc-400 text-center">
-            <Link href="/login" className="text-cyan-400 underline">
+          <div className="bg-[#0D0E12] border border-white/10 rounded-xl p-5 text-sm text-zinc-400 text-center">
+            <Link href="/login" className="text-[#D4FF00] underline">
               Entre com sua conta
             </Link>{" "}
             para marcar o checklist e salvar seu progresso.

@@ -73,7 +73,7 @@ export default async function ProjectPhasePage({
   return (
     <>
       <AppHeader authed backHref={`/projetos/${id}`} backLabel={project.name} />
-      <main className="min-h-screen bg-[#0a0a0c] text-zinc-300 px-4 py-12">
+      <main className="min-h-screen bg-[#050507] text-zinc-300 px-4 py-12">
       <div className="max-w-4xl mx-auto">
         <PhaseHeader
           kicker={phase.kicker}
@@ -114,7 +114,7 @@ export default async function ProjectPhasePage({
           onComplete={completeProjectPhase.bind(null, id, phaseNumber)}
           completeLabel={`Concluir Fase ${phaseNumber}`}
           afterComplete={
-            <div className="bg-gradient-to-r from-amber-500/20 to-cyan-500/20 border border-amber-500 rounded-lg p-4 text-sm text-amber-200 flex items-center justify-between gap-4 flex-wrap">
+            <div className="bg-gradient-to-r from-amber-500/20 to-[#D4FF00]/20 border border-amber-500 rounded-lg p-4 text-sm text-amber-200 flex items-center justify-between gap-4 flex-wrap">
               <span>Fase {phaseNumber} concluída.</span>
               {nextPhase ? (
                 <Link

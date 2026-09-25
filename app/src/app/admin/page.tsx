@@ -54,7 +54,7 @@ export default async function AdminPage() {
   return (
     <>
       <AppHeader authed backHref="/dashboard" backLabel="Dashboard" />
-      <main className="min-h-screen bg-[#0a0a0c] text-zinc-300 px-4 py-12">
+      <main className="min-h-screen bg-[#050507] text-zinc-300 px-4 py-12">
       <div className="max-w-4xl mx-auto">
         <h1 className="font-display font-semibold text-2xl text-white mb-2">Dashboard do Admin</h1>
         <p className="text-sm text-zinc-500 mb-8">
@@ -62,26 +62,26 @@ export default async function AdminPage() {
         </p>
 
         <div className="grid grid-cols-3 gap-4 mb-8">
-          <div className="bg-[#141417] border border-[#2a2a2f] rounded-xl p-4 text-center">
+          <div className="bg-[#0D0E12] border border-white/10 rounded-xl p-4 text-center">
             <p className="text-2xl font-bold text-white">{totalStudents}</p>
             <p className="text-xs text-zinc-500">Alunos</p>
           </div>
-          <div className="bg-[#141417] border border-[#2a2a2f] rounded-xl p-4 text-center">
+          <div className="bg-[#0D0E12] border border-white/10 rounded-xl p-4 text-center">
             <p className="text-2xl font-bold text-amber-400">{totalCompletedCourse}</p>
             <p className="text-xs text-zinc-500">Curso completo</p>
           </div>
-          <div className="bg-[#141417] border border-[#2a2a2f] rounded-xl p-4 text-center">
-            <p className="text-2xl font-bold text-cyan-400">
+          <div className="bg-[#0D0E12] border border-white/10 rounded-xl p-4 text-center">
+            <p className="text-2xl font-bold text-[#D4FF00]">
               {[...projectsByUser.values()].reduce((a, b) => a + b, 0)}
             </p>
             <p className="text-xs text-zinc-500">Projetos criados</p>
           </div>
         </div>
 
-        <div className="bg-[#141417] border border-[#2a2a2f] rounded-xl overflow-hidden">
+        <div className="bg-[#0D0E12] border border-white/10 rounded-xl overflow-hidden">
           <table className="w-full text-sm">
             <thead>
-              <tr className="text-left text-xs uppercase tracking-wider text-zinc-500 border-b border-[#2a2a2f]">
+              <tr className="text-left text-xs uppercase tracking-wider text-zinc-500 border-b border-white/10">
                 <th className="px-4 py-3 font-semibold">Nome / E-mail</th>
                 <th className="px-4 py-3 font-semibold">
                   {isAdmin ? "Papel / Plano / Limite" : "Papel / Plano"}
@@ -94,7 +94,7 @@ export default async function AdminPage() {
               {(profiles ?? []).map((p) => {
                 const completed = completedByUser.get(p.id) ?? 0;
                 return (
-                  <tr key={p.id} className="border-b border-[#1b1b1f] last:border-0">
+                  <tr key={p.id} className="border-b border-white/10 last:border-0">
                     <td className="px-4 py-3">
                       <p className="text-zinc-200">{p.full_name || "—"}</p>
                       <p className="text-xs text-zinc-500">{p.email}</p>

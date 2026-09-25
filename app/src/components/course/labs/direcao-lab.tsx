@@ -58,7 +58,7 @@ export function DirecaoLab() {
             className={`px-3 py-2 rounded-lg border text-xs font-medium transition-colors ${
               sceneId === s.id
                 ? "border-amber-500 text-amber-400 bg-amber-500/10"
-                : "border-[#2a2a2f] text-zinc-400 hover:border-zinc-500"
+                : "border-white/10 text-zinc-400 hover:border-zinc-500"
             }`}
           >
             Cena {String(s.id).padStart(2, "0")}
@@ -67,13 +67,13 @@ export function DirecaoLab() {
       </div>
 
       <div className="grid sm:grid-cols-3 gap-3 mb-5">
-        <div className="bg-[#141417] border border-[#2a2a2f] rounded-lg p-3">
-          <div className="text-[10px] uppercase tracking-wider text-cyan-400 mb-1">
+        <div className="bg-[#0D0E12] border border-white/10 rounded-lg p-3">
+          <div className="text-[10px] uppercase tracking-wider text-[#D4FF00] mb-1">
             Set (travado)
           </div>
           <span className="text-sm text-zinc-300 font-medium">{scene.setName}</span>
         </div>
-        <div className="bg-[#141417] border border-[#2a2a2f] rounded-lg p-3">
+        <div className="bg-[#0D0E12] border border-white/10 rounded-lg p-3">
           <div className="text-[10px] uppercase tracking-wider text-amber-300 mb-1">
             Character Sheet (travado)
           </div>
@@ -81,7 +81,7 @@ export function DirecaoLab() {
             {scene.character} — {scene.figurino.split(",")[0]}
           </span>
         </div>
-        <div className="bg-[#141417] border border-[#2a2a2f] rounded-lg p-3">
+        <div className="bg-[#0D0E12] border border-white/10 rounded-lg p-3">
           <div className="text-[10px] uppercase tracking-wider text-purple-300 mb-1">
             Artefato (travado)
           </div>
@@ -97,7 +97,7 @@ export function DirecaoLab() {
           <select
             value={cameraId}
             onChange={(e) => setCameraId(e.target.value)}
-            className="w-full bg-[#1b1b1f] border border-[#2a2a2f] rounded-lg px-3 py-2 text-sm text-zinc-200"
+            className="w-full bg-[#14151B] border border-white/10 rounded-lg px-3 py-2 text-sm text-zinc-200"
           >
             {CAMERA_OPTIONS.map((o) => (
               <option key={o.id} value={o.id}>
@@ -113,7 +113,7 @@ export function DirecaoLab() {
           <select
             value={actionId}
             onChange={(e) => setActionId(e.target.value)}
-            className="w-full bg-[#1b1b1f] border border-[#2a2a2f] rounded-lg px-3 py-2 text-sm text-zinc-200"
+            className="w-full bg-[#14151B] border border-white/10 rounded-lg px-3 py-2 text-sm text-zinc-200"
           >
             {ACTION_OPTIONS.map((o) => (
               <option key={o.id} value={o.id}>
@@ -129,7 +129,7 @@ export function DirecaoLab() {
           <select
             value={speechId}
             onChange={(e) => setSpeechId(e.target.value)}
-            className="w-full bg-[#1b1b1f] border border-[#2a2a2f] rounded-lg px-3 py-2 text-sm text-zinc-200"
+            className="w-full bg-[#14151B] border border-white/10 rounded-lg px-3 py-2 text-sm text-zinc-200"
           >
             {SPEECH_OPTIONS.map((o) => (
               <option key={o.id} value={o.id}>

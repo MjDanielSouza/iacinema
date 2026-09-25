@@ -3,9 +3,11 @@
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 
-export function LoginCard({ next }: { next: string }) {
+export function LoginCard({ next, intent }: { next: string; intent?: string }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const isMigration = intent === "migrate_fase1";
 
   async function handleGoogleLogin() {
     setLoading(true);
@@ -14,7 +16,9 @@ export function LoginCard({ next }: { next: string }) {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(next)}`,
+        redirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(next)}${
+          isMigration ? "&intent=migrate_fase1" : ""
+        }`,
       },
     });
     if (error) {
@@ -24,21 +28,33 @@ export function LoginCard({ next }: { next: string }) {
   }
 
   return (
-    <div className="w-full max-w-sm bg-[#141413] border border-line p-8 text-center">
+    <div className="glass relative z-10 w-full max-w-sm p-8 text-center">
       <p className="font-tech text-[10px] uppercase tracking-widest text-muted mb-4">
         [ACESSO // SYS v1.0]
       </p>
-      <h1 className="font-display text-2xl text-[#F2EFE9] mb-1">
+      <h1 className="font-display text-2xl text-[#FAFAFA] mb-1">
         Continue de onde parou.
       </h1>
-      <p className="text-sm text-muted mb-8">
+      <p className="text-sm text-muted mb-6">
         Entre para acessar o curso e seus projetos.
       </p>
+
+      {isMigration && (
+        <div className="mb-6 border border-[#D4FF00]/30 bg-[#D4FF00]/[0.06] p-3 text-left">
+          <p className="font-tech text-[10px] uppercase tracking-widest text-[#D4FF00] mb-1">
+            [CHECKPOINT // FASE 01 CONCLUÍDA]
+          </p>
+          <p className="text-xs text-muted leading-relaxed">
+            Sua decupagem da Fase 1 foi salva neste navegador. Assim que você
+            entrar, ela é importada automaticamente para sua conta.
+          </p>
+        </div>
+      )}
 
       <button
         onClick={handleGoogleLogin}
         disabled={loading}
-        className="w-full flex items-center justify-center gap-3 border border-line bg-[#0c0c0b] px-4 py-3 font-tech text-xs uppercase tracking-wider text-[#F2EFE9] hover:border-amber-500 transition-colors duration-100 disabled:opacity-50"
+        className="w-full flex items-center justify-center gap-3 border border-line bg-[#050507] px-4 py-3 font-tech text-xs uppercase tracking-wider text-[#FAFAFA] hover:border-[#D4FF00]/50 transition-colors duration-100 disabled:opacity-50"
       >
         <svg viewBox="0 0 24 24" className="w-4 h-4" aria-hidden="true">
           <path

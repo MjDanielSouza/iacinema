@@ -40,7 +40,7 @@ export function EditableTextarea({
   }
 
   return (
-    <div className="bg-[#141417] border border-[#2a2a2f] rounded-xl p-4">
+    <div className="bg-[#0D0E12] border border-white/10 rounded-xl p-4">
       <div className="flex items-center justify-between mb-2">
         <span className="text-xs uppercase tracking-wider text-zinc-500 font-semibold">
           {label}
@@ -55,7 +55,7 @@ export function EditableTextarea({
         onChange={(e) => handleChange(e.target.value)}
         placeholder={placeholder}
         rows={rows}
-        className="w-full bg-[#0d0d10] border border-[#2a2a2f] rounded-lg p-3 text-sm text-zinc-200 leading-relaxed resize-y focus:outline-none focus:border-cyan-700"
+        className="w-full bg-[#050507] border border-white/10 rounded-lg p-3 text-sm text-zinc-200 leading-relaxed resize-y focus:outline-none focus:border-[#D4FF00]"
       />
     </div>
   );

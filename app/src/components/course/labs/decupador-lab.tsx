@@ -40,7 +40,7 @@ const SCREENPLAY: Segment[] = [
 
 const FILTER_LABELS: Record<TagType, { name: string; color: string; hl: string }> = {
   character: { name: "Personagens", color: "#fcd34d", hl: "bg-amber-500/25 text-amber-300 ring-1 ring-amber-500/40" },
-  location: { name: "Locais/Sets", color: "#67e8f9", hl: "bg-cyan-500/25 text-cyan-300 ring-1 ring-cyan-500/40" },
+  location: { name: "Locais/Sets", color: "#D4FF00", hl: "bg-[#D4FF00]/25 text-[#D4FF00] ring-1 ring-[#D4FF00]/40" },
   prop: { name: "Artefatos/Props", color: "#d8b4fe", hl: "bg-purple-500/25 text-purple-300 ring-1 ring-purple-500/40" },
   dialogue: { name: "Falas/Ação", color: "#fda4af", hl: "bg-rose-500/25 text-rose-300 ring-1 ring-rose-500/40" },
 };
@@ -105,7 +105,7 @@ export function DecupadorLab() {
               onClick={() => toggle(btn.type)}
               className="px-3 py-2 rounded-lg border text-xs font-medium transition-all"
               style={{
-                borderColor: isActive ? FILTER_LABELS[btn.type].color : "#2a2a2f",
+                borderColor: isActive ? FILTER_LABELS[btn.type].color : "rgba(255,255,255,0.1)",
                 color: FILTER_LABELS[btn.type].color,
                 filter: isActive ? "brightness(1.15)" : "brightness(0.7)",
               }}
@@ -117,7 +117,7 @@ export function DecupadorLab() {
       </div>
 
       <div className="grid lg:grid-cols-3 gap-4">
-        <div className="lg:col-span-2 bg-[#141417] border border-[#2a2a2f] rounded-xl p-5 text-sm leading-loose whitespace-pre-wrap font-mono">
+        <div className="lg:col-span-2 bg-[#0D0E12] border border-white/10 rounded-xl p-5 text-sm leading-loose whitespace-pre-wrap font-mono">
           {SCREENPLAY.map((seg, i) => {
             if (!seg.type) return <span key={i}>{seg.text}</span>;
             const isActive = active.has(seg.type);
@@ -135,7 +135,7 @@ export function DecupadorLab() {
           })}
         </div>
 
-        <div className="bg-[#141417] border border-[#2a2a2f] rounded-xl p-4">
+        <div className="bg-[#0D0E12] border border-white/10 rounded-xl p-4">
           <h4 className="text-xs uppercase tracking-wider text-zinc-500 font-semibold mb-3">
             Tabela de Decupagem
           </h4>
@@ -157,7 +157,7 @@ export function DecupadorLab() {
                     {extracted.get(type)?.map((item) => (
                       <li
                         key={item}
-                        className="text-xs text-zinc-400 bg-[#1b1b1f] rounded px-2 py-1 border border-[#2a2a2f]"
+                        className="text-xs text-zinc-400 bg-[#14151B] rounded px-2 py-1 border border-white/10"
                       >
                         {item}
                       </li>

@@ -17,7 +17,7 @@ export function PromptComposer({
   prompts: PromptItem[];
 }) {
   return (
-    <div className="bg-[#141417] border border-[#2a2a2f] rounded-xl p-4">
+    <div className="bg-[#0D0E12] border border-white/10 rounded-xl p-4">
       <span className="text-xs uppercase tracking-wider text-zinc-500 font-semibold block mb-3">
         Prompts desta Fase
       </span>
@@ -42,16 +42,16 @@ export function PromptComposer({
           type="text"
           name="label"
           placeholder="Título do prompt (opcional)"
-          className="bg-[#0d0d10] border border-[#2a2a2f] rounded-lg px-3 py-2 text-xs text-zinc-200"
+          className="bg-[#050507] border border-white/10 rounded-lg px-3 py-2 text-xs text-zinc-200"
         />
         <textarea
           name="promptText"
           rows={3}
           placeholder="Cole ou escreva o prompt desta fase..."
           required
-          className="bg-[#0d0d10] border border-[#2a2a2f] rounded-lg px-3 py-2 text-xs text-zinc-200 resize-y"
+          className="bg-[#050507] border border-white/10 rounded-lg px-3 py-2 text-xs text-zinc-200 resize-y"
         />
-        <button className="self-start px-4 py-2 rounded-lg bg-amber-500 text-[#0a0a0c] font-semibold text-xs">
+        <button className="self-start px-4 py-2 rounded-lg bg-amber-500 text-[#050507] font-semibold text-xs">
           Salvar prompt
         </button>
       </form>

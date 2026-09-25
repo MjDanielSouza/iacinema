@@ -48,14 +48,14 @@ export function TimelineLab() {
         Ative cada camada da ilha de edição e acompanhe o status do master do filme.
       </p>
 
-      <div className="bg-[#141417] border border-[#2a2a2f] rounded-xl p-5 mb-4">
+      <div className="bg-[#0D0E12] border border-white/10 rounded-xl p-5 mb-4">
         <div className="flex items-center justify-between mb-4">
           <span className="text-sm font-semibold text-white">
             Master Finalizado: {pct}%
           </span>
-          <div className="w-40 h-2 bg-[#1b1b1f] rounded-full overflow-hidden border border-[#2a2a2f]">
+          <div className="w-40 h-2 bg-[#14151B] rounded-full overflow-hidden border border-white/10">
             <div
-              className="h-full bg-gradient-to-r from-amber-500 to-cyan-500 transition-all"
+              className="h-full bg-gradient-to-r from-amber-500 to-[#D4FF00] transition-all"
               style={{ width: `${pct}%` }}
             />
           </div>
@@ -64,7 +64,7 @@ export function TimelineLab() {
           {LAYERS.map((l) => (
             <div key={l.id} className="flex items-center gap-3">
               <span className="w-52 shrink-0 text-xs text-zinc-400">{l.trackLabel}</span>
-              <div className="flex-1 h-6 bg-[#1b1b1f] rounded border border-[#2a2a2f] overflow-hidden">
+              <div className="flex-1 h-6 bg-[#14151B] rounded border border-white/10 overflow-hidden">
                 <div
                   className="h-full transition-all"
                   style={{
@@ -95,7 +95,7 @@ export function TimelineLab() {
             className={`px-3 py-2 rounded-lg border text-xs font-medium transition-colors ${
               state[l.id]
                 ? "border-amber-500 text-amber-400 bg-amber-500/10"
-                : "border-[#2a2a2f] text-zinc-400 hover:border-zinc-500"
+                : "border-white/10 text-zinc-400 hover:border-zinc-500"
             }`}
           >
             {l.toggleLabel}
@@ -103,7 +103,7 @@ export function TimelineLab() {
         ))}
       </div>
 
-      <div className="bg-[#141417] border border-[#2a2a2f] rounded-xl p-4">
+      <div className="bg-[#0D0E12] border border-white/10 rounded-xl p-4">
         <h4 className="text-xs uppercase tracking-wider text-zinc-500 font-semibold mb-2">
           Preview / Status do Filme
         </h4>

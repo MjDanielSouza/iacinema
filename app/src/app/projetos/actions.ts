@@ -49,6 +49,51 @@ export async function createProject(formData: FormData) {
   redirect(`/projetos/${project.id}`);
 }
 
+export async function createProjectFromDraft(name: string, scriptText: string) {
+  const { supabase, userId } = await requireUserId();
+  const cleanName = name.trim();
+  if (!cleanName) return;
+
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("project_limit")
+    .eq("id", userId)
+    .single();
+
+  const { count } = await supabase
+    .from("projects")
+    .select("id", { count: "exact", head: true })
+    .eq("owner_id", userId);
+
+  const limit = profile?.project_limit ?? 1;
+  if ((count ?? 0) >= limit) {
+    redirect("/projetos?erro=limite");
+  }
+
+  const { data: project, error } = await supabase
+    .from("projects")
+    .insert({ name: cleanName, owner_id: userId })
+    .select("id")
+    .single();
+
+  if (error || !project) {
+    redirect("/projetos?erro=criar");
+  }
+
+  await supabase.from("project_phases").upsert(
+    {
+      project_id: project.id,
+      phase_number: 1,
+      script_text: scriptText,
+      updated_at: new Date().toISOString(),
+    },
+    { onConflict: "project_id,phase_number" },
+  );
+
+  revalidatePath("/projetos");
+  redirect(`/projetos/${project.id}/fase/1`);
+}
+
 export async function saveProjectPhaseText(
   projectId: string,
   phaseNumber: number,

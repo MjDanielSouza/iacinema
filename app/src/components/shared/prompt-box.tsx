@@ -22,7 +22,7 @@ export function PromptBox({
   }
 
   return (
-    <div className="bg-[#141417] border border-[#2a2a2f] rounded-xl p-4 flex flex-col h-full">
+    <div className="bg-[#0D0E12] border border-white/10 rounded-xl p-4 flex flex-col h-full">
       <div className="flex items-center justify-between mb-2">
         <span className="text-xs uppercase tracking-wider text-zinc-500 font-semibold">
           {label}
@@ -34,7 +34,7 @@ export function PromptBox({
           {copied ? "Copiado!" : "Copiar"}
         </button>
       </div>
-      <div className="bg-[#0d0d10] border border-[#2a2a2f] rounded-lg p-3 text-xs text-cyan-300 leading-relaxed font-mono flex-1 whitespace-pre-wrap">
+      <div className="bg-[#050507] border border-white/10 rounded-lg p-3 text-xs text-[#D4FF00] leading-relaxed font-mono flex-1 whitespace-pre-wrap">
         {text}
       </div>
     </div>
