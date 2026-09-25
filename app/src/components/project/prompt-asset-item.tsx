@@ -24,7 +24,7 @@ export function PromptAssetItem({
   }
 
   return (
-    <div className="bg-[#050507] border border-white/10 rounded-lg p-3">
+    <div className="bg-bg-base border border-white/10 rounded-lg p-3">
       <div className="flex items-center justify-between mb-1.5">
         <span className="text-xs font-semibold text-zinc-300">
           {label || "Prompt"}
@@ -32,7 +32,7 @@ export function PromptAssetItem({
         <div className="flex items-center gap-2">
           <button
             onClick={copy}
-            className="text-[11px] text-amber-400 hover:text-amber-300"
+            className="text-[11px] text-lime hover:text-lime"
           >
             {copied ? "Copiado!" : "Copiar"}
           </button>
@@ -43,7 +43,7 @@ export function PromptAssetItem({
           </form>
         </div>
       </div>
-      <p className="text-xs text-[#D4FF00] font-mono leading-relaxed whitespace-pre-wrap">
+      <p className="text-xs text-lime font-mono leading-relaxed whitespace-pre-wrap">
         {text}
       </p>
     </div>

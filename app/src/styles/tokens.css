@@ -1,0 +1,185 @@
+/* ==========================================================================
+   Pipeline — Cinematic Dark System
+   Tokens gerados a partir de design-system.json (raiz do repo). Qualquer
+   valor visual usado no app deve vir de uma dessas variáveis — nunca hex
+   solto num componente.
+   ========================================================================== */
+
+:root {
+  /* ---- Background ---- */
+  --bg-base: #07070a;
+  --bg-deep: #030304;
+  --bg-raised: #0c0c10;
+  --bg-violet-night: #0e0a1a;
+
+  /* ---- Surface ---- */
+  --surface-card: #111114;
+  --surface-card-elevated: #17171c;
+  --surface-card-olive: #1c1f14;
+  --surface-glass: rgba(20, 16, 32, 0.55);
+  --surface-input: #15151a;
+
+  /* ---- Border ---- */
+  --border-subtle: rgba(255, 255, 255, 0.06);
+  --border-default: rgba(255, 255, 255, 0.1);
+  --border-strong: rgba(255, 255, 255, 0.22);
+  --border-violet: rgba(178, 102, 232, 0.45);
+  --border-accent: rgba(200, 243, 29, 0.55);
+  --border-hairline-white: rgba(255, 255, 255, 0.85);
+
+  /* ---- Text ---- */
+  --text-title: #f5f5f2;
+  --text-subtitle: #c9c9cf;
+  --text-body: #a1a1aa;
+  --text-muted: #6b6b75;
+  --text-dim-headline: #8a8a8f;
+  --text-on-accent: #0a0a0a;
+
+  /* ---- Accent ---- */
+  --accent-lime: #c8f31d;
+  --accent-lime-hover: #d8ff3a;
+  --accent-lime-pressed: #aed400;
+  --accent-glow-green: #5be37d;
+  --accent-violet: #b266e8;
+  --accent-violet-deep: #6a2fd0;
+  --accent-red: #e0262f;
+
+  /* ---- Gradients ---- */
+  --gradient-hero-glow-green: radial-gradient(
+    60% 55% at 50% 30%,
+    rgba(91, 227, 125, 0.28) 0%,
+    rgba(91, 227, 125, 0.06) 45%,
+    transparent 70%
+  );
+  --gradient-hero-glow-violet: radial-gradient(
+    50% 60% at 70% 20%,
+    rgba(130, 70, 230, 0.35) 0%,
+    rgba(40, 20, 90, 0.15) 45%,
+    transparent 75%
+  );
+  --gradient-image-fade-bottom: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(7, 7, 10, 0.35) 55%,
+    #07070a 100%
+  );
+  --gradient-image-fade-left: linear-gradient(
+    90deg,
+    #07070a 0%,
+    rgba(7, 7, 10, 0.75) 35%,
+    transparent 70%
+  );
+  --gradient-card-scrim: linear-gradient(180deg, transparent 40%, rgba(0, 0, 0, 0.85) 100%);
+  --gradient-btn-violet: linear-gradient(135deg, #7a3be0 0%, #b266e8 100%);
+  --gradient-corner-glow-lime: radial-gradient(
+    40% 40% at 100% 0%,
+    rgba(200, 243, 29, 0.14),
+    transparent 70%
+  );
+
+  /* ---- Overlays ---- */
+  --overlay-tech-grid: linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px) 0 0 / 64px
+      64px,
+    linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px) 0 0 / 64px 64px;
+
+  /* ---- Radii ---- */
+  --radius-none: 0px;
+  --radius-xs: 6px;
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+  --radius-pill: 999px;
+
+  /* ---- Shadows ---- */
+  --shadow-card: 0 1px 0 rgba(255, 255, 255, 0.04) inset, 0 20px 40px -24px rgba(0, 0, 0, 0.8);
+  --shadow-float: 0 30px 80px -30px rgba(0, 0, 0, 0.9);
+  --shadow-glow-lime: 0 0 0 1px rgba(200, 243, 29, 0.35), 0 10px 40px -8px rgba(200, 243, 29, 0.45);
+  --shadow-glow-violet: 0 0 0 1px rgba(178, 102, 232, 0.45),
+    0 10px 40px -10px rgba(122, 59, 224, 0.55);
+  --shadow-glow-green-soft: 0 0 60px rgba(91, 227, 125, 0.25);
+
+  /* ---- Motion ---- */
+  --ease-standard: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-emphasized: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-exit: cubic-bezier(0.4, 0, 1, 1);
+  --duration-fast: 150ms;
+  --duration-base: 250ms;
+  --duration-slow: 500ms;
+  --duration-cinematic: 900ms;
+
+  /* ---- Layout ---- */
+  --container-max: 1240px;
+  --container-padding: clamp(20px, 4vw, 48px);
+  --container-narrow: 880px;
+  --section-spacing: 80px;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --section-spacing: 104px;
+  }
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --section-spacing: 136px;
+  }
+}
+
+/* Tailwind v4 CSS-first theme: expõe os tokens acima como utilitários
+   (bg-base, text-title, rounded-md, shadow-glow-lime, font-display, ease-standard...) */
+@theme inline {
+  --color-bg-base: var(--bg-base);
+  --color-bg-deep: var(--bg-deep);
+  --color-bg-raised: var(--bg-raised);
+  --color-bg-violet-night: var(--bg-violet-night);
+
+  --color-surface-card: var(--surface-card);
+  --color-surface-card-elevated: var(--surface-card-elevated);
+  --color-surface-card-olive: var(--surface-card-olive);
+  --color-surface-input: var(--surface-input);
+
+  --color-border-subtle: var(--border-subtle);
+  --color-border-default: var(--border-default);
+  --color-border-strong: var(--border-strong);
+  --color-border-violet: var(--border-violet);
+  --color-border-accent: var(--border-accent);
+
+  --color-title: var(--text-title);
+  --color-subtitle: var(--text-subtitle);
+  --color-body: var(--text-body);
+  --color-muted: var(--text-muted);
+  --color-dim-headline: var(--text-dim-headline);
+  --color-on-accent: var(--text-on-accent);
+
+  --color-lime: var(--accent-lime);
+  --color-lime-hover: var(--accent-lime-hover);
+  --color-lime-pressed: var(--accent-lime-pressed);
+  --color-glow-green: var(--accent-glow-green);
+  --color-violet: var(--accent-violet);
+  --color-violet-deep: var(--accent-violet-deep);
+  --color-red: var(--accent-red);
+
+  --radius-xs: var(--radius-xs);
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+  --radius-xl: var(--radius-xl);
+  --radius-pill: var(--radius-pill);
+
+  --shadow-card: var(--shadow-card);
+  --shadow-float: var(--shadow-float);
+  --shadow-glow-lime: var(--shadow-glow-lime);
+  --shadow-glow-violet: var(--shadow-glow-violet);
+  --shadow-glow-green-soft: var(--shadow-glow-green-soft);
+
+  --font-display: var(--font-display), "Helvetica Neue", Arial, sans-serif;
+  --font-editorial: var(--font-editorial), "Times New Roman", Georgia, serif;
+  --font-technical: var(--font-technical), "SFMono-Regular", Menlo, monospace;
+  --font-body: var(--font-body), system-ui, -apple-system, sans-serif;
+
+  --ease-standard: var(--ease-standard);
+  --ease-emphasized: var(--ease-emphasized);
+  --ease-exit: var(--ease-exit);
+}

@@ -85,7 +85,7 @@ export function ChecklistGate(props: Props) {
   const allChecked = checklist.every(Boolean);
 
   return (
-    <div className="bg-[#14151B] border border-white/10 rounded-xl p-5">
+    <div className="bg-surface-card-elevated border border-white/10 rounded-xl p-5">
       <h3 className="text-sm font-bold text-white mb-4">
         Checklist de Aprovação
       </h3>
@@ -96,7 +96,7 @@ export function ChecklistGate(props: Props) {
               type="checkbox"
               checked={checklist[i]}
               onChange={() => toggle(i)}
-              className="mt-0.5 w-5 h-5 accent-[#D4FF00] shrink-0"
+              className="mt-0.5 w-5 h-5 accent-lime shrink-0"
             />
             <span className="text-sm text-zinc-300">{label}</span>
           </label>
@@ -107,16 +107,16 @@ export function ChecklistGate(props: Props) {
         <button
           onClick={complete}
           disabled={!allChecked || pending}
-          className="press mt-5 px-5 py-2.5 rounded-full bg-[#D4FF00] text-[#050507] font-semibold text-sm disabled:opacity-40 disabled:cursor-not-allowed transition hover:bg-[#e2ff4d]"
+          className="press mt-5 px-5 py-2.5 rounded-full bg-lime text-on-accent font-semibold text-sm disabled:opacity-40 disabled:cursor-not-allowed transition hover:bg-lime-hover"
         >
           {pending ? "Salvando..." : completeLabel}
         </button>
       ) : props.guestMode ? (
-        <div className="mt-5 border border-[#D4FF00]/30 bg-[#D4FF00]/[0.06] rounded-lg p-4 text-sm text-[#FAFAFA]/90 flex items-center justify-between gap-4 flex-wrap">
+        <div className="mt-5 border border-lime/30 bg-lime/[0.06] rounded-lg p-4 text-sm text-title/90 flex items-center justify-between gap-4 flex-wrap">
           <span>Fase 1 concluída (salva neste navegador).</span>
           <button
             onClick={() => setShowCheckpoint(true)}
-            className="text-xs font-semibold text-[#D4FF00] underline"
+            className="text-xs font-semibold text-lime underline"
           >
             Salvar na nuvem e continuar →
           </button>

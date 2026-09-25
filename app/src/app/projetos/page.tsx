@@ -45,7 +45,7 @@ export default async function ProjetosPage({
   return (
     <>
       <AppHeader authed backHref="/dashboard" backLabel="Dashboard" />
-      <main className="min-h-screen bg-[#050507] text-zinc-300 px-4 py-12">
+      <main className="min-h-screen bg-bg-base text-zinc-300 px-4 py-12">
       <div className="max-w-3xl mx-auto">
         <h1 className="font-display font-semibold text-2xl text-white mb-2">Meus Projetos</h1>
         <p className="text-sm text-zinc-500 mb-8">
@@ -58,7 +58,7 @@ export default async function ProjetosPage({
           </div>
         )}
 
-        <div className="bg-[#0D0E12] border border-white/10 rounded-xl p-5 mb-8">
+        <div className="bg-surface-card border border-white/10 rounded-xl p-5 mb-8">
           <h2 className="text-sm font-semibold text-white mb-3">Criar novo projeto</h2>
           <form action={createProject} className="flex flex-col sm:flex-row gap-3">
             <input
@@ -67,12 +67,12 @@ export default async function ProjetosPage({
               placeholder='Ex.: "Filme B"'
               required
               disabled={atLimit}
-              className="flex-1 bg-[#14151B] border border-white/10 rounded-lg px-3 py-2 text-sm text-zinc-200 disabled:opacity-50"
+              className="flex-1 bg-surface-card-elevated border border-white/10 rounded-lg px-3 py-2 text-sm text-zinc-200 disabled:opacity-50"
             />
             <button
               type="submit"
               disabled={atLimit}
-              className="press px-5 py-2 rounded-full bg-amber-500 text-[#050507] font-semibold text-sm disabled:opacity-40 disabled:cursor-not-allowed hover:bg-amber-400 transition duration-150 ease-out"
+              className="press px-5 py-2 rounded-full bg-lime text-on-accent font-semibold text-sm disabled:opacity-40 disabled:cursor-not-allowed hover:bg-lime-hover transition duration-150 ease-out"
             >
               Criar projeto
             </button>
@@ -92,7 +92,7 @@ export default async function ProjetosPage({
             <Link
               key={p.id}
               href={`/projetos/${p.id}`}
-              className="press flex items-center justify-between rounded-xl border border-white/10 bg-[#0D0E12] p-4 hover:border-[#D4FF00] transition duration-150 ease-out"
+              className="press flex items-center justify-between rounded-xl border border-white/10 bg-surface-card p-4 hover:border-lime transition duration-150 ease-out"
             >
               <div>
                 <p className="text-sm font-semibold text-white">{p.name}</p>

@@ -60,16 +60,16 @@ export default async function CursoFasePage({
         backLabel="Todas as fases"
         currentLabel={`Fase 0${phase.number} — ${phase.subtitle}`}
       />
-      <main className="min-h-screen bg-[#050507] text-zinc-300 px-4 py-12">
+      <main className="min-h-screen bg-bg-base text-zinc-300 px-4 py-12">
       <div className="max-w-4xl mx-auto">
         {isGuest && (
-          <div className="mb-8 flex items-center justify-between gap-3 flex-wrap border border-[#D4FF00]/30 bg-[#D4FF00]/[0.06] px-4 py-2.5">
-            <span className="font-tech text-[10px] uppercase tracking-widest text-[#D4FF00]">
+          <div className="mb-8 flex items-center justify-between gap-3 flex-wrap border border-lime/30 bg-lime/[0.06] px-4 py-2.5">
+            <span className="font-tech text-[10px] uppercase tracking-widest text-lime">
               [MODO VISITANTE // SALVAMENTO LOCAL ATIVO]
             </span>
             <Link
               href="/"
-              className="font-tech text-[10px] uppercase tracking-widest text-muted hover:text-[#FAFAFA] transition-colors duration-100"
+              className="font-tech text-[10px] uppercase tracking-widest text-muted hover:text-title transition-colors duration-100"
             >
               &larr; Voltar para a Home
             </Link>
@@ -104,12 +104,12 @@ export default async function CursoFasePage({
             onComplete={completeCoursePhase.bind(null, phaseNumber)}
             completeLabel={`Concluir Fase ${phase.number}`}
             afterComplete={
-              <div className="bg-gradient-to-r from-amber-500/20 to-[#D4FF00]/20 border border-amber-500 rounded-lg p-4 text-sm text-amber-200 flex items-center justify-between gap-4 flex-wrap">
+              <div className="bg-gradient-to-r from-lime/20 to-lime/20 border border-lime rounded-lg p-4 text-sm text-lime flex items-center justify-between gap-4 flex-wrap">
                 <span>Fase {phase.number} concluída.</span>
                 {nextPhase ? (
                   <Link
                     href={`/curso/${nextPhase.number}`}
-                    className="text-xs font-semibold text-amber-300 underline"
+                    className="text-xs font-semibold text-lime underline"
                   >
                     Ir para a Fase {nextPhase.number} →
                   </Link>
@@ -131,8 +131,8 @@ export default async function CursoFasePage({
             checkpointLoginHref="/login?intent=migrate_fase1&next=/curso/2"
           />
         ) : (
-          <div className="bg-[#0D0E12] border border-white/10 rounded-xl p-5 text-sm text-zinc-400 text-center">
-            <Link href="/login" className="text-[#D4FF00] underline">
+          <div className="bg-surface-card border border-white/10 rounded-xl p-5 text-sm text-zinc-400 text-center">
+            <Link href="/login" className="text-lime underline">
               Entre com sua conta
             </Link>{" "}
             para marcar o checklist e salvar seu progresso.

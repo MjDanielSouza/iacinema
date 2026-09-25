@@ -45,7 +45,7 @@ export function GuestImportBanner() {
 
   return (
     <div className="mb-8 glass p-5">
-      <p className="font-tech text-[10px] uppercase tracking-widest text-[#D4FF00] mb-2">
+      <p className="font-tech text-[10px] uppercase tracking-widest text-lime mb-2">
         [IMPORTAR PROGRESSO DA FASE 01 // VISITANTE]
       </p>
       <p className="text-sm text-muted leading-relaxed mb-4">
@@ -57,7 +57,7 @@ export function GuestImportBanner() {
         <button
           onClick={markCourseComplete}
           disabled={pending || imported}
-          className="self-start font-tech text-xs uppercase tracking-wider px-4 py-2 border border-[#D4FF00]/40 text-[#D4FF00] hover:bg-[#D4FF00]/10 transition-colors duration-100 disabled:opacity-40"
+          className="self-start font-tech text-xs uppercase tracking-wider px-4 py-2 border border-lime/40 text-lime hover:bg-lime/10 transition-colors duration-100 disabled:opacity-40"
         >
           {imported ? "Fase 1 marcada como concluída ✓" : "Marcar Fase 1 como concluída na minha conta"}
         </button>
@@ -78,12 +78,12 @@ export function GuestImportBanner() {
               value={projectName}
               onChange={(e) => setProjectName(e.target.value)}
               placeholder='Nome do projeto, ex.: "Filme B"'
-              className="flex-1 bg-[#050507] border border-white/10 px-3 py-2 text-sm text-zinc-200"
+              className="flex-1 bg-bg-base border border-white/10 px-3 py-2 text-sm text-zinc-200"
             />
             <button
               type="submit"
               disabled={pending}
-              className="font-tech text-xs uppercase tracking-wider px-4 py-2 bg-[#D4FF00] text-[#050507] hover:bg-[#e2ff4d] transition-colors duration-100 disabled:opacity-40"
+              className="font-tech text-xs uppercase tracking-wider px-4 py-2 bg-lime text-on-accent hover:bg-lime-hover transition-colors duration-100 disabled:opacity-40"
             >
               Criar projeto com este roteiro
             </button>
@@ -92,7 +92,7 @@ export function GuestImportBanner() {
 
         <button
           onClick={dismiss}
-          className="self-start font-tech text-[10px] uppercase tracking-widest text-muted hover:text-[#FAFAFA] transition-colors duration-100"
+          className="self-start font-tech text-[10px] uppercase tracking-widest text-muted hover:text-title transition-colors duration-100"
         >
           Dispensar
         </button>

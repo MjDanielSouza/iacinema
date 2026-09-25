@@ -22,19 +22,19 @@ export function PromptBox({
   }
 
   return (
-    <div className="bg-[#0D0E12] border border-white/10 rounded-xl p-4 flex flex-col h-full">
+    <div className="bg-surface-card border border-white/10 rounded-xl p-4 flex flex-col h-full">
       <div className="flex items-center justify-between mb-2">
         <span className="text-xs uppercase tracking-wider text-zinc-500 font-semibold">
           {label}
         </span>
         <button
           onClick={copy}
-          className="flex items-center gap-1 text-xs text-amber-400 hover:text-amber-300 px-2 py-1 rounded border border-amber-900 transition-colors"
+          className="press flex items-center gap-1 text-xs text-lime hover:text-lime-hover px-2 py-1 rounded border border-lime/50 hover:border-lime transition-colors duration-150"
         >
-          {copied ? "Copiado!" : "Copiar"}
+          {copied ? "Copiado ✓" : "Copiar"}
         </button>
       </div>
-      <div className="bg-[#050507] border border-white/10 rounded-lg p-3 text-xs text-[#D4FF00] leading-relaxed font-mono flex-1 whitespace-pre-wrap">
+      <div className="bg-bg-base border border-white/10 rounded-lg p-3 text-xs text-lime leading-relaxed font-mono flex-1 whitespace-pre-wrap">
         {text}
       </div>
     </div>

@@ -1,21 +1,24 @@
 @import "tailwindcss";
+@import "../styles/tokens.css";
 
+/* ==========================================================================
+   Compatibilidade — páginas internas (dashboard, curso, projetos, admin,
+   login) usavam um vocabulário de classes/variáveis mais antigo. Em vez de
+   reescrever cada arquivo, essas variáveis/classes continuam existindo mas
+   agora apontam para os tokens novos, então elas herdam o sistema atual
+   automaticamente e nada quebra.
+   ========================================================================== */
 :root {
-  /* Cinema Dark — Obsidian / sala de projeção */
-  --background: #050507;
-  --panel: #0d0e12;
-  --panel-2: #14151b;
-  --foreground: #fafafa;
-  --muted: #8e929f;
-  --line: rgba(255, 255, 255, 0.08);
-  --line-hover: rgba(212, 255, 0, 0.35);
-
-  /* Electric Acid Lime — accent de altíssima conversão (Higgsfield) */
-  --accent: #d4ff00;
-  /* Âmbar Tungstênio 3200K — destaques técnicos / direção de cena */
-  --accent-secondary: #f59e0b;
-  /* REC / alerta */
-  --rec: #e53935;
+  --background: var(--bg-base);
+  --panel: var(--surface-card);
+  --panel-2: var(--surface-card-elevated);
+  --foreground: var(--text-title);
+  --muted: var(--text-muted);
+  --line: var(--border-default);
+  --line-hover: var(--border-accent);
+  --accent: var(--accent-lime);
+  --accent-secondary: var(--accent-lime);
+  --rec: var(--accent-red);
 }
 
 @theme inline {
@@ -28,9 +31,6 @@
   --color-accent: var(--accent);
   --color-accent-secondary: var(--accent-secondary);
   --color-rec: var(--rec);
-  --font-sans: var(--font-sans);
-  --font-serif: var(--font-serif);
-  --font-mono: var(--font-mono);
 }
 
 html {
@@ -38,63 +38,57 @@ html {
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family:
-    var(--font-sans),
-    system-ui,
-    -apple-system,
-    "Segoe UI",
-    Roboto,
-    sans-serif;
+  background: var(--bg-base);
+  color: var(--text-body);
+  font-family: var(--font-body), system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 }
 
-/* Destaque editorial dramático (Instrument Serif itálico) — usado nos
-   títulos de página, mantido com esse nome de classe porque várias
-   páginas já referenciam "font-display". */
+/* Destaque editorial (Instrument Serif itálico) */
 .font-display {
-  font-family: var(--font-serif), Georgia, serif;
+  font-family: var(--font-editorial), Georgia, serif;
   font-style: italic;
   font-weight: 400;
 }
 
+/* Rótulos técnicos (Space Mono) */
 .font-tech {
-  font-family: var(--font-mono), ui-monospace, monospace;
+  font-family: var(--font-technical), ui-monospace, monospace;
 }
 
-/* Marcador de enquadramento — mira de visor de câmera nos cruzamentos do grid */
-.crosshair {
-  font-family: var(--font-mono), ui-monospace, monospace;
-  color: #52524e;
-  user-select: none;
+/* Grão de filme — camada fixa e sutil sobre a página inteira */
+.film-grain {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
   pointer-events: none;
-  font-size: 12px;
-  line-height: 1;
+  opacity: 0.05;
+  mix-blend-mode: overlay;
 }
 
-/* Glassmorphism escuro — superfícies flutuantes (modais, hero, cards HUD).
-   Borda superior mais clara que as outras = luz "pegando" no material
-   (apple-design §12), saturação elevada mantém a vibrância sob o blur. */
+/* Grid técnico de fundo (ref 2), com máscara radial pra sumir nas bordas */
+.tech-grid {
+  background-image: var(--overlay-tech-grid);
+  -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, black 40%, transparent 80%);
+  mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, black 40%, transparent 80%);
+}
+
+/* Glassmorphism — cards flutuantes sobre imagem/vídeo (atmosfera violeta) */
 .glass {
-  background: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(24px) saturate(160%);
-  -webkit-backdrop-filter: blur(24px) saturate(160%);
-  border: 1px solid var(--line);
-  border-top-color: rgba(255, 255, 255, 0.14);
+  background: var(--surface-glass);
+  backdrop-filter: blur(16px) saturate(140%);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  border: 1px solid var(--border-violet);
 }
 
 .glass-hover {
-  transition:
-    border-color 150ms ease,
-    background-color 150ms ease;
+  transition: border-color var(--duration-base) var(--ease-standard),
+    background-color var(--duration-base) var(--ease-standard);
 }
 
 .glass-hover:hover {
-  border-color: var(--line-hover);
+  border-color: var(--border-accent);
 }
 
-/* "Materializa" em vez de só aparecer — escala + blur juntos no enter
-   (apple-design §12), com fallback de cross-fade em movimento reduzido. */
 @keyframes materialize {
   from {
     opacity: 0;
@@ -109,36 +103,20 @@ body {
 }
 
 .glass-in {
-  animation: materialize 220ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  animation: materialize var(--duration-slow) var(--ease-emphasized) both;
 }
 
-/* Feedback instantâneo na pressão, não na soltura (apple-design §1) —
-   aplicado nos elementos que carregam a classe utilitária .press. */
+/* Feedback instantâneo na pressão — usado em controles que não são o
+   componente <Button> (ele já tem seu próprio hover/active). */
 .press {
-  transition: transform 100ms ease-out;
+  transition: transform var(--duration-fast) ease-out;
 }
 
 .press:active {
   transform: scale(0.97);
 }
 
-/* Atmosfera — glow radial esmaecido atrás de monitores/frames */
-.atmosphere::before {
-  content: "";
-  position: absolute;
-  inset: -20%;
-  z-index: -1;
-  background: radial-gradient(
-    ellipse at center,
-    rgba(212, 255, 0, 0.08),
-    transparent 65%
-  );
-  pointer-events: none;
-}
-
-/* Header fixo como camada translúcida, com uma borda-fade em vez de um
-   divisor rígido — a chrome flutuante só "risca" onde encosta no
-   conteúdo (apple-design §12). */
+/* Header fixo como camada translúcida com borda-fade em vez de divisor reto */
 .chrome-edge {
   position: relative;
 }
@@ -150,12 +128,98 @@ body {
   right: 0;
   bottom: -8px;
   height: 8px;
-  background: linear-gradient(to bottom, var(--line), transparent);
+  background: linear-gradient(to bottom, var(--border-default), transparent);
   pointer-events: none;
 }
 
-/* Movimento reduzido: troca escala/spring por cross-fade curto, sem
-   overshoot (apple-design §14). */
+/* Sublinhado que cresce da esquerda no hover (ghost_link) */
+.link-underline {
+  position: relative;
+}
+
+.link-underline::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 100%;
+  height: 1px;
+  background: var(--accent-lime);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--duration-base) var(--ease-standard);
+}
+
+.link-underline:hover::after {
+  transform: scaleX(1);
+}
+
+/* Indicador REC pulsante */
+@keyframes rec-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+
+.rec-pulse {
+  animation: rec-pulse 1.6s infinite;
+}
+
+/* Abertura de claquete do hero — único grande movimento automático da página */
+@keyframes letterbox-open {
+  from {
+    clip-path: inset(50% 0 50% 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+.hero-letterbox {
+  animation: letterbox-open var(--duration-cinematic) var(--ease-emphasized) both;
+}
+
+@keyframes line-reveal {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.hero-line-reveal {
+  display: inline-block;
+  animation: line-reveal var(--duration-slow) var(--ease-emphasized) both;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.hero-fade-in {
+  animation: fade-in var(--duration-slow) var(--ease-standard) both;
+}
+
+/* Foco visível — 2px lime, offset 3px */
+:focus-visible {
+  outline: 2px solid var(--accent-lime);
+  outline-offset: 3px;
+}
+
+/* Movimento reduzido: desliga clip-path/parallax/typewriter/pulse, mantém
+   apenas fades curtos. */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -169,12 +233,19 @@ body {
   .press:active {
     transform: none;
   }
+
+  .hero-letterbox,
+  .hero-line-reveal {
+    clip-path: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+  }
 }
 
-/* Transparência reduzida: materiais ficam mais sólidos, sem blur. */
+/* Transparência reduzida: materiais ficam sólidos, sem blur. */
 @media (prefers-reduced-transparency: reduce) {
   .glass {
-    background: var(--panel);
+    background: var(--surface-card-elevated);
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
   }

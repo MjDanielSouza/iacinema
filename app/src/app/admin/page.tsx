@@ -54,7 +54,7 @@ export default async function AdminPage() {
   return (
     <>
       <AppHeader authed backHref="/dashboard" backLabel="Dashboard" />
-      <main className="min-h-screen bg-[#050507] text-zinc-300 px-4 py-12">
+      <main className="min-h-screen bg-bg-base text-zinc-300 px-4 py-12">
       <div className="max-w-4xl mx-auto">
         <h1 className="font-display font-semibold text-2xl text-white mb-2">Dashboard do Admin</h1>
         <p className="text-sm text-zinc-500 mb-8">
@@ -62,23 +62,23 @@ export default async function AdminPage() {
         </p>
 
         <div className="grid grid-cols-3 gap-4 mb-8">
-          <div className="bg-[#0D0E12] border border-white/10 rounded-xl p-4 text-center">
+          <div className="bg-surface-card border border-white/10 rounded-xl p-4 text-center">
             <p className="text-2xl font-bold text-white">{totalStudents}</p>
             <p className="text-xs text-zinc-500">Alunos</p>
           </div>
-          <div className="bg-[#0D0E12] border border-white/10 rounded-xl p-4 text-center">
-            <p className="text-2xl font-bold text-amber-400">{totalCompletedCourse}</p>
+          <div className="bg-surface-card border border-white/10 rounded-xl p-4 text-center">
+            <p className="text-2xl font-bold text-lime">{totalCompletedCourse}</p>
             <p className="text-xs text-zinc-500">Curso completo</p>
           </div>
-          <div className="bg-[#0D0E12] border border-white/10 rounded-xl p-4 text-center">
-            <p className="text-2xl font-bold text-[#D4FF00]">
+          <div className="bg-surface-card border border-white/10 rounded-xl p-4 text-center">
+            <p className="text-2xl font-bold text-lime">
               {[...projectsByUser.values()].reduce((a, b) => a + b, 0)}
             </p>
             <p className="text-xs text-zinc-500">Projetos criados</p>
           </div>
         </div>
 
-        <div className="bg-[#0D0E12] border border-white/10 rounded-xl overflow-hidden">
+        <div className="bg-surface-card border border-white/10 rounded-xl overflow-hidden">
           <table className="w-full text-sm">
             <thead>
               <tr className="text-left text-xs uppercase tracking-wider text-zinc-500 border-b border-white/10">
@@ -117,7 +117,7 @@ export default async function AdminPage() {
                     <td className="px-4 py-3">
                       <span
                         className={
-                          completed === 5 ? "text-amber-400 font-semibold" : "text-zinc-400"
+                          completed === 5 ? "text-lime font-semibold" : "text-zinc-400"
                         }
                       >
                         {completed}/5

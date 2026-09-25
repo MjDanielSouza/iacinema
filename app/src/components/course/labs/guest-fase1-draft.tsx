@@ -33,7 +33,7 @@ export function GuestFase1Draft() {
         </p>
         <button
           onClick={clearDraft}
-          className="font-tech text-[10px] uppercase tracking-widest text-[#D4FF00] hover:text-[#e2ff4d] transition-colors duration-100 border border-[#D4FF00]/30 px-2 py-1"
+          className="font-tech text-[10px] uppercase tracking-widest text-lime hover:text-lime-hover transition-colors duration-100 border border-lime/30 px-2 py-1"
         >
           [Limpar e Usar Meu Roteiro]
         </button>

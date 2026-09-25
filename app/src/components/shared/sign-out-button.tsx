@@ -16,7 +16,7 @@ export function SignOutButton() {
   return (
     <button
       onClick={handleSignOut}
-      className="press font-tech text-[10px] uppercase tracking-widest text-muted hover:text-[#FAFAFA] border border-line hover:border-[#D4FF00]/40 px-3 py-1.5 transition duration-150 ease-out"
+      className="press font-tech text-[10px] uppercase tracking-widest text-muted hover:text-title border border-line hover:border-lime/40 px-3 py-1.5 transition duration-150 ease-out"
     >
       Sair
     </button>

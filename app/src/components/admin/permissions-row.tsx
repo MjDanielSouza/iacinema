@@ -48,7 +48,7 @@ export function PermissionsRow({
         value={role}
         onChange={(e) => setRole(e.target.value as Role)}
         disabled={isSelf}
-        className="bg-[#14151B] border border-white/10 rounded px-2 py-1 text-xs text-zinc-200 disabled:opacity-50"
+        className="bg-surface-card-elevated border border-white/10 rounded px-2 py-1 text-xs text-zinc-200 disabled:opacity-50"
         title={isSelf ? "Você não pode alterar o próprio papel" : undefined}
       >
         {ROLES.map((r) => (
@@ -61,7 +61,7 @@ export function PermissionsRow({
       <select
         value={plan}
         onChange={(e) => setPlan(e.target.value as Plan)}
-        className="bg-[#14151B] border border-white/10 rounded px-2 py-1 text-xs text-zinc-200"
+        className="bg-surface-card-elevated border border-white/10 rounded px-2 py-1 text-xs text-zinc-200"
       >
         {PLANS.map((p) => (
           <option key={p} value={p}>
@@ -75,18 +75,18 @@ export function PermissionsRow({
         min={0}
         value={projectLimit}
         onChange={(e) => setProjectLimit(Number(e.target.value))}
-        className="w-14 bg-[#14151B] border border-white/10 rounded px-2 py-1 text-xs text-zinc-200"
+        className="w-14 bg-surface-card-elevated border border-white/10 rounded px-2 py-1 text-xs text-zinc-200"
       />
 
       <button
         onClick={save}
         disabled={!dirty || status === "saving"}
-        className="text-xs px-2 py-1 rounded bg-amber-500 text-[#050507] font-semibold disabled:opacity-30 disabled:cursor-not-allowed"
+        className="text-xs px-2 py-1 rounded bg-lime text-on-accent font-semibold disabled:opacity-30 disabled:cursor-not-allowed"
       >
         {status === "saving" ? "..." : "Salvar"}
       </button>
 
-      {status === "saved" && <span className="text-[11px] text-amber-400">Salvo ✓</span>}
+      {status === "saved" && <span className="text-[11px] text-lime">Salvo ✓</span>}
       {status === "error" && <span className="text-[11px] text-red-400">Erro</span>}
     </div>
   );

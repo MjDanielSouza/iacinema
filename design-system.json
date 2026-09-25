@@ -1,0 +1,381 @@
+{
+  "meta": {
+    "name": "Pipeline — Cinematic Dark System",
+    "version": "1.0.0",
+    "project": "iacinema.vercel.app",
+    "sources": {
+      "ref_1_lena_films": "Serif editorial + itálico violeta, glassmorphism escuro, cards de filme com play circular, faixa de stats",
+      "ref_2_crypto": "Display geométrico bold, lime neon em palavra-chave, card central destacado em lime, grid técnico de fundo, linhas orbitais",
+      "ref_3_moon_knight": "Divisores angulares (chanfrados) em linhas finas, numeração 01–05 como paginação, vermelho sinalizador, carrossel com card central maior",
+      "ref_4_wakanda": "Hero full-bleed com fade para preto, pills outline, galeria 3x3 de frames, citação centralizada em itálico",
+      "ref_5_arora": "Glow radial verde atrás do hero, cards de feature com ícone em quadrado verde sólido, pricing de 3 colunas, mock de app dentro da página",
+      "ref_6_good_idea": "Headlines mono/pixel em caixa alta, chips lime com ponto, bento grid, moldura com borda lime, logos de equipamento em círculos"
+    },
+    "direction": "Sala de edição à noite: fundo quase preto, frames de cinema como protagonistas, lime neon como luz de monitor/tally, violeta como luz cinematográfica ambiente, vermelho apenas como sinal REC."
+  },
+
+  "colors": {
+    "background": {
+      "base": { "hex": "#07070A", "rgb": "7, 7, 10", "use": "fundo global do body" },
+      "deep": { "hex": "#030304", "rgb": "3, 3, 4", "use": "footer, fade final de heros full-bleed (ref 4)" },
+      "raised": { "hex": "#0C0C10", "rgb": "12, 12, 16", "use": "seções alternadas" },
+      "violet_night": { "hex": "#0E0A1A", "rgb": "14, 10, 26", "use": "base de seções com clima cinematográfico (ref 1)" }
+    },
+    "surface": {
+      "card": { "hex": "#111114", "rgb": "17, 17, 20", "use": "cards padrão" },
+      "card_elevated": { "hex": "#17171C", "rgb": "23, 23, 28", "use": "cards em hover, modais, mock de interface" },
+      "card_olive": { "hex": "#1C1F14", "rgb": "28, 31, 20", "use": "card de destaque tonalizado em verde-oliva (ref 6)" },
+      "glass": { "value": "rgba(20, 16, 32, 0.55)", "backdrop_filter": "blur(16px) saturate(140%)", "use": "cards flutuantes sobre imagem (ref 1: 'Based in')" },
+      "input": { "hex": "#15151A", "rgb": "21, 21, 26" }
+    },
+    "border": {
+      "subtle": { "value": "rgba(255, 255, 255, 0.06)", "use": "divisores internos" },
+      "default": { "value": "rgba(255, 255, 255, 0.10)", "use": "borda de cards" },
+      "strong": { "value": "rgba(255, 255, 255, 0.22)", "use": "botões outline, pills" },
+      "violet": { "value": "rgba(178, 102, 232, 0.45)", "use": "botões outline e cards glass na atmosfera violeta (ref 1)" },
+      "accent": { "value": "rgba(200, 243, 29, 0.55)", "use": "moldura de destaque (ref 6), foco" },
+      "hairline_white": { "value": "rgba(255, 255, 255, 0.85)", "use": "divisores angulares de seção (ref 3)" }
+    },
+    "text": {
+      "title": { "hex": "#F5F5F2", "rgb": "245, 245, 242" },
+      "subtitle": { "hex": "#C9C9CF", "rgb": "201, 201, 207" },
+      "body": { "hex": "#A1A1AA", "rgb": "161, 161, 170" },
+      "muted": { "hex": "#6B6B75", "rgb": "107, 107, 117" },
+      "dim_headline": { "hex": "#8A8A8F", "rgb": "138, 138, 143", "use": "palavras secundárias em headline de dois tons (ref 2: 'Best crypto' cinza + 'for your future')" },
+      "on_accent": { "hex": "#0A0A0A", "rgb": "10, 10, 10", "use": "texto sobre lime" }
+    },
+    "accent": {
+      "primary_lime": { "hex": "#C8F31D", "rgb": "200, 243, 29", "use": "CTA principal, palavra-chave em headline, card destacado, chips", "share_of_accent_usage": "≈70%" },
+      "primary_lime_hover": { "hex": "#D8FF3A", "rgb": "216, 255, 58" },
+      "primary_lime_pressed": { "hex": "#AED400", "rgb": "174, 212, 0" },
+      "glow_green": { "hex": "#5BE37D", "rgb": "91, 227, 125", "use": "halos radiais e ícones em quadrado sólido (ref 5)" },
+      "cinema_violet": { "hex": "#B266E8", "rgb": "178, 102, 232", "use": "itálico serif editorial, luz ambiente, borda de CTA secundário (ref 1)", "share_of_accent_usage": "≈20%" },
+      "cinema_violet_deep": { "hex": "#6A2FD0", "rgb": "106, 47, 208", "use": "gradiente de botão violeta (ref 1 'View my work')" },
+      "signal_red": { "hex": "#E0262F", "rgb": "224, 38, 47", "use": "SOMENTE indicador REC/ao vivo, fase ativa na timeline, linhas de acento angulares (ref 3)", "share_of_accent_usage": "≈10%" }
+    },
+    "gradients": {
+      "hero_glow_green": "radial-gradient(60% 55% at 50% 30%, rgba(91,227,125,0.28) 0%, rgba(91,227,125,0.06) 45%, transparent 70%)",
+      "hero_glow_violet": "radial-gradient(50% 60% at 70% 20%, rgba(130,70,230,0.35) 0%, rgba(40,20,90,0.15) 45%, transparent 75%)",
+      "image_fade_bottom": "linear-gradient(180deg, transparent 0%, rgba(7,7,10,0.35) 55%, #07070A 100%)",
+      "image_fade_left": "linear-gradient(90deg, #07070A 0%, rgba(7,7,10,0.75) 35%, transparent 70%)",
+      "card_scrim": "linear-gradient(180deg, transparent 40%, rgba(0,0,0,0.85) 100%)",
+      "btn_violet": "linear-gradient(135deg, #7A3BE0 0%, #B266E8 100%)",
+      "corner_glow_lime": "radial-gradient(40% 40% at 100% 0%, rgba(200,243,29,0.14), transparent 70%)"
+    },
+    "overlays": {
+      "tech_grid": "linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px) 0 0 / 64px 64px, linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px) 0 0 / 64px 64px",
+      "film_grain": "SVG feTurbulence baseFrequency 0.8, opacity 0.05, mix-blend-mode overlay"
+    }
+  },
+
+  "typography": {
+    "families": {
+      "display": { "family": "Syne", "fallback": "'Helvetica Neue', Arial, sans-serif", "source": "Google Fonts", "reason": "sans geométrica larga e pesada (ref 2, ref 5)" },
+      "editorial": { "family": "Instrument Serif", "fallback": "'Times New Roman', Georgia, serif", "source": "Google Fonts", "reason": "serif fina de alto contraste com itálico (ref 1)" },
+      "technical": { "family": "Space Mono", "fallback": "'SFMono-Regular', Menlo, monospace", "source": "Google Fonts", "reason": "caixa alta técnica de claquete/slate (ref 6)" },
+      "body": { "family": "Manrope", "fallback": "system-ui, -apple-system, sans-serif", "source": "Google Fonts" }
+    },
+    "roles": {
+      "hero_display": { "family": "display", "weight": 700, "size": "clamp(2.75rem, 6.2vw, 5.75rem)", "line_height": 0.98, "letter_spacing": "-0.03em", "note": "headline em dois tons: parte em text.title, parte em text.dim_headline; UMA expressão em accent.primary_lime" },
+      "editorial_display": { "family": "editorial", "weight": 400, "size": "clamp(2.5rem, 5.5vw, 5rem)", "line_height": 1.02, "letter_spacing": "-0.015em", "note": "usado em seções narrativas (manifesto, comunidade); itálico em cinema_violet para no máximo uma expressão" },
+      "h2": { "family": "display", "weight": 700, "size": "clamp(2rem, 3.6vw, 3.25rem)", "line_height": 1.05, "letter_spacing": "-0.02em" },
+      "h2_technical": { "family": "technical", "weight": 700, "size": "clamp(1.9rem, 3.8vw, 3.5rem)", "line_height": 1.0, "letter_spacing": "0.02em", "transform": "uppercase", "note": "para títulos tipo slate: 'AS 5 FASES' (ref 6)" },
+      "h3": { "family": "display", "weight": 600, "size": "1.375rem", "line_height": 1.2, "letter_spacing": "-0.01em" },
+      "h4_card": { "family": "editorial", "weight": 400, "size": "1.625rem", "line_height": 1.15, "note": "títulos de card de filme (ref 1: 'Bloom', 'She Moves')" },
+      "body_lg": { "family": "body", "weight": 400, "size": "1.125rem", "line_height": 1.65, "max_width": "58ch" },
+      "body": { "family": "body", "weight": 400, "size": "1rem", "line_height": 1.65, "max_width": "65ch" },
+      "body_sm": { "family": "body", "weight": 400, "size": "0.875rem", "line_height": 1.55 },
+      "label_technical": { "family": "technical", "weight": 400, "size": "0.75rem", "line_height": 1.4, "letter_spacing": "0.14em", "transform": "uppercase", "note": "tags de metadados reais: [SC-01], [DIRETOR], códigos de fase" },
+      "stat_number": { "family": "editorial", "weight": 400, "size": "clamp(2rem, 3vw, 2.75rem)", "line_height": 1 },
+      "index_number": { "family": "display", "weight": 700, "size": "clamp(2rem, 3vw, 2.5rem)", "note": "01–05 das fases; ativo em title, inativos em muted (ref 3)" },
+      "button": { "family": "body", "weight": 700, "size": "0.875rem", "letter_spacing": "0.01em" },
+      "quote": { "family": "editorial", "style": "italic", "size": "clamp(1.75rem, 3vw, 2.5rem)", "line_height": 1.2 }
+    },
+    "scale_ratio": "1.25 (major third) no corpo, saltos livres via clamp() nos displays"
+  },
+
+  "layout": {
+    "container": { "max_width": "1240px", "padding_inline": "clamp(20px, 4vw, 48px)" },
+    "narrow_container": { "max_width": "880px" },
+    "grid": { "columns": 12, "gutter": "24px", "gutter_mobile": "16px" },
+    "section_spacing": { "desktop": "136px", "tablet": "104px", "mobile": "80px" },
+    "section_header_to_content": "56px",
+    "stack_gap": { "xs": "8px", "sm": "12px", "md": "20px", "lg": "32px", "xl": "48px" },
+    "card_gap": { "default": "20px", "bento": "16px", "gallery": "12px" },
+    "card_padding": { "sm": "20px", "md": "28px", "lg": "40px" },
+    "hero": { "min_height": "min(92vh, 900px)", "text_column": "span 6 de 12", "headline_max_width": "12ch" },
+    "breakpoints": { "sm": "640px", "md": "768px", "lg": "1024px", "xl": "1280px" },
+    "alignment": "Esquerda como padrão (ref 1, 2, 6). Centralizado apenas para citação final e CTA de fechamento (ref 4, 5)."
+  },
+
+  "radii": {
+    "none": "0px",
+    "xs": "6px",
+    "sm": "10px",
+    "md": "14px",
+    "lg": "20px",
+    "xl": "28px",
+    "pill": "999px",
+    "rule": "Hierarquia de raio: botões e chips = pill; cards de conteúdo = md; containers grandes / mock de app / moldura bento = lg; frames de filme = sm; divisores angulares = 0."
+  },
+
+  "shadows": {
+    "none": "none",
+    "card": "0 1px 0 rgba(255,255,255,0.04) inset, 0 20px 40px -24px rgba(0,0,0,0.8)",
+    "float": "0 30px 80px -30px rgba(0,0,0,0.9)",
+    "glow_lime": "0 0 0 1px rgba(200,243,29,0.35), 0 10px 40px -8px rgba(200,243,29,0.45)",
+    "glow_violet": "0 0 0 1px rgba(178,102,232,0.45), 0 10px 40px -10px rgba(122,59,224,0.55)",
+    "glow_green_soft": "0 0 60px rgba(91,227,125,0.25)"
+  },
+
+  "components": {
+    "buttons": {
+      "primary": {
+        "ref": "ref 2 'Explore now', ref 6 'Fill in the brief'",
+        "background": "#C8F31D",
+        "text": "#0A0A0A",
+        "border": "none",
+        "radius": "pill",
+        "height": "52px",
+        "padding": "0 28px",
+        "icon": "seta diagonal ↗ em círculo escuro de 28px à direita (ref 2)",
+        "hover": { "background": "#D8FF3A", "shadow": "glow_lime", "transform": "translateY(-1px)", "icon": "gira 45° e desliza 2px" },
+        "active": { "background": "#AED400", "transform": "translateY(0) scale(0.98)" }
+      },
+      "secondary_violet": {
+        "ref": "ref 1 'View my work'",
+        "background": "btn_violet",
+        "text": "#FFFFFF",
+        "border": "1px solid rgba(255,255,255,0.18)",
+        "radius": "pill",
+        "height": "52px",
+        "hover": { "shadow": "glow_violet", "filter": "brightness(1.08)" },
+        "usage": "somente dentro de seções com clima violeta"
+      },
+      "outline": {
+        "ref": "ref 1 'Let's create', ref 4 pills",
+        "background": "transparent",
+        "text": "#F5F5F2",
+        "border": "1px solid rgba(255,255,255,0.22)",
+        "radius": "pill",
+        "height": "48px",
+        "hover": { "border_color": "#C8F31D", "text": "#C8F31D", "background": "rgba(200,243,29,0.06)" }
+      },
+      "play": {
+        "ref": "ref 1 'Play showreel' e botões de play nos cards",
+        "size": "56px (hero) / 40px (card)",
+        "shape": "círculo",
+        "background": "rgba(255,255,255,0.08) + backdrop blur",
+        "border": "1px solid rgba(255,255,255,0.3)",
+        "hover": { "scale": 1.08, "background": "#C8F31D", "icon_color": "#0A0A0A" },
+        "label": "texto ao lado em body 700"
+      },
+      "ghost_link": { "text": "#F5F5F2", "underline": "linha 1px lime que cresce da esquerda no hover (scaleX 0→1)" }
+    },
+    "cards": {
+      "base": {
+        "background": "#111114",
+        "border": "1px solid rgba(255,255,255,0.10)",
+        "radius": "md",
+        "padding": "md",
+        "shadow": "card",
+        "hover": { "border_color": "rgba(255,255,255,0.20)", "background": "#17171C", "transform": "translateY(-2px)" }
+      },
+      "featured_lime": {
+        "ref": "ref 2 card '02. Industry best practices'",
+        "background": "#C8F31D",
+        "text": "#0A0A0A",
+        "radius": "md",
+        "behavior": "é 24px mais alto que os vizinhos e sobressai acima da linha deles; usado UMA vez por página"
+      },
+      "film_frame": {
+        "ref": "ref 1 grade 'Selected Films', ref 4 galeria",
+        "image": "object-fit cover, radius sm",
+        "scrim": "card_scrim",
+        "content_position": "canto inferior esquerdo, padding 24px",
+        "category_label": "label_technical em text.subtitle",
+        "title": "h4_card",
+        "play_button": "canto inferior direito",
+        "hover": { "image_scale": 1.05, "duration": "900ms", "scrim_opacity": "0.85 → 0.65" }
+      },
+      "glass_info": {
+        "ref": "ref 1 card 'Based in Vancouver'",
+        "background": "surface.glass",
+        "border": "1px solid rgba(178,102,232,0.45)",
+        "radius": "md",
+        "dividers": "border.subtle entre blocos internos"
+      },
+      "feature_icon": {
+        "ref": "ref 5 cards 'Text to Video'",
+        "layout": "linha: ícone 64px em quadrado sólido glow_green radius sm + título/descrição",
+        "background": "#111114",
+        "border": "border.default"
+      },
+      "bento_frame": {
+        "ref": "ref 6 moldura com borda lime",
+        "border": "1px solid rgba(200,243,29,0.55)",
+        "radius": "lg",
+        "background": "#0C0C10",
+        "padding": "lg",
+        "inner_gap": "16px"
+      },
+      "stats_bar": {
+        "ref": "ref 1 faixa '80+ Projects'",
+        "container": "base card, radius lg, 4 colunas com divisor vertical border.subtle",
+        "icon": "outline 32px em text.subtitle",
+        "number": "stat_number",
+        "label": "body_sm muted"
+      },
+      "mock_interface": {
+        "ref": "ref 5 mock do app 'Generate Images'",
+        "background": "#0C0C10",
+        "border": "border.default",
+        "radius": "lg",
+        "sidebar": "220px, background #07070A, item ativo com fundo #17171C",
+        "use": "prévias de laboratório/projeto (SC-01, /PROJETO_FILME_B)"
+      }
+    },
+    "badges_tags": {
+      "chip_lime_dot": {
+        "ref": "ref 6 '● Podcasts'",
+        "background": "rgba(200,243,29,0.14)",
+        "text": "#C8F31D",
+        "border": "1px solid rgba(200,243,29,0.35)",
+        "radius": "pill",
+        "padding": "6px 12px",
+        "font": "label_technical",
+        "dot": "6px lime à esquerda"
+      },
+      "pill_outline": {
+        "ref": "ref 4 'Action / Sci-Fi'",
+        "border": "1px solid rgba(255,255,255,0.35)",
+        "radius": "pill",
+        "padding": "8px 22px",
+        "text": "text.subtitle",
+        "font": "body_sm"
+      },
+      "role_tag": {
+        "use": "[DIRETOR] [DIR. ARTE] [EDITOR]",
+        "font": "label_technical",
+        "background": "#17171C",
+        "border": "border.default",
+        "radius": "xs",
+        "padding": "4px 8px"
+      },
+      "rec_indicator": {
+        "ref": "vermelho de ref 3",
+        "dot": "8px signal_red com pulso",
+        "text": "label_technical",
+        "use": "fase atual, 'ao vivo', laboratório em execução"
+      },
+      "avatar_stack": {
+        "ref": "ref 2 '168K+ Realtime users'",
+        "size": "40px",
+        "overlap": "-12px",
+        "ring": "2px solid #07070A"
+      }
+    },
+    "dividers": {
+      "angular_rule": {
+        "ref": "ref 3 linhas chanfradas",
+        "description": "linha 1px com dois chanfros de 45° formando uma aba central elevada; SVG com stroke border.hairline_white",
+        "accent_variant": "segundo traço paralelo em signal_red deslocado 20px, cobrindo 60% da largura",
+        "use": "abrir/fechar a seção das 5 fases e o hero"
+      },
+      "hairline": "1px border.subtle"
+    },
+    "navigation": {
+      "header": {
+        "height": "76px",
+        "background": "transparente no topo; ao rolar: rgba(7,7,10,0.72) + blur(14px) + border-bottom border.subtle",
+        "logo": "'Pipeline.' em display 700, ponto final em lime",
+        "links": "body_sm 500, text.subtitle; hover text.title",
+        "cta": "outline (ref 1) → vira primary em hover"
+      },
+      "pagination_numbers": {
+        "ref": "ref 3 '01 02 03 04 05'",
+        "active": "index_number em title + ponto 4px abaixo",
+        "inactive": "muted, 70% do tamanho"
+      },
+      "vertical_timeline": {
+        "ref": "ref 3 linha com nós circulares",
+        "node": "12px círculo outline branco 2px; ativo preenchido em signal_red",
+        "line": "2px border.strong"
+      }
+    },
+    "forms": {
+      "input": {
+        "background": "#15151A",
+        "border": "1px solid rgba(255,255,255,0.10)",
+        "radius": "pill",
+        "height": "52px",
+        "padding": "0 20px",
+        "placeholder": "text.muted",
+        "focus": "border #C8F31D + 0 0 0 4px rgba(200,243,29,0.15)",
+        "inline_submit": "botão circular 40px lime dentro do input à direita (ref 1 newsletter)"
+      }
+    },
+    "quote_block": {
+      "ref": "ref 1 depoimento, ref 4 citação final",
+      "mark": "aspas em editorial 72px cinema_violet",
+      "text": "quote",
+      "attribution": "body_sm subtitle + avatar 64px"
+    },
+    "footer": {
+      "background": "#030304",
+      "columns": "4 (marca, navegar, começar, conta)",
+      "headline": "editorial 2rem",
+      "social_icons": "círculos 48px outline border.strong"
+    }
+  },
+
+  "effects": {
+    "hero_image_treatment": "imagem full-bleed à direita/fundo + image_fade_left + image_fade_bottom + film_grain",
+    "tech_grid_background": "overlays.tech_grid com mask radial para sumir nas bordas (ref 2)",
+    "orbit_lines": "elipses SVG 1px lime a 35% de opacidade ao redor de um mock, com 2 pontos de 8px sobre a trajetória (ref 2)",
+    "ghost_type": "palavra gigante em display 700, 18vw, stroke 1px rgba(255,255,255,0.06), atrás do hero (ref 2 'READ', ref 6 'MAIN PAGE')"
+  },
+
+  "motion": {
+    "easing": {
+      "standard": "cubic-bezier(0.22, 1, 0.36, 1)",
+      "emphasized": "cubic-bezier(0.16, 1, 0.3, 1)",
+      "exit": "cubic-bezier(0.4, 0, 1, 1)"
+    },
+    "duration": { "fast": "150ms", "base": "250ms", "slow": "500ms", "cinematic": "900ms" },
+    "orchestrated_moment": {
+      "name": "Abertura de claquete (page load do hero)",
+      "sequence": [
+        "0ms: frame do hero entra com clip-path inset(50% 0 50% 0) → inset(0) em 900ms (abertura letterbox)",
+        "300ms: headline revela linha a linha (translateY 100% → 0, mask por linha), stagger 90ms",
+        "700ms: parágrafo e CTAs em fade 400ms",
+        "900ms: indicador REC começa a pulsar"
+      ],
+      "rule": "é o ÚNICO movimento automático grande da página"
+    },
+    "scroll": {
+      "phases_timeline": "na seção das 5 fases, o número ativo (01–05) e o nó da timeline acompanham o scroll via IntersectionObserver; troca de fase com crossfade 250ms",
+      "parallax": "imagem do hero translateY até 8% no scroll (desligado em mobile)",
+      "reveal": "nada de fade-up em toda seção; apenas cards da galeria entram com opacity 0→1 escalonado 60ms quando visíveis"
+    },
+    "hover": {
+      "buttons": "ver components.buttons",
+      "film_frames": "zoom de imagem 1.05 em 900ms",
+      "cards": "borda clareia + translateY(-2px) em 250ms",
+      "links": "sublinhado lime scaleX"
+    },
+    "micro": {
+      "rec_pulse": "keyframes opacity 1 → 0.35 → 1, 1.6s infinite",
+      "typewriter_prompt": "no bloco 'Padrão pipeline', linhas digitam em 20ms/char quando entram na tela (uma vez)",
+      "copy_feedback": "chip muda para 'Copiado' com check lime por 1.5s"
+    },
+    "reduced_motion": "prefers-reduced-motion: desliga clip-path, parallax, typewriter e pulse; mantém apenas fades de 150ms"
+  },
+
+  "accessibility": {
+    "contrast": "text.body sobre base ≥ 7:1; lime com texto #0A0A0A ≥ 14:1; nunca texto lime sobre branco",
+    "focus_ring": "2px solid #C8F31D, offset 3px",
+    "hit_area_min": "44px",
+    "images": "todo frame com alt descritivo"
+  }
+}

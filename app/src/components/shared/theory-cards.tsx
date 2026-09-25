@@ -6,7 +6,7 @@ export function TheoryCards({ cards }: { cards: TheoryCard[] }) {
       {cards.map((c) => (
         <div
           key={c.title}
-          className="bg-[#0D0E12] border border-white/10 rounded-xl p-4"
+          className="bg-surface-card border border-white/10 rounded-xl p-4"
         >
           <div className={`font-semibold text-sm mb-2 ${ACCENT_CLASSES[c.accent]}`}>
             {c.title}

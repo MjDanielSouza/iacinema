@@ -32,7 +32,7 @@ export function LoginCard({ next, intent }: { next: string; intent?: string }) {
       <p className="font-tech text-[10px] uppercase tracking-widest text-muted mb-4">
         [ACESSO // SYS v1.0]
       </p>
-      <h1 className="font-display text-2xl text-[#FAFAFA] mb-1">
+      <h1 className="font-display text-2xl text-title mb-1">
         Continue de onde parou.
       </h1>
       <p className="text-sm text-muted mb-6">
@@ -40,8 +40,8 @@ export function LoginCard({ next, intent }: { next: string; intent?: string }) {
       </p>
 
       {isMigration && (
-        <div className="mb-6 border border-[#D4FF00]/30 bg-[#D4FF00]/[0.06] p-3 text-left">
-          <p className="font-tech text-[10px] uppercase tracking-widest text-[#D4FF00] mb-1">
+        <div className="mb-6 border border-lime/30 bg-lime/[0.06] p-3 text-left">
+          <p className="font-tech text-[10px] uppercase tracking-widest text-lime mb-1">
             [CHECKPOINT // FASE 01 CONCLUÍDA]
           </p>
           <p className="text-xs text-muted leading-relaxed">
@@ -54,7 +54,7 @@ export function LoginCard({ next, intent }: { next: string; intent?: string }) {
       <button
         onClick={handleGoogleLogin}
         disabled={loading}
-        className="press w-full flex items-center justify-center gap-3 border border-line bg-[#050507] px-4 py-3 font-tech text-xs uppercase tracking-wider text-[#FAFAFA] hover:border-[#D4FF00]/50 transition duration-150 ease-out disabled:opacity-50"
+        className="press w-full flex items-center justify-center gap-3 border border-line bg-bg-base px-4 py-3 font-tech text-xs uppercase tracking-wider text-title hover:border-lime/50 transition duration-150 ease-out disabled:opacity-50"
       >
         <svg viewBox="0 0 24 24" className="w-4 h-4" aria-hidden="true">
           <path

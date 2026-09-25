@@ -17,7 +17,7 @@ export function ImageGallery({
   images: ImageItem[];
 }) {
   return (
-    <div className="bg-[#0D0E12] border border-white/10 rounded-xl p-4">
+    <div className="bg-surface-card border border-white/10 rounded-xl p-4">
       <span className="text-xs uppercase tracking-wider text-zinc-500 font-semibold block mb-3">
         Imagens de Referência
       </span>
@@ -26,7 +26,7 @@ export function ImageGallery({
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-4">
           {images.map((img) => (
             <div key={img.id} className="relative group">
-              <div className="aspect-square rounded-lg overflow-hidden border border-white/10 bg-[#050507] relative">
+              <div className="aspect-square rounded-lg overflow-hidden border border-white/10 bg-bg-base relative">
                 <Image
                   src={img.url}
                   alt={img.label ?? ""}
@@ -56,7 +56,7 @@ export function ImageGallery({
           type="text"
           name="label"
           placeholder="Descrição da imagem (opcional)"
-          className="bg-[#050507] border border-white/10 rounded-lg px-3 py-2 text-xs text-zinc-200"
+          className="bg-bg-base border border-white/10 rounded-lg px-3 py-2 text-xs text-zinc-200"
         />
         <div className="flex gap-2">
           <input
@@ -64,9 +64,9 @@ export function ImageGallery({
             name="file"
             accept="image/*"
             required
-            className="flex-1 text-xs text-zinc-400 file:mr-3 file:py-2 file:px-3 file:rounded-lg file:border-0 file:bg-[#14151B] file:text-zinc-300 file:text-xs"
+            className="flex-1 text-xs text-zinc-400 file:mr-3 file:py-2 file:px-3 file:rounded-lg file:border-0 file:bg-surface-card-elevated file:text-zinc-300 file:text-xs"
           />
-          <button className="px-4 py-2 rounded-lg bg-amber-500 text-[#050507] font-semibold text-xs shrink-0">
+          <button className="px-4 py-2 rounded-lg bg-lime text-on-accent font-semibold text-xs shrink-0">
             Enviar
           </button>
         </div>

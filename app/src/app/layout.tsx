@@ -1,24 +1,30 @@
 import type { Metadata } from "next";
-import { Archivo, Instrument_Serif, IBM_Plex_Mono } from "next/font/google";
+import { Syne, Instrument_Serif, Space_Mono, Manrope } from "next/font/google";
 import "./globals.css";
 
-const archivo = Archivo({
-  variable: "--font-sans",
+const syne = Syne({
+  variable: "--font-display",
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+  weight: ["600", "700"],
 });
 
 const instrumentSerif = Instrument_Serif({
-  variable: "--font-serif",
+  variable: "--font-editorial",
   subsets: ["latin"],
   weight: ["400"],
   style: ["normal", "italic"],
 });
 
-const plexMono = IBM_Plex_Mono({
-  variable: "--font-mono",
+const spaceMono = Space_Mono({
+  variable: "--font-technical",
   subsets: ["latin"],
-  weight: ["400", "500", "600"],
+  weight: ["400", "700"],
+});
+
+const manrope = Manrope({
+  variable: "--font-body",
+  subsets: ["latin"],
+  weight: ["400", "500", "700"],
 });
 
 const OG_IMAGE =
@@ -49,9 +55,18 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="pt-BR"
-      className={`${archivo.variable} ${instrumentSerif.variable} ${plexMono.variable} h-full antialiased`}
+      className={`${syne.variable} ${instrumentSerif.variable} ${spaceMono.variable} ${manrope.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col overflow-x-hidden">{children}</body>
+      <body className="min-h-full flex flex-col overflow-x-hidden">
+        <svg className="film-grain" aria-hidden="true" focusable="false">
+          <filter id="grain">
+            <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="2" stitchTiles="stitch" />
+            <feColorMatrix type="saturate" values="0" />
+          </filter>
+          <rect width="100%" height="100%" filter="url(#grain)" />
+        </svg>
+        {children}
+      </body>
     </html>
   );
 }

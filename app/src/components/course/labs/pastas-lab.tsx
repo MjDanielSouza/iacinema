@@ -126,7 +126,7 @@ export function PastasLab() {
       </p>
 
       <div className="grid lg:grid-cols-3 gap-4">
-        <div className="bg-[#0D0E12] border border-white/10 rounded-xl p-3 space-y-1">
+        <div className="bg-surface-card border border-white/10 rounded-xl p-3 space-y-1">
           <div className="text-xs uppercase tracking-wider text-zinc-500 font-semibold px-2 py-1">
             /PROJETO_FILME
           </div>
@@ -136,8 +136,8 @@ export function PastasLab() {
               onClick={() => setActiveId(f.id)}
               className={`w-full text-left flex items-center gap-2 px-3 py-2.5 rounded-lg border text-sm transition-colors ${
                 activeId === f.id
-                  ? "border-amber-500 bg-amber-500/10 text-amber-300"
-                  : "border-transparent text-zinc-400 hover:bg-[#14151B]"
+                  ? "border-lime bg-lime/10 text-lime"
+                  : "border-transparent text-zinc-400 hover:bg-surface-card-elevated"
               }`}
             >
               <span className="truncate">{f.label}</span>
@@ -145,8 +145,8 @@ export function PastasLab() {
           ))}
         </div>
 
-        <div className="lg:col-span-2 bg-[#0D0E12] border border-white/10 rounded-xl p-4">
-          <div className="flex items-center gap-2 mb-4 text-amber-400">
+        <div className="lg:col-span-2 bg-surface-card border border-white/10 rounded-xl p-4">
+          <div className="flex items-center gap-2 mb-4 text-lime">
             <span className="font-semibold text-white">
               /PROJETO_FILME/{folder.label}
             </span>
@@ -155,12 +155,12 @@ export function PastasLab() {
             {folder.cards.map((c) => (
               <div
                 key={c.title}
-                className="bg-[#14151B] border border-white/10 rounded-lg p-3"
+                className="bg-surface-card-elevated border border-white/10 rounded-lg p-3"
               >
                 <span className="text-sm font-medium text-zinc-200 block mb-1">
                   {c.title}
                 </span>
-                <span className="inline-block text-[10px] uppercase tracking-wider text-[#D4FF00] mb-1.5">
+                <span className="inline-block text-[10px] uppercase tracking-wider text-lime mb-1.5">
                   {c.meta}
                 </span>
                 <p className="text-xs text-zinc-500 leading-relaxed">{c.desc}</p>

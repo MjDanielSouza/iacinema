@@ -40,17 +40,17 @@ export function CheckpointModal({
         <button
           onClick={onClose}
           aria-label="Fechar"
-          className="press absolute top-3 right-3 font-tech text-[10px] uppercase tracking-widest text-muted hover:text-[#FAFAFA] transition duration-150 ease-out border border-line px-2 py-1"
+          className="press absolute top-3 right-3 font-tech text-[10px] uppercase tracking-widest text-muted hover:text-title transition duration-150 ease-out border border-line px-2 py-1"
         >
           [ESC / FECHAR]
         </button>
 
-        <p className="font-tech text-[10px] uppercase tracking-widest text-[#D4FF00] mb-3">
+        <p className="font-tech text-[10px] uppercase tracking-widest text-lime mb-3">
           [CHECKPOINT DE PRODUÇÃO — FASE 01 CONCLUÍDA]
         </p>
         <h2
           id="checkpoint-title"
-          className="font-display text-2xl text-[#FAFAFA] mb-3 tracking-[-0.01em]"
+          className="font-display text-2xl text-title mb-3 tracking-[-0.01em]"
         >
           Muito bem. Bora salvar isso.
         </h2>
@@ -63,13 +63,13 @@ export function CheckpointModal({
         <div className="flex flex-col gap-3">
           <Link
             href={loginHref}
-            className="press flex items-center justify-center gap-2 text-center font-tech text-xs uppercase tracking-wider px-6 py-3.5 bg-[#D4FF00] text-[#050507] hover:bg-[#e2ff4d] transition duration-150 ease-out"
+            className="press flex items-center justify-center gap-2 text-center font-tech text-xs uppercase tracking-wider px-6 py-3.5 bg-lime text-on-accent hover:bg-lime-hover transition duration-150 ease-out"
           >
             Criar conta grátis e continuar <IconArrow />
           </Link>
           <button
             onClick={onClose}
-            className="press font-tech text-[10px] uppercase tracking-widest text-muted hover:text-[#FAFAFA] transition duration-150 ease-out"
+            className="press font-tech text-[10px] uppercase tracking-widest text-muted hover:text-title transition duration-150 ease-out"
           >
             Continuar sem salvar por enquanto
           </button>

@@ -48,7 +48,7 @@ export default async function ProjectOverviewPage({
   return (
     <>
       <AppHeader authed backHref="/projetos" backLabel="Meus Projetos" />
-      <main className="min-h-screen bg-[#050507] text-zinc-300 px-4 py-12">
+      <main className="min-h-screen bg-bg-base text-zinc-300 px-4 py-12">
       <div className="max-w-3xl mx-auto">
         <h1 className="font-display font-semibold text-2xl text-white mb-1">{project.name}</h1>
         <p className="text-sm text-zinc-500 mb-6">
@@ -56,13 +56,13 @@ export default async function ProjectOverviewPage({
         </p>
 
         <div className="mb-8 flex items-center gap-3">
-          <div className="flex-1 h-2 bg-[#14151B] rounded-full overflow-hidden border border-white/10">
+          <div className="flex-1 h-2 bg-surface-card-elevated rounded-full overflow-hidden border border-white/10">
             <div
-              className="h-full bg-gradient-to-r from-amber-500 to-[#D4FF00] transition-all"
+              className="h-full bg-gradient-to-r from-lime to-lime transition-all"
               style={{ width: `${(completedCount / 5) * 100}%` }}
             />
           </div>
-          <span className="text-xs font-bold text-amber-400 shrink-0">
+          <span className="text-xs font-bold text-lime shrink-0">
             {Math.round((completedCount / 5) * 100)}%
           </span>
         </div>
@@ -74,12 +74,12 @@ export default async function ProjectOverviewPage({
               <Link
                 key={phase.number}
                 href={`/projetos/${id}/fase/${phase.number}`}
-                className="press flex items-center gap-4 rounded-xl border border-white/10 bg-[#0D0E12] p-4 hover:border-[#D4FF00] transition duration-150 ease-out"
+                className="press flex items-center gap-4 rounded-xl border border-white/10 bg-surface-card p-4 hover:border-lime transition duration-150 ease-out"
               >
                 <span
                   className={`w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold shrink-0 border ${
                     completed
-                      ? "bg-amber-500 border-amber-500 text-[#050507]"
+                      ? "bg-lime border-lime text-on-accent"
                       : "border-white/10 text-zinc-400"
                   }`}
                 >
@@ -94,7 +94,7 @@ export default async function ProjectOverviewPage({
           })}
         </div>
 
-        <div className="bg-[#0D0E12] border border-white/10 rounded-xl p-5">
+        <div className="bg-surface-card border border-white/10 rounded-xl p-5">
           <h2 className="text-sm font-semibold text-white mb-3">Equipe</h2>
 
           {erro === "usuario_nao_encontrado" && (
@@ -110,7 +110,7 @@ export default async function ProjectOverviewPage({
               return (
               <li
                 key={m.user_id}
-                className="flex items-center justify-between text-sm bg-[#14151B] border border-white/10 rounded-lg px-3 py-2"
+                className="flex items-center justify-between text-sm bg-surface-card-elevated border border-white/10 rounded-lg px-3 py-2"
               >
                 <span className="text-zinc-300">
                   {memberProfile?.full_name || memberProfile?.email}{" "}
@@ -136,9 +136,9 @@ export default async function ProjectOverviewPage({
                 name="email"
                 placeholder="e-mail da pessoa (precisa já ter entrado no app)"
                 required
-                className="flex-1 bg-[#14151B] border border-white/10 rounded-lg px-3 py-2 text-xs text-zinc-200"
+                className="flex-1 bg-surface-card-elevated border border-white/10 rounded-lg px-3 py-2 text-xs text-zinc-200"
               />
-              <button className="px-4 py-2 rounded-full border border-white/15 text-xs text-zinc-300 hover:border-[#D4FF00] transition-colors">
+              <button className="px-4 py-2 rounded-full border border-white/15 text-xs text-zinc-300 hover:border-lime transition-colors">
                 Adicionar
               </button>
             </form>

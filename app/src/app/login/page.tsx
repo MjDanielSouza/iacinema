@@ -21,11 +21,11 @@ export default async function LoginPage({
   }
 
   return (
-    <main className="relative min-h-screen bg-[#050507] text-[#FAFAFA] flex flex-col items-center justify-center px-4 overflow-hidden">
+    <main className="relative min-h-screen bg-bg-base text-title flex flex-col items-center justify-center px-4 overflow-hidden">
       <div className="atmosphere absolute inset-0" aria-hidden="true" />
       <Link
         href="/"
-        className="relative z-10 font-tech text-[10px] uppercase tracking-widest text-muted hover:text-[#FAFAFA] transition-colors duration-100 mb-6 flex items-center gap-1.5"
+        className="relative z-10 font-tech text-[10px] uppercase tracking-widest text-muted hover:text-title transition-colors duration-100 mb-6 flex items-center gap-1.5"
       >
         &larr; Voltar para a página inicial
       </Link>

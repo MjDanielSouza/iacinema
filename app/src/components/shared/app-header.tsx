@@ -18,7 +18,7 @@ export function AppHeader({
   authed: boolean;
 }) {
   return (
-    <header className="chrome-edge sticky top-0 z-40 bg-[#050507]/80 backdrop-blur-xl backdrop-saturate-150">
+    <header className="chrome-edge sticky top-0 z-40 bg-bg-base/80 backdrop-blur-xl backdrop-saturate-150">
       <div className="max-w-5xl mx-auto flex divide-x divide-line border-x border-line">
         <Link href="/" className="px-5 h-12 flex items-center gap-2 shrink-0">
           <span className="font-semibold text-sm">Pipeline.</span>
@@ -30,20 +30,20 @@ export function AppHeader({
             aria-label="breadcrumb"
             className="hidden sm:flex items-center gap-1.5 px-5 font-tech text-[10px] uppercase tracking-widest text-muted truncate"
           >
-            <Link href="/" className="hover:text-[#FAFAFA] transition-colors duration-100 shrink-0">
+            <Link href="/" className="hover:text-title transition-colors duration-100 shrink-0">
               Início
             </Link>
             <span className="shrink-0">/</span>
             <Link
               href={backHref}
-              className="hover:text-[#FAFAFA] transition-colors duration-100 truncate max-w-[10rem]"
+              className="hover:text-title transition-colors duration-100 truncate max-w-[10rem]"
             >
               {backLabel}
             </Link>
             {currentLabel && (
               <>
                 <span className="shrink-0">/</span>
-                <span className="text-[#FAFAFA]/80 truncate max-w-[10rem]">{currentLabel}</span>
+                <span className="text-title/80 truncate max-w-[10rem]">{currentLabel}</span>
               </>
             )}
           </nav>
@@ -71,7 +71,7 @@ export function AppHeader({
         ) : (
           <Link
             href="/login"
-            className="press flex items-center px-6 font-tech text-xs uppercase tracking-wider bg-[#D4FF00] text-[#050507] hover:bg-[#e2ff4d] transition duration-150 ease-out shrink-0"
+            className="press flex items-center px-6 font-tech text-xs uppercase tracking-wider bg-lime text-on-accent hover:bg-lime-hover transition duration-150 ease-out shrink-0"
           >
             Entrar
           </Link>
@@ -84,7 +84,7 @@ export function AppHeader({
             &larr; Início
           </Link>
           <span className="shrink-0">/</span>
-          <Link href={backHref} className="shrink-0 text-[#FAFAFA]/80">
+          <Link href={backHref} className="shrink-0 text-title/80">
             {backLabel}
           </Link>
         </div>
