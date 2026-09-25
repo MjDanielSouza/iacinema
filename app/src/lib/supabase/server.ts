@@ -1,6 +1,8 @@
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 
+// Ver nota em lib/supabase/client.ts sobre por que o generic `Database` não
+// é usado aqui ainda.
 export async function createClient() {
   const cookieStore = await cookies();
 
