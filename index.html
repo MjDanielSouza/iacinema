@@ -1,0 +1,1373 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Pipeline de Produção Cinematográfica com IA</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          studio: {
+            black: '#0a0a0c',
+            panel: '#141417',
+            panel2: '#1b1b1f',
+            border: '#2a2a2f',
+            amber: '#f59e0b',
+            amberdim: '#78530a',
+            cyan: '#06b6d4',
+            cyandim: '#0e4a55',
+          }
+        },
+        fontFamily: {
+          sans: ['Inter', 'system-ui', 'sans-serif'],
+          mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'monospace'],
+        }
+      }
+    }
+  }
+</script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<style>
+  * { scrollbar-width: thin; scrollbar-color: #3f3f46 #0a0a0c; }
+  ::-webkit-scrollbar { width: 8px; height: 8px; }
+  ::-webkit-scrollbar-track { background: #0a0a0c; }
+  ::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 4px; }
+
+  body { background-color: #0a0a0c; }
+
+  .phase-panel { display: none; }
+  .phase-panel.active-panel { display: block; animation: fadein .35s ease; }
+  @keyframes fadein { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+  .film-grain {
+    background-image: radial-gradient(rgba(255,255,255,0.035) 1px, transparent 1px);
+    background-size: 3px 3px;
+  }
+
+  .prompt-box {
+    background: #0d0d10;
+    border: 1px solid #2a2a2f;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+
+  .sidebar-btn.locked { opacity: 0.45; cursor: not-allowed; }
+  .sidebar-btn.is-current { border-color: #f59e0b; background: rgba(245,158,11,0.08); }
+  .sidebar-btn.is-done .phase-num-badge { background: #f59e0b; color: #0a0a0c; }
+
+  .tag { padding: 0 2px; border-radius: 3px; transition: all .25s ease; }
+  .tag.dim { opacity: 0.35; }
+  .tag.hl-character { background: rgba(245,158,11,0.28); color: #fcd34d; box-shadow: 0 0 0 1px rgba(245,158,11,0.4); }
+  .tag.hl-location { background: rgba(6,182,212,0.25); color: #67e8f9; box-shadow: 0 0 0 1px rgba(6,182,212,0.4); }
+  .tag.hl-prop { background: rgba(168,85,247,0.25); color: #d8b4fe; box-shadow: 0 0 0 1px rgba(168,85,247,0.4); }
+  .tag.hl-dialogue { background: rgba(244,63,94,0.22); color: #fda4af; box-shadow: 0 0 0 1px rgba(244,63,94,0.4); }
+
+  .filter-btn.active-filter { filter: brightness(1.15); box-shadow: 0 0 0 2px currentColor inset; }
+
+  .folder-item.active-folder { background: rgba(245,158,11,0.1); border-color: #f59e0b; color: #fbbf24; }
+
+  input[type="checkbox"].gate-check {
+    appearance: none; width: 20px; height: 20px; border: 2px solid #52525b; border-radius: 4px;
+    background: #0d0d10; cursor: pointer; position: relative; flex-shrink: 0;
+  }
+  input[type="checkbox"].gate-check:checked {
+    background: #f59e0b; border-color: #f59e0b;
+  }
+  input[type="checkbox"].gate-check:checked::after {
+    content: ""; position: absolute; left: 6px; top: 2px; width: 5px; height: 10px;
+    border: solid #0a0a0c; border-width: 0 2px 2px 0; transform: rotate(45deg);
+  }
+
+  .toggle-track { width: 44px; height: 24px; border-radius: 999px; background: #3f3f46; position: relative; transition: background .2s; cursor: pointer; }
+  .toggle-track.on { background: #f59e0b; }
+  .toggle-thumb { position: absolute; top: 2px; left: 2px; width: 20px; height: 20px; border-radius: 999px; background: #e4e4e7; transition: transform .2s; }
+  .toggle-track.on .toggle-thumb { transform: translateX(20px); }
+
+  .copied-flash { animation: flash .6s ease; }
+  @keyframes flash { 0% { background-color: rgba(245,158,11,0.4); } 100% { background-color: transparent; } }
+
+  .timeline-track-fill { transition: opacity .3s ease, filter .3s ease; }
+</style>
+</head>
+<body class="bg-studio-black text-zinc-300 min-h-screen film-grain">
+
+<!-- ======================= TOP BAR (mobile) ======================= -->
+<header class="lg:hidden sticky top-0 z-40 bg-studio-panel border-b border-studio-border px-4 py-3 flex items-center justify-between">
+  <div class="flex items-center gap-2">
+    <i data-lucide="clapperboard" class="text-studio-amber w-5 h-5"></i>
+    <span class="font-bold text-sm tracking-wide text-white">PIPELINE IA CINEMA</span>
+  </div>
+  <button id="mobileMenuBtn" class="p-2 rounded border border-studio-border">
+    <i data-lucide="menu" class="w-5 h-5"></i>
+  </button>
+</header>
+
+<div class="flex flex-col lg:flex-row min-h-screen">
+
+  <!-- ======================= SIDEBAR ======================= -->
+  <aside id="sidebar" class="hidden lg:flex w-full lg:w-80 shrink-0 bg-studio-panel border-b lg:border-b-0 lg:border-r border-studio-border flex-col lg:h-screen lg:sticky lg:top-0">
+    <div class="p-6 border-b border-studio-border">
+      <div class="flex items-center gap-2 mb-1">
+        <i data-lucide="clapperboard" class="text-studio-amber w-6 h-6"></i>
+        <h1 class="font-bold text-white text-lg leading-tight">Pipeline de Produção<br/>Cinematográfica com IA</h1>
+      </div>
+      <p class="text-xs text-zinc-500 mt-2">Do Roteiro à Pós-Produção</p>
+    </div>
+
+    <div class="p-6 border-b border-studio-border">
+      <div class="flex items-center justify-between mb-2">
+        <span class="text-xs uppercase tracking-wider text-zinc-500 font-semibold">Progresso Geral</span>
+        <span id="progressPercentLabel" class="text-xs font-bold text-studio-amber">0%</span>
+      </div>
+      <div class="w-full h-2 bg-studio-panel2 rounded-full overflow-hidden border border-studio-border">
+        <div id="progressBarFill" class="h-full bg-gradient-to-r from-studio-amber to-studio-cyan transition-all duration-500" style="width:0%"></div>
+      </div>
+    </div>
+
+    <nav id="phaseNav" class="flex-1 overflow-y-auto p-4 space-y-2"></nav>
+
+    <div class="p-4 border-t border-studio-border space-y-3">
+      <button id="directorModeBtn" class="w-full flex items-center justify-between px-3 py-2.5 rounded-lg border border-studio-border bg-studio-panel2 hover:border-studio-cyan transition-colors">
+        <span class="flex items-center gap-2 text-sm font-medium text-zinc-200">
+          <i data-lucide="unlock" class="w-4 h-4 text-studio-cyan"></i>
+          Modo Diretor
+        </span>
+        <span id="directorModeToggle" class="toggle-track"><span class="toggle-thumb"></span></span>
+      </button>
+      <p class="text-[11px] text-zinc-500 leading-snug">Libera a navegação livre entre todas as fases, sem precisar concluir os checklists em ordem.</p>
+      <button id="resetProgressBtn" class="w-full text-[11px] text-zinc-600 hover:text-red-400 transition-colors flex items-center justify-center gap-1 pt-1">
+        <i data-lucide="rotate-ccw" class="w-3 h-3"></i> Reiniciar progresso do curso
+      </button>
+    </div>
+  </aside>
+
+  <!-- ======================= MAIN CONTENT ======================= -->
+  <main class="flex-1 min-w-0">
+
+    <!-- ================================================================= -->
+    <!-- FASE 1 -->
+    <!-- ================================================================= -->
+    <section id="phase-1" class="phase-panel p-5 sm:p-8 lg:p-12 max-w-5xl mx-auto">
+      <header class="mb-8">
+        <div class="flex items-center gap-2 text-studio-cyan text-xs font-semibold uppercase tracking-widest mb-2">
+          <i data-lucide="file-text" class="w-4 h-4"></i> Fase 1 de 5 — Pré-Produção Narrativa
+        </div>
+        <h2 class="text-3xl sm:text-4xl font-bold text-white mb-2">Roteiro e Decupagem Inicial</h2>
+        <p class="text-zinc-400 text-sm sm:text-base">Story &amp; Script Breakdown</p>
+        <div class="mt-4 bg-studio-panel border border-studio-border rounded-lg p-4 text-sm text-zinc-400">
+          <span class="text-studio-amber font-semibold">Objetivo da etapa:</span> extrair do roteiro os dados brutos — estilo visual, locais, personagens, artefatos, ação e falas — que vão guiar toda a produção com IA.
+        </div>
+      </header>
+
+      <!-- Imagem + Prompt -->
+      <div class="grid md:grid-cols-2 gap-6 mb-10">
+        <div class="bg-studio-panel border border-studio-border rounded-xl overflow-hidden flex flex-col">
+          <div id="imgPreviewWrap-1" class="aspect-video bg-studio-panel2 flex items-center justify-center relative overflow-hidden">
+            <div id="imgFallback-1" class="flex flex-col items-center text-zinc-600 gap-2 p-6 text-center">
+              <i data-lucide="image" class="w-10 h-10"></i>
+              <span class="text-xs">Nenhuma imagem carregada. Faça upload de uma referência visual para esta fase.</span>
+            </div>
+            <img id="imgPreview-1" class="hidden absolute inset-0 w-full h-full object-cover" />
+          </div>
+          <label class="cursor-pointer border-t border-studio-border p-3 flex items-center justify-center gap-2 text-sm text-zinc-300 hover:bg-studio-panel2 transition-colors">
+            <i data-lucide="upload" class="w-4 h-4"></i> Upload de imagem ilustrativa
+            <input type="file" accept="image/*" class="hidden" data-upload-phase="1" />
+          </label>
+        </div>
+        <div class="bg-studio-panel border border-studio-border rounded-xl p-4 flex flex-col">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-xs uppercase tracking-wider text-zinc-500 font-semibold">Prompt de Imagem — Fase 1</span>
+            <button class="copy-prompt-btn flex items-center gap-1 text-xs text-studio-amber hover:text-amber-300 px-2 py-1 rounded border border-studio-amberdim" data-target="prompt-text-1">
+              <i data-lucide="copy" class="w-3.5 h-3.5"></i> <span>Copiar</span>
+            </button>
+          </div>
+          <div id="prompt-text-1" class="prompt-box rounded-lg p-3 text-xs text-cyan-300 flex-1 overflow-y-auto leading-relaxed">Cinematic concept art of a movie director's desk in a dimly lit studio, glowing digital tablet displaying a formatted screenplay with color-coded breakdown highlights for characters, locations, and props, holographic storyboards floating slightly above, warm tungsten desk lamp contrasting with cyan screen glow, 35mm anamorphic lens style, photorealistic, 8k --ar 16:9</div>
+        </div>
+      </div>
+
+      <!-- Conteúdo teórico -->
+      <div class="mb-10">
+        <h3 class="text-xl font-bold text-white mb-4 flex items-center gap-2"><i data-lucide="layers" class="w-5 h-5 text-studio-amber"></i> Os 5 Elementos Obrigatórios do Roteiro para IA</h3>
+        <div class="grid sm:grid-cols-2 gap-4">
+          <div class="bg-studio-panel border border-studio-border rounded-xl p-4">
+            <div class="flex items-center gap-2 mb-2 text-studio-amber"><i data-lucide="palette" class="w-4 h-4"></i><span class="font-semibold text-sm">1. Definição de Estilo (Look &amp; Tone)</span></div>
+            <p class="text-sm text-zinc-400">A estética macro que guia toda a obra — ex.: Cyberpunk Noir, Animação 3D Estilizada, Realismo Anamórfico Anos 70. É a "bússola visual" de todos os prompts que virão depois.</p>
+          </div>
+          <div class="bg-studio-panel border border-studio-border rounded-xl p-4">
+            <div class="flex items-center gap-2 mb-2 text-studio-cyan"><i data-lucide="map-pin" class="w-4 h-4"></i><span class="font-semibold text-sm">2. Cabeçalho e Locais (Sluglines)</span></div>
+            <p class="text-sm text-zinc-400">Onde a cena acontece (INT./EXT., local, período do dia) e a atmosfera do ambiente. Define o Set que será gerado na Fase 3.</p>
+          </div>
+          <div class="bg-studio-panel border border-studio-border rounded-xl p-4">
+            <div class="flex items-center gap-2 mb-2 text-amber-300"><i data-lucide="users" class="w-4 h-4"></i><span class="font-semibold text-sm">3. Descrição de Personagens</span></div>
+            <p class="text-sm text-zinc-400">Características físicas fixas, idade, expressões e personalidade — a base do Character Sheet consistente.</p>
+          </div>
+          <div class="bg-studio-panel border border-studio-border rounded-xl p-4">
+            <div class="flex items-center gap-2 mb-2 text-purple-300"><i data-lucide="package" class="w-4 h-4"></i><span class="font-semibold text-sm">4. Elementos de Cena e Artefatos</span></div>
+            <p class="text-sm text-zinc-400">Menção clara a objetos importantes (Props) e veículos que entram em cada cena — tudo que precisa ser gerado isoladamente.</p>
+          </div>
+          <div class="bg-studio-panel border border-studio-border rounded-xl p-4 sm:col-span-2">
+            <div class="flex items-center gap-2 mb-2 text-rose-300"><i data-lucide="mic" class="w-4 h-4"></i><span class="font-semibold text-sm">5. Ação e Falas (Diálogos)</span></div>
+            <p class="text-sm text-zinc-400">O que acontece fisicamente na cena e o que é dito — a matéria-prima da direção de cena na Fase 4.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Laboratório -->
+      <div class="mb-10">
+        <h3 class="text-xl font-bold text-white mb-1 flex items-center gap-2"><i data-lucide="search" class="w-5 h-5 text-studio-cyan"></i> Laboratório: Decupador de Roteiro Interativo</h3>
+        <p class="text-sm text-zinc-500 mb-4">Clique nos filtros para destacar e extrair automaticamente os elementos do trecho de roteiro abaixo.</p>
+
+        <div class="flex flex-wrap gap-2 mb-4">
+          <button class="filter-btn active-filter px-3 py-2 rounded-lg border border-studio-amberdim text-amber-300 text-xs font-medium flex items-center gap-1.5" data-filter="character" style="color:#fcd34d">
+            <i data-lucide="users" class="w-3.5 h-3.5"></i> Destacar Personagens
+          </button>
+          <button class="filter-btn px-3 py-2 rounded-lg border border-studio-border text-cyan-300 text-xs font-medium flex items-center gap-1.5" data-filter="location" style="color:#67e8f9">
+            <i data-lucide="map-pin" class="w-3.5 h-3.5"></i> Destacar Locais/Sets
+          </button>
+          <button class="filter-btn px-3 py-2 rounded-lg border border-studio-border text-purple-300 text-xs font-medium flex items-center gap-1.5" data-filter="prop" style="color:#d8b4fe">
+            <i data-lucide="package" class="w-3.5 h-3.5"></i> Destacar Artefatos/Props
+          </button>
+          <button class="filter-btn px-3 py-2 rounded-lg border border-studio-border text-rose-300 text-xs font-medium flex items-center gap-1.5" data-filter="dialogue" style="color:#fda4af">
+            <i data-lucide="mic" class="w-3.5 h-3.5"></i> Destacar Falas/Ação
+          </button>
+        </div>
+
+        <div class="grid lg:grid-cols-3 gap-4">
+          <div class="lg:col-span-2 bg-studio-panel border border-studio-border rounded-xl p-5 text-sm leading-loose whitespace-pre-wrap font-mono" id="screenplayBox">
+<span class="tag" data-type="location">INT. GALPÃO ABANDONADO – NOITE</span>
+
+Um raio de lua atravessa as venezianas quebradas. <span class="tag" data-type="character">RAFAEL</span> (35), casaco de couro surrado, cicatriz na sobrancelha esquerda, avança lentamente segurando uma <span class="tag" data-type="prop">LANTERNA A QUEROSENE</span>.
+
+<span class="tag" data-type="character">RAFAEL</span>
+(sussurrando)
+<span class="tag" data-type="dialogue">Ela disse que estaria aqui...</span>
+
+Um barulho metálico ecoa. <span class="tag" data-type="character">MARINA</span> (28), cabelo curto grisalho, jaqueta tática cinza, surge das sombras empunhando uma <span class="tag" data-type="prop">CHAVE DE FENDA</span> como arma improvisada.
+
+<span class="tag" data-type="character">MARINA</span>
+<span class="tag" data-type="dialogue">Você não devia ter vindo sozinho.</span>
+
+<span class="tag" data-type="dialogue">Rafael recua um passo e tropeça em uma <span class="tag" data-type="prop">MOTOCICLETA</span> enferrujada encostada na parede.</span></div>
+          <div class="bg-studio-panel border border-studio-border rounded-xl p-4">
+            <h4 class="text-xs uppercase tracking-wider text-zinc-500 font-semibold mb-3">Tabela de Decupagem</h4>
+            <div id="breakdownTable" class="space-y-3 text-sm"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Checklist -->
+      <div class="bg-studio-panel2 border border-studio-border rounded-xl p-5">
+        <h3 class="text-sm font-bold text-white mb-4 flex items-center gap-2"><i data-lucide="check-circle" class="w-4 h-4 text-studio-amber"></i> Checklist de Aprovação — Fase 1</h3>
+        <div class="space-y-3" data-checklist="1">
+          <label class="flex items-start gap-3 cursor-pointer"><input type="checkbox" class="gate-check mt-0.5" data-phase="1" data-item="0" /><span class="text-sm text-zinc-300">Identifiquei corretamente todos os personagens mencionados no trecho de roteiro.</span></label>
+          <label class="flex items-start gap-3 cursor-pointer"><input type="checkbox" class="gate-check mt-0.5" data-phase="1" data-item="1" /><span class="text-sm text-zinc-300">Utilizei o filtro de Locais/Sets e reconheço a slugline como definidora de ambiente.</span></label>
+          <label class="flex items-start gap-3 cursor-pointer"><input type="checkbox" class="gate-check mt-0.5" data-phase="1" data-item="2" /><span class="text-sm text-zinc-300">Listei ao menos dois artefatos (props) citados na cena usando o decupador.</span></label>
+        </div>
+        <button class="advance-btn mt-5 w-full sm:w-auto px-5 py-2.5 rounded-lg bg-studio-amber text-studio-black font-semibold text-sm disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2" data-phase="1" disabled>
+          Concluir Fase 1 e avançar <i data-lucide="chevron-right" class="w-4 h-4"></i>
+        </button>
+      </div>
+    </section>
+
+    <!-- ================================================================= -->
+    <!-- FASE 2 -->
+    <!-- ================================================================= -->
+    <section id="phase-2" class="phase-panel p-5 sm:p-8 lg:p-12 max-w-5xl mx-auto">
+      <header class="mb-8">
+        <div class="flex items-center gap-2 text-studio-cyan text-xs font-semibold uppercase tracking-widest mb-2">
+          <i data-lucide="search" class="w-4 h-4"></i> Fase 2 de 5 — Pré-Produção Visual
+        </div>
+        <h2 class="text-3xl sm:text-4xl font-bold text-white mb-2">Pesquisa, Direção de Arte e Pastas de Referência</h2>
+        <p class="text-zinc-400 text-sm sm:text-base">Research &amp; Art Department</p>
+        <div class="mt-4 bg-studio-panel border border-studio-border rounded-lg p-4 text-sm text-zinc-400">
+          <span class="text-studio-amber font-semibold">Objetivo da etapa:</span> curar referências visuais do roteiro decupado e organizá-las em uma estrutura rígida de pastas — nada é gerado ainda.
+        </div>
+      </header>
+
+      <div class="grid md:grid-cols-2 gap-6 mb-10">
+        <div class="bg-studio-panel border border-studio-border rounded-xl overflow-hidden flex flex-col">
+          <div id="imgPreviewWrap-2" class="aspect-video bg-studio-panel2 flex items-center justify-center relative overflow-hidden">
+            <div id="imgFallback-2" class="flex flex-col items-center text-zinc-600 gap-2 p-6 text-center">
+              <i data-lucide="image" class="w-10 h-10"></i>
+              <span class="text-xs">Nenhuma imagem carregada. Faça upload de uma referência visual para esta fase.</span>
+            </div>
+            <img id="imgPreview-2" class="hidden absolute inset-0 w-full h-full object-cover" />
+          </div>
+          <label class="cursor-pointer border-t border-studio-border p-3 flex items-center justify-center gap-2 text-sm text-zinc-300 hover:bg-studio-panel2 transition-colors">
+            <i data-lucide="upload" class="w-4 h-4"></i> Upload de imagem ilustrativa
+            <input type="file" accept="image/*" class="hidden" data-upload-phase="2" />
+          </label>
+        </div>
+        <div class="bg-studio-panel border border-studio-border rounded-xl p-4 flex flex-col">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-xs uppercase tracking-wider text-zinc-500 font-semibold">Prompt de Imagem — Fase 2</span>
+            <button class="copy-prompt-btn flex items-center gap-1 text-xs text-studio-amber hover:text-amber-300 px-2 py-1 rounded border border-studio-amberdim" data-target="prompt-text-2">
+              <i data-lucide="copy" class="w-3.5 h-3.5"></i> <span>Copiar</span>
+            </button>
+          </div>
+          <div id="prompt-text-2" class="prompt-box rounded-lg p-3 text-xs text-cyan-300 flex-1 overflow-y-auto leading-relaxed">Wide shot of a modern film production war room and art department wall covered in organized moodboards, reference photographs of character faces, period costumes, vintage motorcycles, medieval swords, and architectural locations connected by organized labels, digital folder structure projected on a sleek ultrawide monitor, cinematic lighting, 8k --ar 16:9</div>
+        </div>
+      </div>
+
+      <div class="mb-10">
+        <h3 class="text-xl font-bold text-white mb-4 flex items-center gap-2"><i data-lucide="layers" class="w-5 h-5 text-studio-amber"></i> O que é pesquisado e arquivado</h3>
+        <div class="grid sm:grid-cols-2 gap-4">
+          <div class="bg-studio-panel border border-studio-border rounded-xl p-4">
+            <div class="flex items-center gap-2 mb-2 text-amber-300"><i data-lucide="users" class="w-4 h-4"></i><span class="font-semibold text-sm">Referências de Personagens</span></div>
+            <p class="text-sm text-zinc-400">Rostos, biotipos, expressões e detalhes de cabelo/maquiagem que fixam a identidade visual do personagem.</p>
+          </div>
+          <div class="bg-studio-panel border border-studio-border rounded-xl p-4">
+            <div class="flex items-center gap-2 mb-2 text-cyan-300"><i data-lucide="package" class="w-4 h-4"></i><span class="font-semibold text-sm">Figurino por Cena (Wardrobe)</span></div>
+            <p class="text-sm text-zinc-400">Referências exatas das roupas que o personagem usará em cada momento específico da história.</p>
+          </div>
+          <div class="bg-studio-panel border border-studio-border rounded-xl p-4">
+            <div class="flex items-center gap-2 mb-2 text-purple-300"><i data-lucide="map-pin" class="w-4 h-4"></i><span class="font-semibold text-sm">Referências de Locais (Location Scouting)</span></div>
+            <p class="text-sm text-zinc-400">Fotos de arquitetura, iluminação ambiental, texturas de parede e paisagens.</p>
+          </div>
+          <div class="bg-studio-panel border border-studio-border rounded-xl p-4">
+            <div class="flex items-center gap-2 mb-2 text-rose-300"><i data-lucide="sparkles" class="w-4 h-4"></i><span class="font-semibold text-sm">Artefatos — Props e Veículos</span></div>
+            <p class="text-sm text-zinc-400">Armas, espadas, amuletos, carros, motos ou objetos especiais com destaque narrativo.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="mb-10">
+        <h3 class="text-xl font-bold text-white mb-1 flex items-center gap-2"><i data-lucide="folder" class="w-5 h-5 text-studio-cyan"></i> Laboratório: Simulador de Pastas do Projeto &amp; Moodboard</h3>
+        <p class="text-sm text-zinc-500 mb-4">Clique em uma pasta para revisar as referências salvas a partir do roteiro decupado na Fase 1.</p>
+        <div class="grid lg:grid-cols-3 gap-4">
+          <div class="bg-studio-panel border border-studio-border rounded-xl p-3 space-y-1" id="folderTree"></div>
+          <div class="lg:col-span-2 bg-studio-panel border border-studio-border rounded-xl p-5" id="folderPanel"></div>
+        </div>
+      </div>
+
+      <div class="bg-studio-panel2 border border-studio-border rounded-xl p-5">
+        <h3 class="text-sm font-bold text-white mb-4 flex items-center gap-2"><i data-lucide="check-circle" class="w-4 h-4 text-studio-amber"></i> Checklist de Aprovação — Fase 2</h3>
+        <div class="space-y-3" data-checklist="2">
+          <label class="flex items-start gap-3 cursor-pointer"><input type="checkbox" class="gate-check mt-0.5" data-phase="2" data-item="0" /><span class="text-sm text-zinc-300">Explorei as 5 pastas do projeto e entendi a função de cada uma.</span></label>
+          <label class="flex items-start gap-3 cursor-pointer"><input type="checkbox" class="gate-check mt-0.5" data-phase="2" data-item="1" /><span class="text-sm text-zinc-300">Reconheço a diferença entre referência de figurino por cena e referência geral de personagem.</span></label>
+          <label class="flex items-start gap-3 cursor-pointer"><input type="checkbox" class="gate-check mt-0.5" data-phase="2" data-item="2" /><span class="text-sm text-zinc-300">Identifiquei pelo menos um artefato/prop catalogado na pasta de pesquisa.</span></label>
+        </div>
+        <button class="advance-btn mt-5 w-full sm:w-auto px-5 py-2.5 rounded-lg bg-studio-amber text-studio-black font-semibold text-sm disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2" data-phase="2" disabled>
+          Concluir Fase 2 e avançar <i data-lucide="chevron-right" class="w-4 h-4"></i>
+        </button>
+      </div>
+    </section>
+
+    <!-- ================================================================= -->
+    <!-- FASE 3 -->
+    <!-- ================================================================= -->
+    <section id="phase-3" class="phase-panel p-5 sm:p-8 lg:p-12 max-w-5xl mx-auto">
+      <header class="mb-8">
+        <div class="flex items-center gap-2 text-studio-cyan text-xs font-semibold uppercase tracking-widest mb-2">
+          <i data-lucide="wand-2" class="w-4 h-4"></i> Fase 3 de 5 — Criação de Assets
+        </div>
+        <h2 class="text-3xl sm:text-4xl font-bold text-white mb-2">Engenharia de Prompts e Criação de Assets</h2>
+        <p class="text-zinc-400 text-sm sm:text-base">Character Sheets, Sets &amp; Props</p>
+        <div class="mt-4 bg-studio-panel border border-studio-border rounded-lg p-4 text-sm text-zinc-400">
+          <span class="text-studio-amber font-semibold">Objetivo da etapa:</span> transformar roteiro + referências em Assets de Produção isolados, gerados fora de cena para garantir raccord.
+        </div>
+      </header>
+
+      <div class="grid md:grid-cols-2 gap-6 mb-10">
+        <div class="bg-studio-panel border border-studio-border rounded-xl overflow-hidden flex flex-col">
+          <div id="imgPreviewWrap-3" class="aspect-video bg-studio-panel2 flex items-center justify-center relative overflow-hidden">
+            <div id="imgFallback-3" class="flex flex-col items-center text-zinc-600 gap-2 p-6 text-center">
+              <i data-lucide="image" class="w-10 h-10"></i>
+              <span class="text-xs">Nenhuma imagem carregada. Faça upload de uma referência visual para esta fase.</span>
+            </div>
+            <img id="imgPreview-3" class="hidden absolute inset-0 w-full h-full object-cover" />
+          </div>
+          <label class="cursor-pointer border-t border-studio-border p-3 flex items-center justify-center gap-2 text-sm text-zinc-300 hover:bg-studio-panel2 transition-colors">
+            <i data-lucide="upload" class="w-4 h-4"></i> Upload de imagem ilustrativa
+            <input type="file" accept="image/*" class="hidden" data-upload-phase="3" />
+          </label>
+        </div>
+        <div class="bg-studio-panel border border-studio-border rounded-xl p-4 flex flex-col">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-xs uppercase tracking-wider text-zinc-500 font-semibold">Prompt de Imagem — Fase 3</span>
+            <button class="copy-prompt-btn flex items-center gap-1 text-xs text-studio-amber hover:text-amber-300 px-2 py-1 rounded border border-studio-amberdim" data-target="prompt-text-3">
+              <i data-lucide="copy" class="w-3.5 h-3.5"></i> <span>Copiar</span>
+            </button>
+          </div>
+          <div id="prompt-text-3" class="prompt-box rounded-lg p-3 text-xs text-cyan-300 flex-1 overflow-y-auto leading-relaxed">Split-screen technical showcase of AI filmmaking assets on a sleek dark interface: on the left, a full-body character turnaround sheet showing the same character in three different scene-specific outfits with accessories; in the center, isolated high-detail 3D prop renders of a futuristic motorcycle and an ancient sword; on the right, an empty cinematic environment clean plate set, studio presentation, 8k --ar 16:9</div>
+        </div>
+      </div>
+
+      <div class="mb-10">
+        <h3 class="text-xl font-bold text-white mb-4 flex items-center gap-2"><i data-lucide="layers" class="w-5 h-5 text-studio-amber"></i> Os 3 Pilares de Assets Gerados</h3>
+        <div class="grid sm:grid-cols-3 gap-4">
+          <div class="bg-studio-panel border border-studio-border rounded-xl p-4">
+            <div class="flex items-center gap-2 mb-2 text-amber-300"><i data-lucide="users" class="w-4 h-4"></i><span class="font-semibold text-sm">Character Sheets por Cena</span></div>
+            <p class="text-sm text-zinc-400">Ficha de personagem com raccord de figurino: frente, perfil, corpo inteiro, fundo neutro, já vestindo a roupa e acessórios daquela cena específica. Ex.: <code class="text-studio-cyan">Char_Rafael_Cena01_JaquetaCouro</code>.</p>
+          </div>
+          <div class="bg-studio-panel border border-studio-border rounded-xl p-4">
+            <div class="flex items-center gap-2 mb-2 text-cyan-300"><i data-lucide="map-pin" class="w-4 h-4"></i><span class="font-semibold text-sm">Sets / Clean Plates</span></div>
+            <p class="text-sm text-zinc-400">Cenários vazios onde as cenas vão acontecer, respeitando a direção de arte e a iluminação planejada.</p>
+          </div>
+          <div class="bg-studio-panel border border-studio-border rounded-xl p-4">
+            <div class="flex items-center gap-2 mb-2 text-purple-300"><i data-lucide="package" class="w-4 h-4"></i><span class="font-semibold text-sm">Artefatos Isolados</span></div>
+            <p class="text-sm text-zinc-400">Objetos específicos (espadas, carros, tambores, armas) gerados a partir de referência + descrição do roteiro, prontos para uso.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="mb-10">
+        <h3 class="text-xl font-bold text-white mb-1 flex items-center gap-2"><i data-lucide="wand-2" class="w-5 h-5 text-studio-cyan"></i> Laboratório: Construtor de Assets e Raccord de Figurino</h3>
+        <p class="text-sm text-zinc-500 mb-4">Selecione a cena e a aba de asset para montar o prompt automaticamente.</p>
+
+        <div class="flex flex-wrap gap-2 mb-4" id="sceneSelector3"></div>
+        <div class="flex gap-2 mb-4 border-b border-studio-border" id="assetTabs3"></div>
+
+        <div class="grid lg:grid-cols-2 gap-4">
+          <div class="bg-studio-panel border border-studio-border rounded-xl p-4" id="assetChips3"></div>
+          <div class="bg-studio-panel border border-studio-border rounded-xl p-4 flex flex-col">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs uppercase tracking-wider text-zinc-500 font-semibold">Prompt de Asset Gerado</span>
+              <button class="copy-prompt-btn flex items-center gap-1 text-xs text-studio-amber hover:text-amber-300 px-2 py-1 rounded border border-studio-amberdim" data-target="assetPromptOutput">
+                <i data-lucide="copy" class="w-3.5 h-3.5"></i> <span>Copiar</span>
+              </button>
+            </div>
+            <div id="assetPromptOutput" class="prompt-box rounded-lg p-3 text-xs text-cyan-300 flex-1 leading-relaxed"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-studio-panel2 border border-studio-border rounded-xl p-5">
+        <h3 class="text-sm font-bold text-white mb-4 flex items-center gap-2"><i data-lucide="check-circle" class="w-4 h-4 text-studio-amber"></i> Checklist de Aprovação — Fase 3</h3>
+        <div class="space-y-3" data-checklist="3">
+          <label class="flex items-start gap-3 cursor-pointer"><input type="checkbox" class="gate-check mt-0.5" data-phase="3" data-item="0" /><span class="text-sm text-zinc-300">Montei o prompt de Character Sheet combinando referência base + figurino da cena + acessório.</span></label>
+          <label class="flex items-start gap-3 cursor-pointer"><input type="checkbox" class="gate-check mt-0.5" data-phase="3" data-item="1" /><span class="text-sm text-zinc-300">Gerei (simulei) o prompt de um Set/Cenário limpo (Clean Plate) para uma das cenas.</span></label>
+          <label class="flex items-start gap-3 cursor-pointer"><input type="checkbox" class="gate-check mt-0.5" data-phase="3" data-item="2" /><span class="text-sm text-zinc-300">Gerei (simulei) o prompt de um Artefato/Prop isolado pronto para uso em cena.</span></label>
+        </div>
+        <button class="advance-btn mt-5 w-full sm:w-auto px-5 py-2.5 rounded-lg bg-studio-amber text-studio-black font-semibold text-sm disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2" data-phase="3" disabled>
+          Concluir Fase 3 e avançar <i data-lucide="chevron-right" class="w-4 h-4"></i>
+        </button>
+      </div>
+    </section>
+
+    <!-- ================================================================= -->
+    <!-- FASE 4 -->
+    <!-- ================================================================= -->
+    <section id="phase-4" class="phase-panel p-5 sm:p-8 lg:p-12 max-w-5xl mx-auto">
+      <header class="mb-8">
+        <div class="flex items-center gap-2 text-studio-cyan text-xs font-semibold uppercase tracking-widest mb-2">
+          <i data-lucide="camera" class="w-4 h-4"></i> Fase 4 de 5 — Produção
+        </div>
+        <h2 class="text-3xl sm:text-4xl font-bold text-white mb-2">Direção de Cena, Fotografia e Geração de Vídeo</h2>
+        <p class="text-zinc-400 text-sm sm:text-base">Principal Photography em IA</p>
+        <div class="mt-4 bg-studio-panel border border-studio-border rounded-lg p-4 text-sm text-zinc-400">
+          <span class="text-studio-amber font-semibold">Objetivo da etapa:</span> unir Set + Character Sheet + Artefatos como insumos visuais e dirigir a cena com blocking, câmera e diálogo — sem redescrever o que a IA já recebeu como referência.
+        </div>
+      </header>
+
+      <div class="grid md:grid-cols-2 gap-6 mb-10">
+        <div class="bg-studio-panel border border-studio-border rounded-xl overflow-hidden flex flex-col">
+          <div id="imgPreviewWrap-4" class="aspect-video bg-studio-panel2 flex items-center justify-center relative overflow-hidden">
+            <div id="imgFallback-4" class="flex flex-col items-center text-zinc-600 gap-2 p-6 text-center">
+              <i data-lucide="image" class="w-10 h-10"></i>
+              <span class="text-xs">Nenhuma imagem carregada. Faça upload de uma referência visual para esta fase.</span>
+            </div>
+            <img id="imgPreview-4" class="hidden absolute inset-0 w-full h-full object-cover" />
+          </div>
+          <label class="cursor-pointer border-t border-studio-border p-3 flex items-center justify-center gap-2 text-sm text-zinc-300 hover:bg-studio-panel2 transition-colors">
+            <i data-lucide="upload" class="w-4 h-4"></i> Upload de imagem ilustrativa
+            <input type="file" accept="image/*" class="hidden" data-upload-phase="4" />
+          </label>
+        </div>
+        <div class="bg-studio-panel border border-studio-border rounded-xl p-4 flex flex-col">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-xs uppercase tracking-wider text-zinc-500 font-semibold">Prompt de Imagem — Fase 4</span>
+            <button class="copy-prompt-btn flex items-center gap-1 text-xs text-studio-amber hover:text-amber-300 px-2 py-1 rounded border border-studio-amberdim" data-target="prompt-text-4">
+              <i data-lucide="copy" class="w-3.5 h-3.5"></i> <span>Copiar</span>
+            </button>
+          </div>
+          <div id="prompt-text-4" class="prompt-box rounded-lg p-3 text-xs text-cyan-300 flex-1 overflow-y-auto leading-relaxed">Cinematic behind-the-scenes visualization of AI video generation: a digital film set where a pre-designed character asset, a vintage car prop, and a desert camp background layer merge seamlessly into a live moving cinema frame, virtual cinema camera rig showing dolly movement arrows and lens focal length HUD, dramatic golden hour lighting, 8k --ar 16:9</div>
+        </div>
+      </div>
+
+      <div class="mb-10">
+        <h3 class="text-xl font-bold text-white mb-4 flex items-center gap-2"><i data-lucide="layers" class="w-5 h-5 text-studio-amber"></i> A Regra de Ouro do Prompt de Vídeo</h3>
+        <div class="grid sm:grid-cols-2 gap-4">
+          <div class="bg-studio-panel border border-red-900/50 rounded-xl p-4">
+            <div class="flex items-center gap-2 mb-2 text-red-400"><i data-lucide="x" class="w-4 h-4"></i><span class="font-semibold text-sm">O que NÃO colocar no prompt</span></div>
+            <p class="text-sm text-zinc-400">Não descreva de novo o cenário nem como o personagem está vestido — a IA de vídeo já recebe o Set e o Character Sheet prontos como referência. Reescrever isso gera conflito e perda de consistência (raccord quebrado).</p>
+          </div>
+          <div class="bg-studio-panel border border-emerald-900/50 rounded-xl p-4">
+            <div class="flex items-center gap-2 mb-2 text-emerald-400"><i data-lucide="check" class="w-4 h-4"></i><span class="font-semibold text-sm">O que COLOCAR no prompt</span></div>
+            <p class="text-sm text-zinc-400"><span class="text-white font-medium">Blocking e Ação Física:</span> o que o personagem faz e como interage com o cenário/artefato.<br/><span class="text-white font-medium">Fotografia e Câmera:</span> enquadramento e movimento — Dolly In, Tracking Shot, Panorâmica, Handheld.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="mb-10">
+        <h3 class="text-xl font-bold text-white mb-1 flex items-center gap-2"><i data-lucide="video" class="w-5 h-5 text-studio-cyan"></i> Laboratório: Mesa de Direção e Prompt de Vídeo</h3>
+        <p class="text-sm text-zinc-500 mb-4">Os insumos visuais já estão travados. Dirija a cena escolhendo câmera, ação e intenção de fala.</p>
+
+        <div class="flex flex-wrap gap-2 mb-4" id="sceneSelector4"></div>
+
+        <div class="grid sm:grid-cols-3 gap-3 mb-5" id="lockedAssets4"></div>
+
+        <div class="grid sm:grid-cols-3 gap-4 mb-5">
+          <div>
+            <label class="text-xs uppercase tracking-wider text-zinc-500 font-semibold block mb-2">Movimento de Câmera</label>
+            <select id="cameraSelect" class="w-full bg-studio-panel2 border border-studio-border rounded-lg px-3 py-2 text-sm text-zinc-200"></select>
+          </div>
+          <div>
+            <label class="text-xs uppercase tracking-wider text-zinc-500 font-semibold block mb-2">Ação do Personagem</label>
+            <select id="actionSelect" class="w-full bg-studio-panel2 border border-studio-border rounded-lg px-3 py-2 text-sm text-zinc-200"></select>
+          </div>
+          <div>
+            <label class="text-xs uppercase tracking-wider text-zinc-500 font-semibold block mb-2">Intenção da Fala</label>
+            <select id="speechSelect" class="w-full bg-studio-panel2 border border-studio-border rounded-lg px-3 py-2 text-sm text-zinc-200"></select>
+          </div>
+        </div>
+
+        <div class="grid lg:grid-cols-2 gap-4">
+          <div class="bg-studio-panel border border-red-900/50 rounded-xl p-4 flex flex-col">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs uppercase tracking-wider text-red-400 font-semibold flex items-center gap-1.5"><i data-lucide="x" class="w-3.5 h-3.5"></i> Prompt Errado (Redundante)</span>
+              <button class="copy-prompt-btn flex items-center gap-1 text-xs text-zinc-500 hover:text-zinc-300 px-2 py-1 rounded border border-studio-border" data-target="wrongPromptOutput">
+                <i data-lucide="copy" class="w-3.5 h-3.5"></i> <span>Copiar</span>
+              </button>
+            </div>
+            <div id="wrongPromptOutput" class="prompt-box rounded-lg p-3 text-xs text-red-300/80 flex-1 leading-relaxed"></div>
+          </div>
+          <div class="bg-studio-panel border border-emerald-900/50 rounded-xl p-4 flex flex-col">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs uppercase tracking-wider text-emerald-400 font-semibold flex items-center gap-1.5"><i data-lucide="check" class="w-3.5 h-3.5"></i> Prompt Técnico Correto</span>
+              <button class="copy-prompt-btn flex items-center gap-1 text-xs text-studio-amber hover:text-amber-300 px-2 py-1 rounded border border-studio-amberdim" data-target="correctPromptOutput">
+                <i data-lucide="copy" class="w-3.5 h-3.5"></i> <span>Copiar</span>
+              </button>
+            </div>
+            <div id="correctPromptOutput" class="prompt-box rounded-lg p-3 text-xs text-emerald-300 flex-1 leading-relaxed"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-studio-panel2 border border-studio-border rounded-xl p-5">
+        <h3 class="text-sm font-bold text-white mb-4 flex items-center gap-2"><i data-lucide="check-circle" class="w-4 h-4 text-studio-amber"></i> Checklist de Aprovação — Fase 4</h3>
+        <div class="space-y-3" data-checklist="4">
+          <label class="flex items-start gap-3 cursor-pointer"><input type="checkbox" class="gate-check mt-0.5" data-phase="4" data-item="0" /><span class="text-sm text-zinc-300">Entendi por que não devemos redescrever roupa e cenário no prompt de vídeo.</span></label>
+          <label class="flex items-start gap-3 cursor-pointer"><input type="checkbox" class="gate-check mt-0.5" data-phase="4" data-item="1" /><span class="text-sm text-zinc-300">Selecionei um movimento de câmera e uma ação física coerente com a cena.</span></label>
+          <label class="flex items-start gap-3 cursor-pointer"><input type="checkbox" class="gate-check mt-0.5" data-phase="4" data-item="2" /><span class="text-sm text-zinc-300">Comparei o prompt redundante com o prompt técnico correto e identifiquei as diferenças.</span></label>
+        </div>
+        <button class="advance-btn mt-5 w-full sm:w-auto px-5 py-2.5 rounded-lg bg-studio-amber text-studio-black font-semibold text-sm disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2" data-phase="4" disabled>
+          Concluir Fase 4 e avançar <i data-lucide="chevron-right" class="w-4 h-4"></i>
+        </button>
+      </div>
+    </section>
+
+    <!-- ================================================================= -->
+    <!-- FASE 5 -->
+    <!-- ================================================================= -->
+    <section id="phase-5" class="phase-panel p-5 sm:p-8 lg:p-12 max-w-5xl mx-auto">
+      <header class="mb-8">
+        <div class="flex items-center gap-2 text-studio-cyan text-xs font-semibold uppercase tracking-widest mb-2">
+          <i data-lucide="scissors" class="w-4 h-4"></i> Fase 5 de 5 — Pós-Produção
+        </div>
+        <h2 class="text-3xl sm:text-4xl font-bold text-white mb-2">Montagem, Sound Design e Finalização</h2>
+        <p class="text-zinc-400 text-sm sm:text-base">Post-Production &amp; Finishing</p>
+        <div class="mt-4 bg-studio-panel border border-studio-border rounded-lg p-4 text-sm text-zinc-400">
+          <span class="text-studio-amber font-semibold">Objetivo da etapa:</span> transformar os takes brutos da Fase 4 em um filme com ritmo, voz definitiva, atmosfera sonora e unidade visual.
+        </div>
+      </header>
+
+      <div class="grid md:grid-cols-2 gap-6 mb-10">
+        <div class="bg-studio-panel border border-studio-border rounded-xl overflow-hidden flex flex-col">
+          <div id="imgPreviewWrap-5" class="aspect-video bg-studio-panel2 flex items-center justify-center relative overflow-hidden">
+            <div id="imgFallback-5" class="flex flex-col items-center text-zinc-600 gap-2 p-6 text-center">
+              <i data-lucide="image" class="w-10 h-10"></i>
+              <span class="text-xs">Nenhuma imagem carregada. Faça upload de uma referência visual para esta fase.</span>
+            </div>
+            <img id="imgPreview-5" class="hidden absolute inset-0 w-full h-full object-cover" />
+          </div>
+          <label class="cursor-pointer border-t border-studio-border p-3 flex items-center justify-center gap-2 text-sm text-zinc-300 hover:bg-studio-panel2 transition-colors">
+            <i data-lucide="upload" class="w-4 h-4"></i> Upload de imagem ilustrativa
+            <input type="file" accept="image/*" class="hidden" data-upload-phase="5" />
+          </label>
+        </div>
+        <div class="bg-studio-panel border border-studio-border rounded-xl p-4 flex flex-col">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-xs uppercase tracking-wider text-zinc-500 font-semibold">Prompt de Imagem — Fase 5</span>
+            <button class="copy-prompt-btn flex items-center gap-1 text-xs text-studio-amber hover:text-amber-300 px-2 py-1 rounded border border-studio-amberdim" data-target="prompt-text-5">
+              <i data-lucide="copy" class="w-3.5 h-3.5"></i> <span>Copiar</span>
+            </button>
+          </div>
+          <div id="prompt-text-5" class="prompt-box rounded-lg p-3 text-xs text-cyan-300 flex-1 overflow-y-auto leading-relaxed">Professional post-production color grading and editing suite in a dark room, ultrawide curved monitor displaying a multi-track video timeline, audio waveforms for ADR dubbing and sound design, and color wheels with a cinematic scene on the reference display, sleek studio speakers and control surface panel on the desk, moody ambient lighting, 8k --ar 16:9</div>
+        </div>
+      </div>
+
+      <div class="mb-10">
+        <h3 class="text-xl font-bold text-white mb-4 flex items-center gap-2"><i data-lucide="layers" class="w-5 h-5 text-studio-amber"></i> As 4 Etapas da Pós-Produção</h3>
+        <div class="grid sm:grid-cols-2 gap-4">
+          <div class="bg-studio-panel border border-studio-border rounded-xl p-4">
+            <div class="flex items-center gap-2 mb-2 text-amber-300"><i data-lucide="scissors" class="w-4 h-4"></i><span class="font-semibold text-sm">Montagem e Decupagem de Takes</span></div>
+            <p class="text-sm text-zinc-400">Cortar os vídeos gerados, aproveitar os melhores segundos de cada geração, estabelecer ritmo narrativo e continuidade de movimento entre cortes.</p>
+          </div>
+          <div class="bg-studio-panel border border-studio-border rounded-xl p-4">
+            <div class="flex items-center gap-2 mb-2 text-cyan-300"><i data-lucide="mic" class="w-4 h-4"></i><span class="font-semibold text-sm">Voz, Dublagem e Lip-Sync (ADR)</span></div>
+            <p class="text-sm text-zinc-400">Substituir ou gerar vozes definitivas para os diálogos, aplicar dublagem com timbre específico e sincronizar os lábios.</p>
+          </div>
+          <div class="bg-studio-panel border border-studio-border rounded-xl p-4">
+            <div class="flex items-center gap-2 mb-2 text-purple-300"><i data-lucide="music" class="w-4 h-4"></i><span class="font-semibold text-sm">Sound Design e Foley</span></div>
+            <p class="text-sm text-zinc-400">Paisagem sonora (passos, motor, vento, impacto) e trilha musical que dão peso real às imagens geradas por IA.</p>
+          </div>
+          <div class="bg-studio-panel border border-studio-border rounded-xl p-4">
+            <div class="flex items-center gap-2 mb-2 text-rose-300"><i data-lucide="palette" class="w-4 h-4"></i><span class="font-semibold text-sm">Color Grading e Finalização (DI)</span></div>
+            <p class="text-sm text-zinc-400">Correção de cor, LUTs, granulação de película (Film Grain) e uniformização para parecer que tudo foi filmado pela mesma câmera.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="mb-10">
+        <h3 class="text-xl font-bold text-white mb-1 flex items-center gap-2"><i data-lucide="sliders-horizontal" class="w-5 h-5 text-studio-cyan"></i> Laboratório: Mini-Timeline de Pós-Produção</h3>
+        <p class="text-sm text-zinc-500 mb-4">Ative cada camada da ilha de edição e acompanhe o status do master do filme.</p>
+
+        <div class="bg-studio-panel border border-studio-border rounded-xl p-5 mb-4">
+          <div class="flex items-center justify-between mb-4">
+            <span class="text-sm font-semibold text-white" id="masterStatusLabel">Master Finalizado: 0%</span>
+            <div class="w-40 h-2 bg-studio-panel2 rounded-full overflow-hidden border border-studio-border">
+              <div id="masterProgressFill" class="h-full bg-gradient-to-r from-studio-amber to-studio-cyan transition-all duration-500" style="width:0%"></div>
+            </div>
+          </div>
+          <div class="space-y-2" id="timelineTracks"></div>
+        </div>
+
+        <div class="flex flex-wrap gap-2 mb-4" id="timelineToggles"></div>
+
+        <div class="bg-studio-panel border border-studio-border rounded-xl p-4">
+          <h4 class="text-xs uppercase tracking-wider text-zinc-500 font-semibold mb-2">Preview / Status do Filme</h4>
+          <p id="timelinePreviewText" class="text-sm text-zinc-400 leading-relaxed"></p>
+        </div>
+      </div>
+
+      <div class="bg-studio-panel2 border border-studio-border rounded-xl p-5">
+        <h3 class="text-sm font-bold text-white mb-4 flex items-center gap-2"><i data-lucide="check-circle" class="w-4 h-4 text-studio-amber"></i> Checklist de Aprovação — Fase 5</h3>
+        <div class="space-y-3" data-checklist="5">
+          <label class="flex items-start gap-3 cursor-pointer"><input type="checkbox" class="gate-check mt-0.5" data-phase="5" data-item="0" /><span class="text-sm text-zinc-300">Apliquei o corte de takes na trilha de vídeo (V1).</span></label>
+          <label class="flex items-start gap-3 cursor-pointer"><input type="checkbox" class="gate-check mt-0.5" data-phase="5" data-item="1" /><span class="text-sm text-zinc-300">Ativei a camada de dublagem/ADR e de sound design (A1/A2).</span></label>
+          <label class="flex items-start gap-3 cursor-pointer"><input type="checkbox" class="gate-check mt-0.5" data-phase="5" data-item="2" /><span class="text-sm text-zinc-300">Apliquei o color grading cinematográfico e finalizei o master do filme.</span></label>
+        </div>
+        <button class="advance-btn mt-5 w-full sm:w-auto px-5 py-2.5 rounded-lg bg-studio-amber text-studio-black font-semibold text-sm disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2" data-phase="5" disabled>
+          <i data-lucide="star" class="w-4 h-4"></i> Concluir o Curso
+        </button>
+        <div id="courseCompleteMsg" class="hidden mt-4 bg-gradient-to-r from-studio-amber/20 to-studio-cyan/20 border border-studio-amber rounded-lg p-4 text-sm text-amber-200 flex items-center gap-2">
+          <i data-lucide="clapperboard" class="w-5 h-5"></i> Parabéns! Você completou o pipeline de produção cinematográfica com IA, do roteiro à pós-produção.
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script>
+/* ============================================================
+   ESTADO E PERSISTÊNCIA
+   ============================================================ */
+const STORAGE_KEY = 'iacinema_pipeline_state_v1';
+const TOTAL_PHASES = 5;
+
+const defaultState = {
+  currentPhase: 1,
+  unlockedPhases: [1],
+  completedPhases: [],
+  directorMode: false,
+  checklists: {
+    1: [false, false, false],
+    2: [false, false, false],
+    3: [false, false, false],
+    4: [false, false, false],
+    5: [false, false, false],
+  },
+  images: { 1: null, 2: null, 3: null, 4: null, 5: null },
+};
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return JSON.parse(JSON.stringify(defaultState));
+    const parsed = JSON.parse(raw);
+    return Object.assign(JSON.parse(JSON.stringify(defaultState)), parsed);
+  } catch (e) {
+    return JSON.parse(JSON.stringify(defaultState));
+  }
+}
+
+function saveState() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  } catch (e) { /* localStorage indisponível - segue sem persistir */ }
+}
+
+let state = loadState();
+
+/* ============================================================
+   DADOS DAS FASES (nav)
+   ============================================================ */
+const PHASES_META = [
+  { id: 1, title: 'Roteiro e Decupagem', icon: 'file-text' },
+  { id: 2, title: 'Pesquisa e Direção de Arte', icon: 'search' },
+  { id: 3, title: 'Criação de Assets', icon: 'wand-2' },
+  { id: 4, title: 'Direção de Cena e Vídeo', icon: 'camera' },
+  { id: 5, title: 'Pós-Produção', icon: 'scissors' },
+];
+
+/* ============================================================
+   NAVEGAÇÃO / SIDEBAR
+   ============================================================ */
+function isUnlocked(phaseId) {
+  return state.directorMode || state.unlockedPhases.includes(phaseId);
+}
+
+function renderSidebarNav() {
+  const nav = document.getElementById('phaseNav');
+  nav.innerHTML = '';
+  PHASES_META.forEach(p => {
+    const unlocked = isUnlocked(p.id);
+    const done = state.completedPhases.includes(p.id);
+    const current = state.currentPhase === p.id;
+    const btn = document.createElement('button');
+    btn.className = `sidebar-btn w-full text-left px-3 py-3 rounded-lg border border-studio-border bg-studio-panel2 flex items-center gap-3 transition-colors ${unlocked ? 'hover:border-studio-cyan' : 'locked'} ${current ? 'is-current' : ''} ${done ? 'is-done' : ''}`;
+    btn.setAttribute('data-nav-phase', p.id);
+    btn.innerHTML = `
+      <span class="phase-num-badge w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold border border-studio-border bg-studio-panel text-zinc-400 shrink-0">${done ? '<i data-lucide="check" class="w-3.5 h-3.5"></i>' : p.id}</span>
+      <span class="flex-1 min-w-0">
+        <span class="block text-sm font-medium ${current ? 'text-white' : 'text-zinc-300'} truncate">${p.title}</span>
+        <span class="block text-[11px] text-zinc-500">Fase ${p.id}</span>
+      </span>
+      ${!unlocked ? '<i data-lucide="lock" class="w-3.5 h-3.5 text-zinc-600 shrink-0"></i>' : ''}
+    `;
+    btn.addEventListener('click', () => {
+      if (!isUnlocked(p.id)) return;
+      goToPhase(p.id);
+    });
+    nav.appendChild(btn);
+  });
+  lucide.createIcons();
+}
+
+function goToPhase(id) {
+  state.currentPhase = id;
+  saveState();
+  renderAll();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  if (window.innerWidth < 1024) {
+    document.getElementById('sidebar').classList.add('hidden');
+  }
+}
+
+function renderPanels() {
+  for (let i = 1; i <= TOTAL_PHASES; i++) {
+    const el = document.getElementById('phase-' + i);
+    el.classList.toggle('active-panel', state.currentPhase === i);
+  }
+}
+
+function renderProgress() {
+  const pct = Math.round((state.completedPhases.length / TOTAL_PHASES) * 100);
+  document.getElementById('progressBarFill').style.width = pct + '%';
+  document.getElementById('progressPercentLabel').textContent = pct + '%';
+}
+
+/* ============================================================
+   MODO DIRETOR
+   ============================================================ */
+function renderDirectorToggle() {
+  const toggle = document.getElementById('directorModeToggle');
+  toggle.classList.toggle('on', state.directorMode);
+}
+
+document.getElementById('directorModeBtn').addEventListener('click', () => {
+  state.directorMode = !state.directorMode;
+  saveState();
+  renderSidebarNav();
+  renderDirectorToggle();
+});
+
+document.getElementById('resetProgressBtn').addEventListener('click', () => {
+  if (!confirm('Isso vai apagar todo o progresso salvo do curso neste navegador. Continuar?')) return;
+  localStorage.removeItem(STORAGE_KEY);
+  state = JSON.parse(JSON.stringify(defaultState));
+  renderAll();
+  window.scrollTo({ top: 0 });
+});
+
+document.getElementById('mobileMenuBtn').addEventListener('click', () => {
+  document.getElementById('sidebar').classList.toggle('hidden');
+});
+
+/* ============================================================
+   CHECKLISTS / GATEKEEPER
+   ============================================================ */
+document.querySelectorAll('input.gate-check').forEach(cb => {
+  const phase = parseInt(cb.getAttribute('data-phase'), 10);
+  const item = parseInt(cb.getAttribute('data-item'), 10);
+  cb.checked = !!state.checklists[phase][item];
+  cb.addEventListener('change', () => {
+    state.checklists[phase][item] = cb.checked;
+    saveState();
+    updateAdvanceButton(phase);
+  });
+});
+
+function updateAdvanceButton(phase) {
+  const allChecked = state.checklists[phase].every(Boolean);
+  const btn = document.querySelector(`.advance-btn[data-phase="${phase}"]`);
+  btn.disabled = !allChecked;
+}
+
+document.querySelectorAll('.advance-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const phase = parseInt(btn.getAttribute('data-phase'), 10);
+    if (!state.checklists[phase].every(Boolean)) return;
+    if (!state.completedPhases.includes(phase)) state.completedPhases.push(phase);
+    const next = phase + 1;
+    if (next <= TOTAL_PHASES && !state.unlockedPhases.includes(next)) {
+      state.unlockedPhases.push(next);
+    }
+    saveState();
+    if (phase === TOTAL_PHASES) {
+      document.getElementById('courseCompleteMsg').classList.remove('hidden');
+      renderSidebarNav();
+      renderProgress();
+    } else {
+      goToPhase(next);
+    }
+  });
+});
+
+/* ============================================================
+   UPLOAD DE IMAGEM POR FASE
+   ============================================================ */
+document.querySelectorAll('input[data-upload-phase]').forEach(input => {
+  const phase = input.getAttribute('data-upload-phase');
+  input.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      state.images[phase] = ev.target.result;
+      saveState();
+      renderImagePreview(phase);
+    };
+    reader.readAsDataURL(file);
+  });
+});
+
+function renderImagePreview(phase) {
+  const img = document.getElementById('imgPreview-' + phase);
+  const fallback = document.getElementById('imgFallback-' + phase);
+  const src = state.images[phase];
+  if (src) {
+    img.src = src;
+    img.classList.remove('hidden');
+    fallback.classList.add('hidden');
+  } else {
+    img.classList.add('hidden');
+    fallback.classList.remove('hidden');
+  }
+}
+
+/* ============================================================
+   COPIAR PROMPT
+   ============================================================ */
+function copyTextToClipboard(text) {
+  if (navigator.clipboard && window.isSecureContext) {
+    return navigator.clipboard.writeText(text);
+  }
+  return new Promise((resolve, reject) => {
+    const textarea = document.createElement('textarea');
+    textarea.value = text;
+    textarea.style.position = 'fixed';
+    textarea.style.opacity = '0';
+    document.body.appendChild(textarea);
+    textarea.focus();
+    textarea.select();
+    try {
+      document.execCommand('copy');
+      resolve();
+    } catch (err) {
+      reject(err);
+    } finally {
+      document.body.removeChild(textarea);
+    }
+  });
+}
+
+document.addEventListener('click', (e) => {
+  const btn = e.target.closest('.copy-prompt-btn');
+  if (!btn) return;
+  const targetId = btn.getAttribute('data-target');
+  const targetEl = document.getElementById(targetId);
+  if (!targetEl) return;
+  const text = targetEl.innerText || targetEl.textContent;
+  copyTextToClipboard(text).then(() => {
+    const label = btn.querySelector('span');
+    const original = label.textContent;
+    label.textContent = 'Copiado!';
+    btn.classList.add('copied-flash');
+    setTimeout(() => {
+      label.textContent = original;
+      btn.classList.remove('copied-flash');
+    }, 1400);
+  });
+});
+
+/* ============================================================
+   FASE 1 — DECUPADOR DE ROTEIRO
+   ============================================================ */
+const FILTER_LABELS = {
+  character: { name: 'Personagens', color: '#fcd34d' },
+  location: { name: 'Locais/Sets', color: '#67e8f9' },
+  prop: { name: 'Artefatos/Props', color: '#d8b4fe' },
+  dialogue: { name: 'Falas/Ação', color: '#fda4af' },
+};
+
+let activeFilters = new Set(['character']);
+
+function applyScreenplayFilters() {
+  const tags = document.querySelectorAll('#screenplayBox .tag');
+  tags.forEach(tag => {
+    const type = tag.getAttribute('data-type');
+    tag.classList.remove('hl-character', 'hl-location', 'hl-prop', 'hl-dialogue', 'dim');
+    if (activeFilters.size === 0) return;
+    if (activeFilters.has(type)) {
+      tag.classList.add('hl-' + type);
+    } else {
+      tag.classList.add('dim');
+    }
+  });
+
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    const f = btn.getAttribute('data-filter');
+    btn.classList.toggle('active-filter', activeFilters.has(f));
+    btn.style.borderColor = activeFilters.has(f) ? FILTER_LABELS[f].color : '#2a2a2f';
+  });
+
+  renderBreakdownTable();
+}
+
+function renderBreakdownTable() {
+  const container = document.getElementById('breakdownTable');
+  if (activeFilters.size === 0) {
+    container.innerHTML = '<p class="text-xs text-zinc-600">Selecione ao menos um filtro para extrair elementos do roteiro.</p>';
+    return;
+  }
+  let html = '';
+  activeFilters.forEach(type => {
+    const seen = new Set();
+    const items = [];
+    document.querySelectorAll(`#screenplayBox .tag[data-type="${type}"]`).forEach(tag => {
+      const txt = tag.textContent.trim();
+      const key = txt.toLowerCase();
+      if (!seen.has(key)) { seen.add(key); items.push(txt); }
+    });
+    html += `<div>
+      <div class="text-[11px] uppercase tracking-wider font-semibold mb-1.5" style="color:${FILTER_LABELS[type].color}">${FILTER_LABELS[type].name} (${items.length})</div>
+      <ul class="space-y-1">
+        ${items.map(i => `<li class="text-xs text-zinc-400 bg-studio-panel2 rounded px-2 py-1 border border-studio-border">${i}</li>`).join('')}
+      </ul>
+    </div>`;
+  });
+  container.innerHTML = html;
+}
+
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const f = btn.getAttribute('data-filter');
+    if (activeFilters.has(f)) activeFilters.delete(f); else activeFilters.add(f);
+    applyScreenplayFilters();
+  });
+});
+
+/* ============================================================
+   FASE 2 — SIMULADOR DE PASTAS
+   ============================================================ */
+const FOLDERS = [
+  {
+    id: 'roteiro', label: '01_Roteiro', icon: 'file-text',
+    cards: [
+      { title: 'Roteiro_Master_v3.pdf', meta: 'Documento mestre', desc: 'Versão decupada na Fase 1, com sluglines, personagens, props e diálogos marcados.' },
+      { title: 'Guia_de_Estilo_Visual.pdf', meta: 'Look & Tone', desc: 'Definição macro da estética: tom, paleta de cor e referência de gênero cinematográfico.' },
+    ]
+  },
+  {
+    id: 'personagens', label: '02_Pesquisa_Personagens', icon: 'users',
+    cards: [
+      { title: 'Rafael — Referência Facial', meta: 'Char. Principal', desc: 'Rosto anguloso, cicatriz na sobrancelha esquerda, cabelo curto castanho escuro, 35 anos.' },
+      { title: 'Marina — Referência Facial', meta: 'Char. Secundária', desc: 'Cabelo curto grisalho, estrutura atlética, olhar determinado, 28 anos.' },
+    ]
+  },
+  {
+    id: 'figurinos', label: '03_Pesquisa_Figurinos', icon: 'package',
+    cards: [
+      { title: 'Rafael — Cena 01', meta: 'Wardrobe', desc: 'Jaqueta de couro marrom surrada, camisa cinza, calça jeans escura, botas de trilha.' },
+      { title: 'Rafael — Cena 02', meta: 'Wardrobe', desc: 'Jaqueta tática cinza-escura, colete utilitário, calça cargo preta, coturno tático.' },
+      { title: 'Marina — Cena 03', meta: 'Wardrobe', desc: 'Jaqueta tática cinza, camiseta preta, calça cargo, luvas sem dedos.' },
+    ]
+  },
+  {
+    id: 'locais', label: '04_Pesquisa_Locais_Sets', icon: 'map-pin',
+    cards: [
+      { title: 'Galpão Abandonado', meta: 'Location Scouting', desc: 'Vigas de metal enferrujadas, luar entrando por venezianas quebradas, poeira suspensa.' },
+      { title: 'Beco Industrial', meta: 'Location Scouting', desc: 'Beco estreito entre galpões, chão molhado, luzes de neon distante, fiação exposta.' },
+      { title: 'Telhado ao Amanhecer', meta: 'Location Scouting', desc: 'Dutos de ventilação, luz alaranjada do amanhecer, silhuetas da cidade ao fundo.' },
+    ]
+  },
+  {
+    id: 'artefatos', label: '05_Pesquisa_Artefatos_Props', icon: 'sparkles',
+    cards: [
+      { title: 'Lanterna a Querosene', meta: 'Prop de Cena', desc: 'Metal envelhecido, vidro trincado, chama alaranjada, estilo vintage industrial.' },
+      { title: 'Motocicleta Custom', meta: 'Veículo de Cena', desc: 'Estilo bobber com ferrugem controlada, tanque preto fosco, escapamento cromado.' },
+      { title: 'Chave de Fenda Industrial', meta: 'Prop de Cena', desc: 'Cabo amarelo desgastado, ponta metálica arranhada, aparência de ferramenta usada em combate.' },
+    ]
+  },
+];
+
+let activeFolder = 'roteiro';
+
+function renderFolderTree() {
+  const tree = document.getElementById('folderTree');
+  tree.innerHTML = '<div class="text-xs uppercase tracking-wider text-zinc-500 font-semibold px-2 py-1">/PROJETO_FILME</div>';
+  FOLDERS.forEach(f => {
+    const item = document.createElement('button');
+    item.className = `folder-item w-full text-left flex items-center gap-2 px-3 py-2.5 rounded-lg border border-transparent text-sm text-zinc-400 hover:bg-studio-panel2 transition-colors ${activeFolder === f.id ? 'active-folder' : ''}`;
+    item.innerHTML = `<i data-lucide="${activeFolder === f.id ? 'folder-open' : 'folder'}" class="w-4 h-4 shrink-0"></i> <span class="truncate">${f.label}</span>`;
+    item.addEventListener('click', () => {
+      activeFolder = f.id;
+      renderFolderTree();
+      renderFolderPanel();
+    });
+    tree.appendChild(item);
+  });
+  lucide.createIcons();
+}
+
+function renderFolderPanel() {
+  const panel = document.getElementById('folderPanel');
+  const folder = FOLDERS.find(f => f.id === activeFolder);
+  panel.innerHTML = `
+    <div class="flex items-center gap-2 mb-4 text-studio-amber">
+      <i data-lucide="${folder.icon}" class="w-5 h-5"></i>
+      <span class="font-semibold text-white">/PROJETO_FILME/${folder.label}</span>
+    </div>
+    <div class="grid sm:grid-cols-2 gap-3">
+      ${folder.cards.map(c => `
+        <div class="bg-studio-panel2 border border-studio-border rounded-lg p-3">
+          <div class="flex items-center justify-between mb-1">
+            <span class="text-sm font-medium text-zinc-200">${c.title}</span>
+          </div>
+          <span class="inline-block text-[10px] uppercase tracking-wider text-studio-cyan mb-1.5">${c.meta}</span>
+          <p class="text-xs text-zinc-500 leading-relaxed">${c.desc}</p>
+        </div>
+      `).join('')}
+    </div>
+  `;
+  lucide.createIcons();
+}
+
+/* ============================================================
+   FASE 3 — CONSTRUTOR DE ASSETS
+   ============================================================ */
+const SCENES = [
+  {
+    id: 1, name: 'Cena 01 — Confronto no Galpão', character: 'Rafael',
+    actorBase: 'homem, 35 anos, rosto anguloso, cicatriz na sobrancelha esquerda, cabelo curto castanho escuro',
+    figurino: 'jaqueta de couro marrom surrada sobre camisa cinza, calça jeans escura, botas de trilha',
+    acessorio: 'lanterna a querosene na mão direita',
+    setName: 'Galpão Abandonado à Noite',
+    setDesc: 'interior de um galpão industrial abandonado, vigas de metal enferrujadas, luar entrando por venezianas quebradas, poeira suspensa no ar',
+    prop: 'Lanterna a Querosene Antiga',
+    propDesc: 'lanterna de metal envelhecido com vidro trincado, chama alaranjada tênue, estilo vintage industrial',
+  },
+  {
+    id: 2, name: 'Cena 02 — A Perseguição', character: 'Rafael',
+    actorBase: 'homem, 35 anos, rosto anguloso, cicatriz na sobrancelha esquerda, cabelo curto castanho escuro',
+    figurino: 'jaqueta tática cinza-escura, colete com bolsos utilitários, calça cargo preta, coturno tático',
+    acessorio: 'motocicleta custom enferrujada',
+    setName: 'Beco Industrial Chuvoso',
+    setDesc: 'beco estreito entre galpões, chão molhado refletindo luzes de neon distante, fiação exposta nas paredes',
+    prop: 'Motocicleta Custom Enferrujada',
+    propDesc: 'motocicleta estilo bobber com ferrugem controlada, tanque pintado de preto fosco, escapamento cromado',
+  },
+  {
+    id: 3, name: 'Cena 03 — O Confronto Final', character: 'Marina',
+    actorBase: 'mulher, 28 anos, cabelo curto grisalho, olhar determinado, estrutura atlética',
+    figurino: 'jaqueta tática cinza, camiseta preta, calça cargo, luvas sem dedos',
+    acessorio: 'chave de fenda segurada como arma improvisada',
+    setName: 'Telhado do Galpão ao Amanhecer',
+    setDesc: 'telhado industrial com dutos de ventilação, luz alaranjada do amanhecer, silhuetas da cidade ao fundo',
+    prop: 'Chave de Fenda Industrial',
+    propDesc: 'chave de fenda robusta de cabo amarelo desgastado, ponta metálica arranhada, aparência de ferramenta usada em combate improvisado',
+  },
+];
+
+const ASSET_TABS = [
+  { id: 'personagem', label: 'Character Sheet', icon: 'users' },
+  { id: 'set', label: 'Set / Cenário', icon: 'map-pin' },
+  { id: 'prop', label: 'Artefato / Prop', icon: 'package' },
+];
+
+let activeScene3 = 1;
+let activeAssetTab3 = 'personagem';
+
+function renderSceneSelector3() {
+  const wrap = document.getElementById('sceneSelector3');
+  wrap.innerHTML = '';
+  SCENES.forEach(s => {
+    const btn = document.createElement('button');
+    btn.className = `px-3 py-2 rounded-lg border text-xs font-medium transition-colors ${activeScene3 === s.id ? 'border-studio-amber text-studio-amber bg-studio-amber/10' : 'border-studio-border text-zinc-400 hover:border-zinc-500'}`;
+    btn.textContent = 'Cena ' + String(s.id).padStart(2, '0');
+    btn.addEventListener('click', () => { activeScene3 = s.id; renderSceneSelector3(); renderAssetPanel3(); });
+    wrap.appendChild(btn);
+  });
+}
+
+function renderAssetTabs3() {
+  const wrap = document.getElementById('assetTabs3');
+  wrap.innerHTML = '';
+  ASSET_TABS.forEach(t => {
+    const btn = document.createElement('button');
+    btn.className = `px-4 py-2 text-sm font-medium border-b-2 flex items-center gap-1.5 transition-colors ${activeAssetTab3 === t.id ? 'border-studio-cyan text-studio-cyan' : 'border-transparent text-zinc-500 hover:text-zinc-300'}`;
+    btn.innerHTML = `<i data-lucide="${t.icon}" class="w-4 h-4"></i> ${t.label}`;
+    btn.addEventListener('click', () => { activeAssetTab3 = t.id; renderAssetTabs3(); renderAssetPanel3(); });
+    wrap.appendChild(btn);
+  });
+  lucide.createIcons();
+}
+
+function renderAssetPanel3() {
+  const scene = SCENES.find(s => s.id === activeScene3);
+  const chips = document.getElementById('assetChips3');
+  const output = document.getElementById('assetPromptOutput');
+  let prompt = '';
+  let chipsHtml = '';
+
+  if (activeAssetTab3 === 'personagem') {
+    chipsHtml = `
+      <h4 class="text-xs uppercase tracking-wider text-zinc-500 font-semibold mb-3">Combinação de Raccord — ${scene.name}</h4>
+      <div class="space-y-2">
+        <div class="bg-studio-panel2 border border-studio-border rounded-lg p-3"><span class="text-[10px] uppercase tracking-wider text-studio-amber block mb-1">Referência Base do Ator</span><span class="text-sm text-zinc-300">${scene.actorBase}</span></div>
+        <div class="bg-studio-panel2 border border-studio-border rounded-lg p-3"><span class="text-[10px] uppercase tracking-wider text-studio-cyan block mb-1">Figurino da Cena</span><span class="text-sm text-zinc-300">${scene.figurino}</span></div>
+        <div class="bg-studio-panel2 border border-studio-border rounded-lg p-3"><span class="text-[10px] uppercase tracking-wider text-purple-300 block mb-1">Acessório no Corpo</span><span class="text-sm text-zinc-300">${scene.acessorio}</span></div>
+      </div>
+      <span class="inline-block mt-3 text-xs text-zinc-500">ID do Asset: <code class="text-studio-amber">Char_${scene.character}_Cena0${scene.id}</code></span>
+    `;
+    prompt = `Character sheet, turnaround de corpo inteiro (frente, perfil, costas), fundo neutro cinza, iluminação de estúdio uniforme, personagem: ${scene.actorBase}, vestindo ${scene.figurino}, portando ${scene.acessorio}, identificação: Char_${scene.character}_Cena0${scene.id}, alta definição de tecido e textura de pele, consistência de raccord --ar 3:4`;
+  } else if (activeAssetTab3 === 'set') {
+    chipsHtml = `
+      <h4 class="text-xs uppercase tracking-wider text-zinc-500 font-semibold mb-3">Set / Clean Plate — ${scene.name}</h4>
+      <div class="bg-studio-panel2 border border-studio-border rounded-lg p-3">
+        <span class="text-[10px] uppercase tracking-wider text-studio-cyan block mb-1">${scene.setName}</span>
+        <span class="text-sm text-zinc-300">${scene.setDesc}</span>
+      </div>
+      <span class="inline-block mt-3 text-xs text-zinc-500">Cenário vazio, sem personagens ou artefatos em cena.</span>
+    `;
+    prompt = `Clean plate cinematográfico, cenário vazio sem personagens, ${scene.setName}: ${scene.setDesc}, direção de arte consistente com o tom do filme, iluminação prática motivada, pronto para composição de atores em pós-produção, 8k, fotorrealista --ar 16:9`;
+  } else {
+    chipsHtml = `
+      <h4 class="text-xs uppercase tracking-wider text-zinc-500 font-semibold mb-3">Artefato Isolado — ${scene.name}</h4>
+      <div class="bg-studio-panel2 border border-studio-border rounded-lg p-3">
+        <span class="text-[10px] uppercase tracking-wider text-purple-300 block mb-1">${scene.prop}</span>
+        <span class="text-sm text-zinc-300">${scene.propDesc}</span>
+      </div>
+      <span class="inline-block mt-3 text-xs text-zinc-500">Referência de continuidade para Cena 0${scene.id}.</span>
+    `;
+    prompt = `Isolated product-style render de artefato de cena, ${scene.prop}: ${scene.propDesc}, fundo neutro para recorte, iluminação de estúdio em três pontos, altíssimo nível de detalhe e textura, referência de continuidade para Cena 0${scene.id} --ar 1:1`;
+  }
+
+  chips.innerHTML = chipsHtml;
+  output.textContent = prompt;
+}
+
+/* ============================================================
+   FASE 4 — MESA DE DIREÇÃO
+   ============================================================ */
+const CAMERA_OPTIONS = [
+  { id: 'dolly', label: 'Dolly In lento', desc: 'Dolly in lento e contínuo em direção ao personagem' },
+  { id: 'tracking', label: 'Tracking lateral', desc: 'Tracking shot lateral acompanhando o movimento do personagem' },
+  { id: 'static', label: 'Plano Estático', desc: 'Plano estático em câmera travada, composição centrada' },
+  { id: 'handheld', label: 'Handheld nervoso', desc: 'Handheld com leve tremor, sensação de urgência e tensão' },
+  { id: 'pan', label: 'Panorâmica lenta', desc: 'Panorâmica lenta da esquerda para a direita revelando o personagem' },
+];
+
+const ACTION_OPTIONS = [
+  { id: 'lanterna', label: 'Levanta a lanterna e examina o ambiente', desc: 'levanta a lanterna a querosene na altura dos olhos e examina lentamente o ambiente ao redor' },
+  { id: 'moto', label: 'Acelera a motocicleta em fuga', desc: 'monta na motocicleta e acelera bruscamente em direção à saída do beco' },
+  { id: 'chave', label: 'Empunha a chave de fenda em posição defensiva', desc: 'empunha a chave de fenda à frente do corpo em posição defensiva, pés firmes no chão' },
+];
+
+const SPEECH_OPTIONS = [
+  { id: 'sussurro', label: 'Sussurrando com tensão', desc: 'sussurrando com tensão contida, quase sem fôlego' },
+  { id: 'grito', label: 'Gritando em desespero', desc: 'gritando em tom de desespero, voz rouca e quebrada' },
+  { id: 'frieza', label: 'Falando com frieza calculada', desc: 'falando com frieza calculada, olhar fixo e tom baixo' },
+];
+
+let activeScene4 = 1;
+
+function renderSceneSelector4() {
+  const wrap = document.getElementById('sceneSelector4');
+  wrap.innerHTML = '';
+  SCENES.forEach(s => {
+    const btn = document.createElement('button');
+    btn.className = `px-3 py-2 rounded-lg border text-xs font-medium transition-colors ${activeScene4 === s.id ? 'border-studio-amber text-studio-amber bg-studio-amber/10' : 'border-studio-border text-zinc-400 hover:border-zinc-500'}`;
+    btn.textContent = 'Cena ' + String(s.id).padStart(2, '0');
+    btn.addEventListener('click', () => { activeScene4 = s.id; renderSceneSelector4(); renderLockedAssets4(); updateVideoPrompts(); });
+    wrap.appendChild(btn);
+  });
+}
+
+function renderLockedAssets4() {
+  const scene = SCENES.find(s => s.id === activeScene4);
+  const wrap = document.getElementById('lockedAssets4');
+  wrap.innerHTML = `
+    <div class="bg-studio-panel border border-studio-border rounded-lg p-3">
+      <div class="flex items-center gap-1.5 text-[10px] uppercase tracking-wider text-studio-cyan mb-1"><i data-lucide="map-pin" class="w-3 h-3"></i> Set (travado)</div>
+      <span class="text-sm text-zinc-300 font-medium">${scene.setName}</span>
+    </div>
+    <div class="bg-studio-panel border border-studio-border rounded-lg p-3">
+      <div class="flex items-center gap-1.5 text-[10px] uppercase tracking-wider text-amber-300 mb-1"><i data-lucide="users" class="w-3 h-3"></i> Character Sheet (travado)</div>
+      <span class="text-sm text-zinc-300 font-medium">${scene.character} — ${scene.figurino.split(',')[0]}</span>
+    </div>
+    <div class="bg-studio-panel border border-studio-border rounded-lg p-3">
+      <div class="flex items-center gap-1.5 text-[10px] uppercase tracking-wider text-purple-300 mb-1"><i data-lucide="package" class="w-3 h-3"></i> Artefato (travado)</div>
+      <span class="text-sm text-zinc-300 font-medium">${scene.prop}</span>
+    </div>
+  `;
+  lucide.createIcons();
+}
+
+function populateSelect(selectEl, options) {
+  selectEl.innerHTML = options.map(o => `<option value="${o.id}">${o.label}</option>`).join('');
+}
+
+function updateVideoPrompts() {
+  const scene = SCENES.find(s => s.id === activeScene4);
+  const camera = CAMERA_OPTIONS.find(o => o.id === document.getElementById('cameraSelect').value) || CAMERA_OPTIONS[0];
+  const action = ACTION_OPTIONS.find(o => o.id === document.getElementById('actionSelect').value) || ACTION_OPTIONS[0];
+  const speech = SPEECH_OPTIONS.find(o => o.id === document.getElementById('speechSelect').value) || SPEECH_OPTIONS[0];
+
+  const wrongPrompt = `Um(a) ${scene.character === 'Rafael' ? 'homem' : 'mulher'} de personagem ${scene.character}, vestindo ${scene.figurino}, dentro de ${scene.setName.toLowerCase()}: ${scene.setDesc}, segurando ${scene.prop.toLowerCase()}, ${action.desc}, dizendo a fala ${speech.desc}`;
+
+  const correctPrompt = `${camera.desc}, enquadramento fechado no personagem, ${action.desc}, expressão facial tensa e concentrada, diálogo entregue ${speech.desc}, ritmo de corte pausado, iluminação motivada pela fonte de luz já estabelecida na cena`;
+
+  document.getElementById('wrongPromptOutput').textContent = wrongPrompt;
+  document.getElementById('correctPromptOutput').textContent = correctPrompt;
+}
+
+/* ============================================================
+   FASE 5 — TIMELINE DE PÓS-PRODUÇÃO
+   ============================================================ */
+const TIMELINE_LAYERS = [
+  { id: 'cut', trackLabel: 'V1 — Vídeo (Corte de Takes)', toggleLabel: 'Aplicar Corte de Take', icon: 'scissors', color: '#f59e0b' },
+  { id: 'adr', trackLabel: 'A1 — Diálogo / Dublagem (ADR)', toggleLabel: 'Ativar Dublagem/ADR', icon: 'mic', color: '#06b6d4' },
+  { id: 'sound', trackLabel: 'A2 — Sound Design / Foley', toggleLabel: 'Inserir Camada de Sound Design', icon: 'music', color: '#a855f7' },
+  { id: 'color', trackLabel: 'Color Grading (DI)', toggleLabel: 'Aplicar Color Grading Cinematográfico', icon: 'palette', color: '#f43f5e' },
+];
+
+let timelineState = { cut: false, adr: false, sound: false, color: false };
+
+function renderTimelineTracks() {
+  const wrap = document.getElementById('timelineTracks');
+  wrap.innerHTML = TIMELINE_LAYERS.map(l => `
+    <div class="flex items-center gap-3">
+      <span class="w-52 shrink-0 text-xs text-zinc-400 flex items-center gap-1.5"><i data-lucide="${l.icon}" class="w-3.5 h-3.5"></i> ${l.trackLabel}</span>
+      <div class="flex-1 h-6 bg-studio-panel2 rounded border border-studio-border overflow-hidden relative">
+        <div class="timeline-track-fill h-full" style="width:100%; background:${l.color}; opacity:${timelineState[l.id] ? 0.85 : 0.12}; filter:${timelineState[l.id] ? 'none' : 'grayscale(1)'}"></div>
+      </div>
+      <span class="w-16 text-right text-[11px] ${timelineState[l.id] ? 'text-studio-amber' : 'text-zinc-600'}">${timelineState[l.id] ? 'Ativo' : 'Vazio'}</span>
+    </div>
+  `).join('');
+  lucide.createIcons();
+}
+
+function renderTimelineToggles() {
+  const wrap = document.getElementById('timelineToggles');
+  wrap.innerHTML = '';
+  TIMELINE_LAYERS.forEach(l => {
+    const btn = document.createElement('button');
+    btn.className = `px-3 py-2 rounded-lg border text-xs font-medium flex items-center gap-1.5 transition-colors ${timelineState[l.id] ? 'border-studio-amber text-studio-amber bg-studio-amber/10' : 'border-studio-border text-zinc-400 hover:border-zinc-500'}`;
+    btn.innerHTML = `<i data-lucide="${l.icon}" class="w-3.5 h-3.5"></i> ${l.toggleLabel}`;
+    btn.addEventListener('click', () => {
+      timelineState[l.id] = !timelineState[l.id];
+      renderTimelineTracks();
+      renderTimelineToggles();
+      updateMasterStatus();
+    });
+    wrap.appendChild(btn);
+  });
+}
+
+function updateMasterStatus() {
+  const activeCount = Object.values(timelineState).filter(Boolean).length;
+  const pct = activeCount * 25;
+  document.getElementById('masterStatusLabel').textContent = `Master Finalizado: ${pct}%`;
+  document.getElementById('masterProgressFill').style.width = pct + '%';
+
+  let desc = [];
+  if (timelineState.cut) desc.push('os takes brutos foram cortados e organizados com ritmo narrativo definido');
+  if (timelineState.adr) desc.push('os diálogos já contam com dublagem/ADR sincronizada em lip-sync');
+  if (timelineState.sound) desc.push('a paisagem sonora e a trilha de Foley foram inseridas, dando peso real às imagens');
+  if (timelineState.color) desc.push('o color grading cinematográfico e o grão de película foram aplicados, unificando a estética de todos os takes');
+
+  const preview = document.getElementById('timelinePreviewText');
+  if (desc.length === 0) {
+    preview.textContent = 'Nenhuma camada de pós-produção foi aplicada ainda. O filme ainda é apenas um conjunto de takes brutos gerados na Fase 4.';
+  } else if (pct === 100) {
+    preview.textContent = 'Master finalizado! ' + desc.join('; ') + '. O filme está pronto para exibição.';
+  } else {
+    preview.textContent = 'Progresso atual: ' + desc.join('; ') + '.';
+  }
+}
+
+/* ============================================================
+   INICIALIZAÇÃO GERAL
+   ============================================================ */
+function renderAll() {
+  renderSidebarNav();
+  renderDirectorToggle();
+  renderPanels();
+  renderProgress();
+  for (let i = 1; i <= TOTAL_PHASES; i++) {
+    renderImagePreview(i);
+    updateAdvanceButton(i);
+  }
+  if (state.completedPhases.includes(5)) {
+    document.getElementById('courseCompleteMsg').classList.remove('hidden');
+  }
+  document.getElementById('sidebar').classList.remove('hidden');
+  if (window.innerWidth < 1024 && !document.body.dataset.firstRender) {
+    document.getElementById('sidebar').classList.add('hidden');
+  }
+  document.body.dataset.firstRender = '1';
+}
+
+function initInteractiveLabs() {
+  applyScreenplayFilters();
+  renderFolderTree();
+  renderFolderPanel();
+  renderSceneSelector3();
+  renderAssetTabs3();
+  renderAssetPanel3();
+  renderSceneSelector4();
+  renderLockedAssets4();
+  populateSelect(document.getElementById('cameraSelect'), CAMERA_OPTIONS);
+  populateSelect(document.getElementById('actionSelect'), ACTION_OPTIONS);
+  populateSelect(document.getElementById('speechSelect'), SPEECH_OPTIONS);
+  document.getElementById('cameraSelect').addEventListener('change', updateVideoPrompts);
+  document.getElementById('actionSelect').addEventListener('change', updateVideoPrompts);
+  document.getElementById('speechSelect').addEventListener('change', updateVideoPrompts);
+  updateVideoPrompts();
+  renderTimelineTracks();
+  renderTimelineToggles();
+  updateMasterStatus();
+}
+
+renderAll();
+initInteractiveLabs();
+lucide.createIcons();
+</script>
+</body>
+</html>
